@@ -8,6 +8,7 @@
     "clean": "rimraf dist",
     "build": "tsc -t ES6 -p tsconfig.json",
     "test": "npm run-script odata-lite-antlr & ts-mocha --paths -t ES6 -p test/tsconfig.json test/**/*.spec.ts -w --watch-extensions ts",
+    "test-watch": "npm run-script odata-lite-antlr & ts-mocha --paths -t ES6 -p test/tsconfig.json test/**/*.spec.ts",
     "odata-lite-antlr": "antlr4ts -visitor -listener src/grammar/OData4Lite.g4 -o src"
   },
   "files": [
