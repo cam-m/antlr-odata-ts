@@ -7,9 +7,11 @@
   "scripts": {
     "clean": "rimraf dist",
     "build": "npm run-script antlr & tsc -t ES6 -p tsconfig.json",
+    "full-grammar-build": "npm run-script antlr & tsc -t ES6 -p tsconfig.json",
     "test": "npm run-script antlr & ts-mocha --paths -t ES6 -p test/tsconfig.json test/**/*.spec.ts",
     "test-watch": "npm run-script antlr & ts-mocha --paths -t ES6 -p test/tsconfig.json test/**/*.spec.ts -w --watch-extensions ts",
-    "antlr": "antlr4ts -visitor -listener src/grammar/OData4Lite.g4 -o src"
+    "antlr": "antlr4ts -visitor -listener src/grammar/OData4Lite.g4 -o src",
+    "antlr-full": "antlr4ts src/grammar/ODataLexer.g4 -o src && antlr4ts -visitor -listener src/grammar/ODataParser.g4 -o src"
   },
   "files": [
     "dist/**/*"
