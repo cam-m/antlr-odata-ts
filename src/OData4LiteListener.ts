@@ -18,6 +18,10 @@ import { LiteralExpressionContext } from "./OData4LiteParser";
 import { IdExpressionContext } from "./OData4LiteParser";
 import { OdataRelativeURIContext } from "./OData4LiteParser";
 import { ResourcePathContext } from "./OData4LiteParser";
+import { FunctionImportCallContext } from "./OData4LiteParser";
+import { FunctionParametersContext } from "./OData4LiteParser";
+import { FunctionParameterContext } from "./OData4LiteParser";
+import { FunctionParameterNameContext } from "./OData4LiteParser";
 import { CollectionNavigationContext } from "./OData4LiteParser";
 import { CollectionNavPathContext } from "./OData4LiteParser";
 import { SingleNavigationContext } from "./OData4LiteParser";
@@ -31,6 +35,10 @@ import { SimpleKeyContext } from "./OData4LiteParser";
 import { CompoundKeyContext } from "./OData4LiteParser";
 import { QueryOptionsContext } from "./OData4LiteParser";
 import { QueryOptionContext } from "./OData4LiteParser";
+import { SystemQueryOptionContext } from "./OData4LiteParser";
+import { AliasAndValueContext } from "./OData4LiteParser";
+import { ParameterAliasContext } from "./OData4LiteParser";
+import { ParameterValueContext } from "./OData4LiteParser";
 import { FilterContext } from "./OData4LiteParser";
 import { CountContext } from "./OData4LiteParser";
 import { TopContext } from "./OData4LiteParser";
@@ -247,6 +255,50 @@ export interface OData4LiteListener extends ParseTreeListener {
 	exitResourcePath?: (ctx: ResourcePathContext) => void;
 
 	/**
+	 * Enter a parse tree produced by `OData4LiteParser.functionImportCall`.
+	 * @param ctx the parse tree
+	 */
+	enterFunctionImportCall?: (ctx: FunctionImportCallContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.functionImportCall`.
+	 * @param ctx the parse tree
+	 */
+	exitFunctionImportCall?: (ctx: FunctionImportCallContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `OData4LiteParser.functionParameters`.
+	 * @param ctx the parse tree
+	 */
+	enterFunctionParameters?: (ctx: FunctionParametersContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.functionParameters`.
+	 * @param ctx the parse tree
+	 */
+	exitFunctionParameters?: (ctx: FunctionParametersContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `OData4LiteParser.functionParameter`.
+	 * @param ctx the parse tree
+	 */
+	enterFunctionParameter?: (ctx: FunctionParameterContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.functionParameter`.
+	 * @param ctx the parse tree
+	 */
+	exitFunctionParameter?: (ctx: FunctionParameterContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `OData4LiteParser.functionParameterName`.
+	 * @param ctx the parse tree
+	 */
+	enterFunctionParameterName?: (ctx: FunctionParameterNameContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.functionParameterName`.
+	 * @param ctx the parse tree
+	 */
+	exitFunctionParameterName?: (ctx: FunctionParameterNameContext) => void;
+
+	/**
 	 * Enter a parse tree produced by `OData4LiteParser.collectionNavigation`.
 	 * @param ctx the parse tree
 	 */
@@ -388,6 +440,50 @@ export interface OData4LiteListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitQueryOption?: (ctx: QueryOptionContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `OData4LiteParser.systemQueryOption`.
+	 * @param ctx the parse tree
+	 */
+	enterSystemQueryOption?: (ctx: SystemQueryOptionContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.systemQueryOption`.
+	 * @param ctx the parse tree
+	 */
+	exitSystemQueryOption?: (ctx: SystemQueryOptionContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `OData4LiteParser.aliasAndValue`.
+	 * @param ctx the parse tree
+	 */
+	enterAliasAndValue?: (ctx: AliasAndValueContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.aliasAndValue`.
+	 * @param ctx the parse tree
+	 */
+	exitAliasAndValue?: (ctx: AliasAndValueContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `OData4LiteParser.parameterAlias`.
+	 * @param ctx the parse tree
+	 */
+	enterParameterAlias?: (ctx: ParameterAliasContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.parameterAlias`.
+	 * @param ctx the parse tree
+	 */
+	exitParameterAlias?: (ctx: ParameterAliasContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `OData4LiteParser.parameterValue`.
+	 * @param ctx the parse tree
+	 */
+	enterParameterValue?: (ctx: ParameterValueContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.parameterValue`.
+	 * @param ctx the parse tree
+	 */
+	exitParameterValue?: (ctx: ParameterValueContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `OData4LiteParser.filter`.

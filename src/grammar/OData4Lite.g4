@@ -9,8 +9,11 @@ odataRelativeURI
 
 resourcePath
     : IDENTIFIER
-    | IDENTIFIER collectionNavigation
+    // This is ambiguous and results in some functionImportCalls not being matched. Odata is not context free. We
+    // will need to have some endpoint metadata and predicates to match this correctly.
+//    | IDENTIFIER collectionNavigation
     | IDENTIFIER singleNavigation
+    | functionImportCall
     // Unsupported...
 //    | actionImportCall
 //    | entityColFunctionImportCall    [ collectionNavigation ]
@@ -23,6 +26,13 @@ resourcePath
 //    | '$all'
     ;
 
+functionImportCall
+    : IDENTIFIER functionParameters
+    ;
+
+functionParameters    : LPAREN ( functionParameter ( COMMA functionParameter )* )? RPAREN ;
+functionParameter     : functionParameterName EQ ( parameterAlias | primitiveLiteral ) ;
+functionParameterName : IDENTIFIER ;
 
 collectionNavigation
     : (FWD_SLASH qualifiedName)? collectionNavPath;
@@ -111,18 +121,42 @@ compoundKey
     ) RPAREN;
 // /$value can be appended to a media entity - not supported
 
-queryOptions: queryOption (AND queryOption)* ;
-queryOption
+queryOptions: queryOption (AMPERSAND queryOption)* ;
+
+queryOption  : systemQueryOption
+             | aliasAndValue
+             // | parameterNameAndValue
+             // | customQueryOption
+             ;
+
+systemQueryOption
     : filter
     | count
-//    | orderby
-//    | skip
     | top
     | expand
     | select
-    // Unsupported
+//    | aggregate
+//    | orderby
+//    | inlinecount
+//    | skiptoken
+//    Unsupported
 //    | format
     ;
+
+aliasAndValue
+    : parameterAlias EQ parameterValue
+    ;
+
+parameterAlias : AT_SIGN IDENTIFIER ;
+
+parameterValue : primitiveLiteral;
+// TODO: assess for support
+//parameterValue : complexInUri
+//               | complexColInUri
+//               | entityReference
+//               | entityRefColInUri
+//               | primitiveLiteral
+//               | primitiveColInUri;
 
 
 // search: ; // TODO
@@ -333,9 +367,10 @@ OP_MOD              : RWS M O D RWS;
 //FN_GEOLENGTH           : G E O L E N G T H;
 //FN_GEOINTERSECTS       : G E O I N T E R S E C T S;
 
+AT_SIGN          : '@'   ;
 DOT              : '.'   ;
 DOLLAR           : '$'   ;
-AND              : '&'   ;
+AMPERSAND        : '&'   ;
 SEMICOLON        : ';'   ;
 MINUS            : '-'   ;
 FWD_SLASH        : '/'   ;

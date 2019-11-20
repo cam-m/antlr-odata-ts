@@ -1,15 +1,25 @@
-import { describe } from 'mocha'
+import {describe} from 'mocha'
 import {
     BinaryExpressionContext,
     ExpressionContext,
     FilterContext,
+    FunctionImportCallContext,
     LogicalExpressionContext,
-    OData4LiteLexer
+    OData4LiteLexer,
+    OData4LiteParser,
+    OdataRelativeURIContext
 } from "../src";
-import { OData4LiteParser } from "../src";
-import {CharStreams, CodePointCharStream, CommonTokenStream, ParserRuleContext} from "antlr4ts";
-import { ParseTree } from "antlr4ts/tree";
+import {CharStreams, CodePointCharStream, CommonTokenStream} from "antlr4ts";
+import {ParseTree} from "antlr4ts/tree";
 import * as assert from "assert";
+
+export const getODataLiteParser = (odataUrl: string): OData4LiteParser => {
+    const codePointCharStream: CodePointCharStream = CharStreams.fromString(odataUrl);
+    const lexer = new OData4LiteLexer(codePointCharStream);
+    const tokens: CommonTokenStream  = new CommonTokenStream(lexer);
+    return new OData4LiteParser(tokens);
+};
+
 
 describe('OData Parser and Lexer Tests', function() {
     describe('Functional Test', function() {
@@ -54,7 +64,7 @@ describe('OData Parser and Lexer Tests', function() {
                         break;
                     case 7:
                         assert.equal(t.text, '&');
-                        assert.equal(t.type, OData4LiteLexer.AND);
+                        assert.equal(t.type, OData4LiteLexer.AMPERSAND);
                         break;
                     case 8:
                         assert.equal(t.text, '$expand');
@@ -70,7 +80,7 @@ describe('OData Parser and Lexer Tests', function() {
                         break;
                     case 11:
                         assert.equal(t.text, '&');
-                        assert.equal(t.type, OData4LiteLexer.AND);
+                        assert.equal(t.type, OData4LiteLexer.AMPERSAND);
                         break;
                     case 12:
                         assert.equal(t.text, '$filter');
@@ -153,6 +163,44 @@ describe('OData Parser and Lexer Tests', function() {
                     assert.equal(expression.expression()[1].constructor, BinaryExpressionContext);
                 }
            })
+        })
+
+        describe('Unbound Function tests', function() {
+            it('Should parse an unbound function with no arguments', function () {
+                const tree: OdataRelativeURIContext = getODataLiteParser(`MyDummyFunction()`).odataRelativeURI();
+                assert.equal(tree.resourcePath().functionImportCall().IDENTIFIER().text, 'MyDummyFunction');
+                assert.equal(tree.resourcePath().functionImportCall().functionParameters().LPAREN().text, '(');
+                assert.equal(tree.resourcePath().functionImportCall().functionParameters().RPAREN().text, ')');
+            })
+
+            it('Should correctly parse an unbound function with 1 literal argument', function () {
+                const tree: OdataRelativeURIContext = getODataLiteParser(`MyDummyFunction(EnvironmentIdList='1,2,3')`).odataRelativeURI();
+                assert.equal(tree.resourcePath().functionImportCall().IDENTIFIER().text, 'MyDummyFunction');
+                assert.equal(tree.resourcePath().functionImportCall().functionParameters().LPAREN().text, '(');
+                assert.equal(tree.resourcePath().functionImportCall().functionParameters().functionParameter()[0].functionParameterName().text, 'EnvironmentIdList');
+                assert.equal(tree.resourcePath().functionImportCall().functionParameters().functionParameter()[0].primitiveLiteral().text, '\'1,2,3\'');
+                assert.equal(tree.resourcePath().functionImportCall().functionParameters().RPAREN().text, ')');
+            })
+
+            it('Should correctly parse an unbound function with 1 alias argument', function () {
+                const tree: OdataRelativeURIContext = getODataLiteParser(`MyDummyFunction(EnvironmentIdList=@EnvironmentIdList)`).odataRelativeURI();
+                assert.equal(tree.resourcePath().functionImportCall().IDENTIFIER().text, 'MyDummyFunction');
+                assert.equal(tree.resourcePath().functionImportCall().functionParameters().LPAREN().text, '(');
+                assert.equal(tree.resourcePath().functionImportCall().functionParameters().functionParameter()[0].functionParameterName().text, 'EnvironmentIdList');
+                assert.equal(tree.resourcePath().functionImportCall().functionParameters().functionParameter()[0].parameterAlias().text, '@EnvironmentIdList');
+                assert.equal(tree.resourcePath().functionImportCall().functionParameters().RPAREN().text, ')');
+            })
+
+            it('Should correctly parse an unbound function with 2 alias argument', function () {
+                const tree: OdataRelativeURIContext = getODataLiteParser(`MyDummyFunction(EnvironmentIdList=@EnvironmentIdList,AnotherOne=@AnotherOne)`).odataRelativeURI();
+                assert.equal(tree.resourcePath().functionImportCall().IDENTIFIER().text, 'MyDummyFunction');
+                assert.equal(tree.resourcePath().functionImportCall().functionParameters().LPAREN().text, '(');
+                assert.equal(tree.resourcePath().functionImportCall().functionParameters().functionParameter()[0].functionParameterName().text, 'EnvironmentIdList');
+                assert.equal(tree.resourcePath().functionImportCall().functionParameters().functionParameter()[0].parameterAlias().text, '@EnvironmentIdList');
+                assert.equal(tree.resourcePath().functionImportCall().functionParameters().functionParameter()[1].functionParameterName().text, 'AnotherOne');
+                assert.equal(tree.resourcePath().functionImportCall().functionParameters().functionParameter()[1].parameterAlias().text, '@AnotherOne');
+                assert.equal(tree.resourcePath().functionImportCall().functionParameters().RPAREN().text, ')');
+            })
         })
     })
 });

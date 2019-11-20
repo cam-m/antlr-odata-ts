@@ -18,6 +18,10 @@ import { LiteralExpressionContext } from "./OData4LiteParser";
 import { IdExpressionContext } from "./OData4LiteParser";
 import { OdataRelativeURIContext } from "./OData4LiteParser";
 import { ResourcePathContext } from "./OData4LiteParser";
+import { FunctionImportCallContext } from "./OData4LiteParser";
+import { FunctionParametersContext } from "./OData4LiteParser";
+import { FunctionParameterContext } from "./OData4LiteParser";
+import { FunctionParameterNameContext } from "./OData4LiteParser";
 import { CollectionNavigationContext } from "./OData4LiteParser";
 import { CollectionNavPathContext } from "./OData4LiteParser";
 import { SingleNavigationContext } from "./OData4LiteParser";
@@ -31,6 +35,10 @@ import { SimpleKeyContext } from "./OData4LiteParser";
 import { CompoundKeyContext } from "./OData4LiteParser";
 import { QueryOptionsContext } from "./OData4LiteParser";
 import { QueryOptionContext } from "./OData4LiteParser";
+import { SystemQueryOptionContext } from "./OData4LiteParser";
+import { AliasAndValueContext } from "./OData4LiteParser";
+import { ParameterAliasContext } from "./OData4LiteParser";
+import { ParameterValueContext } from "./OData4LiteParser";
 import { FilterContext } from "./OData4LiteParser";
 import { CountContext } from "./OData4LiteParser";
 import { TopContext } from "./OData4LiteParser";
@@ -177,6 +185,34 @@ export interface OData4LiteVisitor<Result> extends ParseTreeVisitor<Result> {
 	visitResourcePath?: (ctx: ResourcePathContext) => Result;
 
 	/**
+	 * Visit a parse tree produced by `OData4LiteParser.functionImportCall`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitFunctionImportCall?: (ctx: FunctionImportCallContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `OData4LiteParser.functionParameters`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitFunctionParameters?: (ctx: FunctionParametersContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `OData4LiteParser.functionParameter`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitFunctionParameter?: (ctx: FunctionParameterContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `OData4LiteParser.functionParameterName`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitFunctionParameterName?: (ctx: FunctionParameterNameContext) => Result;
+
+	/**
 	 * Visit a parse tree produced by `OData4LiteParser.collectionNavigation`.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -266,6 +302,34 @@ export interface OData4LiteVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitQueryOption?: (ctx: QueryOptionContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `OData4LiteParser.systemQueryOption`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitSystemQueryOption?: (ctx: SystemQueryOptionContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `OData4LiteParser.aliasAndValue`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitAliasAndValue?: (ctx: AliasAndValueContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `OData4LiteParser.parameterAlias`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitParameterAlias?: (ctx: ParameterAliasContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `OData4LiteParser.parameterValue`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitParameterValue?: (ctx: ParameterValueContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `OData4LiteParser.filter`.
