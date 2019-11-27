@@ -2307,7 +2307,7 @@ export class OData4LiteParser extends Parser {
 			let _alt: number;
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 470;
+			this.state = 469;
 			this._errHandler.sync(this);
 			switch ( this.interpreter.adaptivePredict(this._input, 45, this._ctx) ) {
 			case 1:
@@ -2317,7 +2317,7 @@ export class OData4LiteParser extends Parser {
 				_prevctx = _localctx;
 
 				this.state = 452;
-				this.propertyPath();
+				this.match(OData4LiteParser.IDENTIFIER);
 				this.state = 453;
 				this.match(OData4LiteParser.LPAREN);
 				this.state = 455;
@@ -2340,11 +2340,11 @@ export class OData4LiteParser extends Parser {
 				_localctx = new ParenthesisExpressionContext(_localctx);
 				this._ctx = _localctx;
 				_prevctx = _localctx;
-				this.state = 459;
+				this.state = 458;
 				this.match(OData4LiteParser.LPAREN);
-				this.state = 460;
+				this.state = 459;
 				this.expression(0);
-				this.state = 461;
+				this.state = 460;
 				this.match(OData4LiteParser.RPAREN);
 				}
 				break;
@@ -2354,7 +2354,7 @@ export class OData4LiteParser extends Parser {
 				_localctx = new UnaryExpressionContext(_localctx);
 				this._ctx = _localctx;
 				_prevctx = _localctx;
-				this.state = 463;
+				this.state = 462;
 				_la = this._input.LA(1);
 				if (!(((((_la - 34)) & ~0x1F) === 0 && ((1 << (_la - 34)) & ((1 << (OData4LiteParser.OP_HAS - 34)) | (1 << (OData4LiteParser.OP_NOT - 34)) | (1 << (OData4LiteParser.MINUS - 34)))) !== 0))) {
 				this._errHandler.recoverInline(this);
@@ -2366,7 +2366,7 @@ export class OData4LiteParser extends Parser {
 					this._errHandler.reportMatch(this);
 					this.consume();
 				}
-				this.state = 464;
+				this.state = 463;
 				this.expression(12);
 				}
 				break;
@@ -2376,9 +2376,9 @@ export class OData4LiteParser extends Parser {
 				_localctx = new NegativeExpressionContext(_localctx);
 				this._ctx = _localctx;
 				_prevctx = _localctx;
-				this.state = 465;
+				this.state = 464;
 				this.match(OData4LiteParser.MINUS);
-				this.state = 466;
+				this.state = 465;
 				this.expression(11);
 				}
 				break;
@@ -2388,7 +2388,7 @@ export class OData4LiteParser extends Parser {
 				_localctx = new LiteralExpressionContext(_localctx);
 				this._ctx = _localctx;
 				_prevctx = _localctx;
-				this.state = 467;
+				this.state = 466;
 				this.primitiveLiteral();
 				}
 				break;
@@ -2398,7 +2398,7 @@ export class OData4LiteParser extends Parser {
 				_localctx = new IdExpressionContext(_localctx);
 				this._ctx = _localctx;
 				_prevctx = _localctx;
-				this.state = 468;
+				this.state = 467;
 				this.propertyPath();
 				}
 				break;
@@ -2408,13 +2408,13 @@ export class OData4LiteParser extends Parser {
 				_localctx = new AliasExpressionContext(_localctx);
 				this._ctx = _localctx;
 				_prevctx = _localctx;
-				this.state = 469;
+				this.state = 468;
 				this.parameterAlias();
 				}
 				break;
 			}
 			this._ctx._stop = this._input.tryLT(-1);
-			this.state = 511;
+			this.state = 510;
 			this._errHandler.sync(this);
 			_alt = this.interpreter.adaptivePredict(this._input, 49, this._ctx);
 			while (_alt !== 2 && _alt !== ATN.INVALID_ALT_NUMBER) {
@@ -2424,20 +2424,20 @@ export class OData4LiteParser extends Parser {
 					}
 					_prevctx = _localctx;
 					{
-					this.state = 509;
+					this.state = 508;
 					this._errHandler.sync(this);
 					switch ( this.interpreter.adaptivePredict(this._input, 48, this._ctx) ) {
 					case 1:
 						{
 						_localctx = new ModulusExpressionContext(new ExpressionContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, OData4LiteParser.RULE_expression);
-						this.state = 472;
+						this.state = 471;
 						if (!(this.precpred(this._ctx, 10))) {
 							throw new FailedPredicateException(this, "this.precpred(this._ctx, 10)");
 						}
-						this.state = 473;
+						this.state = 472;
 						this.match(OData4LiteParser.OP_MOD);
-						this.state = 474;
+						this.state = 473;
 						this.expression(10);
 						}
 						break;
@@ -2446,13 +2446,13 @@ export class OData4LiteParser extends Parser {
 						{
 						_localctx = new MultiplyExpressionContext(new ExpressionContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, OData4LiteParser.RULE_expression);
-						this.state = 475;
+						this.state = 474;
 						if (!(this.precpred(this._ctx, 9))) {
 							throw new FailedPredicateException(this, "this.precpred(this._ctx, 9)");
 						}
-						this.state = 476;
+						this.state = 475;
 						this.match(OData4LiteParser.OP_MUL);
-						this.state = 477;
+						this.state = 476;
 						this.expression(10);
 						}
 						break;
@@ -2461,13 +2461,13 @@ export class OData4LiteParser extends Parser {
 						{
 						_localctx = new DivisionExpressionContext(new ExpressionContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, OData4LiteParser.RULE_expression);
-						this.state = 478;
+						this.state = 477;
 						if (!(this.precpred(this._ctx, 8))) {
 							throw new FailedPredicateException(this, "this.precpred(this._ctx, 8)");
 						}
-						this.state = 479;
+						this.state = 478;
 						this.match(OData4LiteParser.OP_DIV);
-						this.state = 480;
+						this.state = 479;
 						this.expression(9);
 						}
 						break;
@@ -2476,13 +2476,13 @@ export class OData4LiteParser extends Parser {
 						{
 						_localctx = new SubtractExpressionContext(new ExpressionContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, OData4LiteParser.RULE_expression);
-						this.state = 481;
+						this.state = 480;
 						if (!(this.precpred(this._ctx, 7))) {
 							throw new FailedPredicateException(this, "this.precpred(this._ctx, 7)");
 						}
-						this.state = 482;
+						this.state = 481;
 						this.match(OData4LiteParser.OP_SUB);
-						this.state = 483;
+						this.state = 482;
 						this.expression(8);
 						}
 						break;
@@ -2491,13 +2491,13 @@ export class OData4LiteParser extends Parser {
 						{
 						_localctx = new AddExpressionContext(new ExpressionContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, OData4LiteParser.RULE_expression);
-						this.state = 484;
+						this.state = 483;
 						if (!(this.precpred(this._ctx, 6))) {
 							throw new FailedPredicateException(this, "this.precpred(this._ctx, 6)");
 						}
-						this.state = 485;
+						this.state = 484;
 						this.match(OData4LiteParser.OP_ADD);
-						this.state = 486;
+						this.state = 485;
 						this.expression(7);
 						}
 						break;
@@ -2506,11 +2506,11 @@ export class OData4LiteParser extends Parser {
 						{
 						_localctx = new BinaryExpressionContext(new ExpressionContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, OData4LiteParser.RULE_expression);
-						this.state = 487;
+						this.state = 486;
 						if (!(this.precpred(this._ctx, 5))) {
 							throw new FailedPredicateException(this, "this.precpred(this._ctx, 5)");
 						}
-						this.state = 488;
+						this.state = 487;
 						_la = this._input.LA(1);
 						if (!(((((_la - 28)) & ~0x1F) === 0 && ((1 << (_la - 28)) & ((1 << (OData4LiteParser.OP_EQ - 28)) | (1 << (OData4LiteParser.OP_NE - 28)) | (1 << (OData4LiteParser.OP_GT - 28)) | (1 << (OData4LiteParser.OP_GE - 28)) | (1 << (OData4LiteParser.OP_LT - 28)) | (1 << (OData4LiteParser.OP_LE - 28)))) !== 0))) {
 						this._errHandler.recoverInline(this);
@@ -2522,7 +2522,7 @@ export class OData4LiteParser extends Parser {
 							this._errHandler.reportMatch(this);
 							this.consume();
 						}
-						this.state = 489;
+						this.state = 488;
 						this.expression(6);
 						}
 						break;
@@ -2531,11 +2531,11 @@ export class OData4LiteParser extends Parser {
 						{
 						_localctx = new LogicalExpressionContext(new ExpressionContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, OData4LiteParser.RULE_expression);
-						this.state = 490;
+						this.state = 489;
 						if (!(this.precpred(this._ctx, 4))) {
 							throw new FailedPredicateException(this, "this.precpred(this._ctx, 4)");
 						}
-						this.state = 491;
+						this.state = 490;
 						_la = this._input.LA(1);
 						if (!(_la === OData4LiteParser.OP_AND || _la === OData4LiteParser.OP_OR)) {
 						this._errHandler.recoverInline(this);
@@ -2547,7 +2547,7 @@ export class OData4LiteParser extends Parser {
 							this._errHandler.reportMatch(this);
 							this.consume();
 						}
-						this.state = 492;
+						this.state = 491;
 						this.expression(5);
 						}
 						break;
@@ -2556,34 +2556,34 @@ export class OData4LiteParser extends Parser {
 						{
 						_localctx = new InExpressionContext(new ExpressionContext(_parentctx, _parentState));
 						this.pushNewRecursionContext(_localctx, _startState, OData4LiteParser.RULE_expression);
-						this.state = 493;
+						this.state = 492;
 						if (!(this.precpred(this._ctx, 13))) {
 							throw new FailedPredicateException(this, "this.precpred(this._ctx, 13)");
 						}
-						this.state = 494;
+						this.state = 493;
 						this.match(OData4LiteParser.OP_IN);
-						this.state = 495;
+						this.state = 494;
 						this.match(OData4LiteParser.LPAREN);
-						this.state = 505;
+						this.state = 504;
 						this._errHandler.sync(this);
 						switch ( this.interpreter.adaptivePredict(this._input, 47, this._ctx) ) {
 						case 1:
 							{
-							this.state = 496;
+							this.state = 495;
 							this.primitiveLiteral();
-							this.state = 501;
+							this.state = 500;
 							this._errHandler.sync(this);
 							_la = this._input.LA(1);
 							while (_la === OData4LiteParser.COMMA) {
 								{
 								{
-								this.state = 497;
+								this.state = 496;
 								this.match(OData4LiteParser.COMMA);
-								this.state = 498;
+								this.state = 497;
 								this.primitiveLiteral();
 								}
 								}
-								this.state = 503;
+								this.state = 502;
 								this._errHandler.sync(this);
 								_la = this._input.LA(1);
 							}
@@ -2592,19 +2592,19 @@ export class OData4LiteParser extends Parser {
 
 						case 2:
 							{
-							this.state = 504;
+							this.state = 503;
 							this.expression(0);
 							}
 							break;
 						}
-						this.state = 507;
+						this.state = 506;
 						this.match(OData4LiteParser.RPAREN);
 						}
 						break;
 					}
 					}
 				}
-				this.state = 513;
+				this.state = 512;
 				this._errHandler.sync(this);
 				_alt = this.interpreter.adaptivePredict(this._input, 49, this._ctx);
 			}
@@ -2632,21 +2632,21 @@ export class OData4LiteParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 514;
+			this.state = 513;
 			this.expression(0);
-			this.state = 519;
+			this.state = 518;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			while (_la === OData4LiteParser.COMMA) {
 				{
 				{
-				this.state = 515;
+				this.state = 514;
 				this.match(OData4LiteParser.COMMA);
-				this.state = 516;
+				this.state = 515;
 				this.expression(0);
 				}
 				}
-				this.state = 521;
+				this.state = 520;
 				this._errHandler.sync(this);
 				_la = this._input.LA(1);
 			}
@@ -2671,76 +2671,76 @@ export class OData4LiteParser extends Parser {
 		let _localctx: PrimitiveLiteralContext = new PrimitiveLiteralContext(this._ctx, this.state);
 		this.enterRule(_localctx, 98, OData4LiteParser.RULE_primitiveLiteral);
 		try {
-			this.state = 532;
+			this.state = 531;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
 			case OData4LiteParser.NULL:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 522;
+				this.state = 521;
 				this.match(OData4LiteParser.NULL);
 				}
 				break;
 			case OData4LiteParser.LIT_BOOLEAN:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 523;
+				this.state = 522;
 				this.match(OData4LiteParser.LIT_BOOLEAN);
 				}
 				break;
 			case OData4LiteParser.LIT_DATE:
 				this.enterOuterAlt(_localctx, 3);
 				{
-				this.state = 524;
+				this.state = 523;
 				this.match(OData4LiteParser.LIT_DATE);
 				}
 				break;
 			case OData4LiteParser.LIT_DATETIME:
 				this.enterOuterAlt(_localctx, 4);
 				{
-				this.state = 525;
+				this.state = 524;
 				this.match(OData4LiteParser.LIT_DATETIME);
 				}
 				break;
 			case OData4LiteParser.LIT_TIME_OF_DAY:
 				this.enterOuterAlt(_localctx, 5);
 				{
-				this.state = 526;
+				this.state = 525;
 				this.match(OData4LiteParser.LIT_TIME_OF_DAY);
 				}
 				break;
 			case OData4LiteParser.LIT_INTEGER:
 				this.enterOuterAlt(_localctx, 6);
 				{
-				this.state = 527;
+				this.state = 526;
 				this.match(OData4LiteParser.LIT_INTEGER);
 				}
 				break;
 			case OData4LiteParser.LIT_DOUBLE:
 				this.enterOuterAlt(_localctx, 7);
 				{
-				this.state = 528;
+				this.state = 527;
 				this.match(OData4LiteParser.LIT_DOUBLE);
 				}
 				break;
 			case OData4LiteParser.LIT_STRING:
 				this.enterOuterAlt(_localctx, 8);
 				{
-				this.state = 529;
+				this.state = 528;
 				this.match(OData4LiteParser.LIT_STRING);
 				}
 				break;
 			case OData4LiteParser.LIT_DAY_TIME_DURATION:
 				this.enterOuterAlt(_localctx, 9);
 				{
-				this.state = 530;
+				this.state = 529;
 				this.match(OData4LiteParser.LIT_DAY_TIME_DURATION);
 				}
 				break;
 			case OData4LiteParser.IDENTIFIER:
 				this.enterOuterAlt(_localctx, 10);
 				{
-				this.state = 531;
+				this.state = 530;
 				this.enum();
 				}
 				break;
@@ -2769,13 +2769,13 @@ export class OData4LiteParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 534;
+			this.state = 533;
 			this.qualifiedEnumTypeName();
-			this.state = 535;
+			this.state = 534;
 			this.match(OData4LiteParser.SQUOTE);
-			this.state = 536;
+			this.state = 535;
 			this.enumValues();
-			this.state = 537;
+			this.state = 536;
 			this.match(OData4LiteParser.SQUOTE);
 			}
 		}
@@ -2800,9 +2800,9 @@ export class OData4LiteParser extends Parser {
 		try {
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 539;
+			this.state = 538;
 			this.namespace();
-			this.state = 540;
+			this.state = 539;
 			this.match(OData4LiteParser.IDENTIFIER);
 			}
 		}
@@ -2826,13 +2826,13 @@ export class OData4LiteParser extends Parser {
 		this.enterRule(_localctx, 104, OData4LiteParser.RULE_enumValues);
 		let _la: number;
 		try {
-			this.state = 550;
+			this.state = 549;
 			this._errHandler.sync(this);
 			switch ( this.interpreter.adaptivePredict(this._input, 53, this._ctx) ) {
 			case 1:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 542;
+				this.state = 541;
 				this.enumValue();
 				}
 				break;
@@ -2840,21 +2840,21 @@ export class OData4LiteParser extends Parser {
 			case 2:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 543;
+				this.state = 542;
 				this.enumValue();
-				this.state = 546;
+				this.state = 545;
 				this._errHandler.sync(this);
 				_la = this._input.LA(1);
 				do {
 					{
 					{
-					this.state = 544;
+					this.state = 543;
 					this.match(OData4LiteParser.COMMA);
-					this.state = 545;
+					this.state = 544;
 					this.enumValue();
 					}
 					}
-					this.state = 548;
+					this.state = 547;
 					this._errHandler.sync(this);
 					_la = this._input.LA(1);
 				} while (_la === OData4LiteParser.COMMA);
@@ -2881,24 +2881,24 @@ export class OData4LiteParser extends Parser {
 		let _localctx: EnumValueContext = new EnumValueContext(this._ctx, this.state);
 		this.enterRule(_localctx, 106, OData4LiteParser.RULE_enumValue);
 		try {
-			this.state = 556;
+			this.state = 555;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
 			case OData4LiteParser.LIT_INTEGER:
 				this.enterOuterAlt(_localctx, 1);
 				{
-				this.state = 552;
+				this.state = 551;
 				this.match(OData4LiteParser.LIT_INTEGER);
 				}
 				break;
 			case OData4LiteParser.IDENTIFIER:
 				this.enterOuterAlt(_localctx, 2);
 				{
-				this.state = 553;
+				this.state = 552;
 				this.match(OData4LiteParser.IDENTIFIER);
-				this.state = 554;
+				this.state = 553;
 				this.match(OData4LiteParser.DOT);
-				this.state = 555;
+				this.state = 554;
 				this.match(OData4LiteParser.IDENTIFIER);
 				}
 				break;
@@ -2928,27 +2928,27 @@ export class OData4LiteParser extends Parser {
 			let _alt: number;
 			this.enterOuterAlt(_localctx, 1);
 			{
-			this.state = 558;
+			this.state = 557;
 			this.match(OData4LiteParser.IDENTIFIER);
-			this.state = 563;
+			this.state = 562;
 			this._errHandler.sync(this);
 			_alt = this.interpreter.adaptivePredict(this._input, 55, this._ctx);
 			while (_alt !== 2 && _alt !== ATN.INVALID_ALT_NUMBER) {
 				if (_alt === 1) {
 					{
 					{
-					this.state = 559;
+					this.state = 558;
 					this.match(OData4LiteParser.DOT);
-					this.state = 560;
+					this.state = 559;
 					this.match(OData4LiteParser.IDENTIFIER);
 					}
 					}
 				}
-				this.state = 565;
+				this.state = 564;
 				this._errHandler.sync(this);
 				_alt = this.interpreter.adaptivePredict(this._input, 55, this._ctx);
 			}
-			this.state = 566;
+			this.state = 565;
 			this.match(OData4LiteParser.DOT);
 			}
 		}
@@ -3005,7 +3005,7 @@ export class OData4LiteParser extends Parser {
 
 	private static readonly _serializedATNSegments: number = 2;
 	private static readonly _serializedATNSegment0: string =
-		"\x03\uC91D\uCABA\u058D\uAFBA\u4F53\u0607\uEA8B\uC241\x03I\u023B\x04\x02" +
+		"\x03\uC91D\uCABA\u058D\uAFBA\u4F53\u0607\uEA8B\uC241\x03I\u023A\x04\x02" +
 		"\t\x02\x04\x03\t\x03\x04\x04\t\x04\x04\x05\t\x05\x04\x06\t\x06\x04\x07" +
 		"\t\x07\x04\b\t\b\x04\t\t\t\x04\n\t\n\x04\v\t\v\x04\f\t\f\x04\r\t\r\x04" +
 		"\x0E\t\x0E\x04\x0F\t\x0F\x04\x10\t\x10\x04\x11\t\x11\x04\x12\t\x12\x04" +
@@ -3049,20 +3049,20 @@ export class OData4LiteParser extends Parser {
 		"\n.\f.\x0E.\u01AF\v.\x03.\x03.\x03.\x05.\u01B4\n.\x03/\x03/\x03/\x07/" +
 		"\u01B9\n/\f/\x0E/\u01BC\v/\x030\x030\x030\x030\x030\x030\x050\u01C4\n" +
 		"0\x031\x031\x031\x031\x051\u01CA\n1\x031\x031\x031\x031\x031\x031\x03" +
-		"1\x031\x031\x031\x031\x031\x031\x051\u01D9\n1\x031\x031\x031\x031\x03" +
+		"1\x031\x031\x031\x031\x031\x051\u01D8\n1\x031\x031\x031\x031\x031\x03" +
 		"1\x031\x031\x031\x031\x031\x031\x031\x031\x031\x031\x031\x031\x031\x03" +
-		"1\x031\x031\x031\x031\x031\x031\x031\x031\x071\u01F6\n1\f1\x0E1\u01F9" +
-		"\v1\x031\x051\u01FC\n1\x031\x031\x071\u0200\n1\f1\x0E1\u0203\v1\x032\x03" +
-		"2\x032\x072\u0208\n2\f2\x0E2\u020B\v2\x033\x033\x033\x033\x033\x033\x03" +
-		"3\x033\x033\x033\x053\u0217\n3\x034\x034\x034\x034\x034\x035\x035\x03" +
-		"5\x036\x036\x036\x036\x066\u0225\n6\r6\x0E6\u0226\x056\u0229\n6\x037\x03" +
-		"7\x037\x037\x057\u022F\n7\x038\x038\x038\x078\u0234\n8\f8\x0E8\u0237\v" +
-		"8\x038\x038\x038\x02\x02\x03`9\x02\x02\x04\x02\x06\x02\b\x02\n\x02\f\x02" +
-		"\x0E\x02\x10\x02\x12\x02\x14\x02\x16\x02\x18\x02\x1A\x02\x1C\x02\x1E\x02" +
-		" \x02\"\x02$\x02&\x02(\x02*\x02,\x02.\x020\x022\x024\x026\x028\x02:\x02" +
+		"1\x031\x031\x031\x031\x031\x031\x031\x071\u01F5\n1\f1\x0E1\u01F8\v1\x03" +
+		"1\x051\u01FB\n1\x031\x031\x071\u01FF\n1\f1\x0E1\u0202\v1\x032\x032\x03" +
+		"2\x072\u0207\n2\f2\x0E2\u020A\v2\x033\x033\x033\x033\x033\x033\x033\x03" +
+		"3\x033\x033\x053\u0216\n3\x034\x034\x034\x034\x034\x035\x035\x035\x03" +
+		"6\x036\x036\x036\x066\u0224\n6\r6\x0E6\u0225\x056\u0228\n6\x037\x037\x03" +
+		"7\x037\x057\u022E\n7\x038\x038\x038\x078\u0233\n8\f8\x0E8\u0236\v8\x03" +
+		"8\x038\x038\x02\x02\x03`9\x02\x02\x04\x02\x06\x02\b\x02\n\x02\f\x02\x0E" +
+		"\x02\x10\x02\x12\x02\x14\x02\x16\x02\x18\x02\x1A\x02\x1C\x02\x1E\x02 " +
+		"\x02\"\x02$\x02&\x02(\x02*\x02,\x02.\x020\x022\x024\x026\x028\x02:\x02" +
 		"<\x02>\x02@\x02B\x02D\x02F\x02H\x02J\x02L\x02N\x02P\x02R\x02T\x02V\x02" +
 		"X\x02Z\x02\\\x02^\x02`\x02b\x02d\x02f\x02h\x02j\x02l\x02n\x02\x02\x05" +
-		"\x05\x02$$++66\x03\x02\x1E#\x03\x02)*\x02\u025F\x02p\x03\x02\x02\x02\x04" +
+		"\x05\x02$$++66\x03\x02\x1E#\x03\x02)*\x02\u025E\x02p\x03\x02\x02\x02\x04" +
 		"{\x03\x02\x02\x02\x06}\x03\x02\x02\x02\b\x80\x03\x02\x02\x02\n\x8D\x03" +
 		"\x02\x02\x02\f\x93\x03\x02\x02\x02\x0E\x97\x03\x02\x02\x02\x10\xA2\x03" +
 		"\x02\x02\x02\x12\xB1\x03\x02\x02\x02\x14\xB3\x03\x02\x02\x02\x16\xB5\x03" +
@@ -3077,10 +3077,10 @@ export class OData4LiteParser extends Parser {
 		"\x02\x02J\u0176\x03\x02\x02\x02L\u0178\x03\x02\x02\x02N\u017B\x03\x02" +
 		"\x02\x02P\u017F\x03\x02\x02\x02R\u0183\x03\x02\x02\x02T\u0187\x03\x02" +
 		"\x02\x02V\u0193\x03\x02\x02\x02X\u0198\x03\x02\x02\x02Z\u01A2\x03\x02" +
-		"\x02\x02\\\u01B5\x03\x02\x02\x02^\u01C3\x03\x02\x02\x02`\u01D8\x03\x02" +
-		"\x02\x02b\u0204\x03\x02\x02\x02d\u0216\x03\x02\x02\x02f\u0218\x03\x02" +
-		"\x02\x02h\u021D\x03\x02\x02\x02j\u0228\x03\x02\x02\x02l\u022E\x03\x02" +
-		"\x02\x02n\u0230\x03\x02\x02\x02ps\x05\x04\x03\x02qr\x078\x02\x02rt\x05" +
+		"\x02\x02\\\u01B5\x03\x02\x02\x02^\u01C3\x03\x02\x02\x02`\u01D7\x03\x02" +
+		"\x02\x02b\u0203\x03\x02\x02\x02d\u0215\x03\x02\x02\x02f\u0217\x03\x02" +
+		"\x02\x02h\u021C\x03\x02\x02\x02j\u0227\x03\x02\x02\x02l\u022D\x03\x02" +
+		"\x02\x02n\u022F\x03\x02\x02\x02ps\x05\x04\x03\x02qr\x078\x02\x02rt\x05" +
 		"\"\x12\x02sq\x03\x02\x02\x02st\x03\x02\x02\x02tu\x03\x02\x02\x02uv\x07" +
 		"\x02\x02\x03v\x03\x03\x02\x02\x02w|\x07H\x02\x02xy\x07H\x02\x02y|\x05" +
 		"\x10\t\x02z|\x05\x06\x04\x02{w\x03\x02\x02\x02{x\x03\x02\x02\x02{z\x03" +
@@ -3219,65 +3219,64 @@ export class OData4LiteParser extends Parser {
 		"\x03\x02\x02\x02\u01C3\u01BE\x03\x02\x02\x02\u01C3\u01BF\x03\x02\x02\x02" +
 		"\u01C3\u01C0\x03\x02\x02\x02\u01C3\u01C1\x03\x02\x02\x02\u01C3\u01C2\x03" +
 		"\x02\x02\x02\u01C4_\x03\x02\x02\x02\u01C5\u01C6\b1\x01\x02\u01C6\u01C7" +
-		"\x05\x12\n\x02\u01C7\u01C9\x07>\x02\x02\u01C8\u01CA\x05b2\x02\u01C9\u01C8" +
+		"\x07H\x02\x02\u01C7\u01C9\x07>\x02\x02\u01C8\u01CA\x05b2\x02\u01C9\u01C8" +
 		"\x03\x02\x02\x02\u01C9\u01CA\x03\x02\x02\x02\u01CA\u01CB\x03\x02\x02\x02" +
-		"\u01CB\u01CC\x07=\x02\x02\u01CC\u01D9\x03\x02\x02\x02\u01CD\u01CE\x07" +
-		">\x02\x02\u01CE\u01CF\x05`1\x02\u01CF\u01D0\x07=\x02\x02\u01D0\u01D9\x03" +
-		"\x02\x02\x02\u01D1\u01D2\t\x02\x02\x02\u01D2\u01D9\x05`1\x0E\u01D3\u01D4" +
-		"\x076\x02\x02\u01D4\u01D9\x05`1\r\u01D5\u01D9\x05d3\x02\u01D6\u01D9\x05" +
-		"\x12\n\x02\u01D7\u01D9\x05*\x16\x02\u01D8\u01C5\x03\x02\x02\x02\u01D8" +
-		"\u01CD\x03\x02\x02\x02\u01D8\u01D1\x03\x02\x02\x02\u01D8\u01D3\x03\x02" +
-		"\x02\x02\u01D8\u01D5\x03\x02\x02\x02\u01D8\u01D6\x03\x02\x02\x02\u01D8" +
-		"\u01D7\x03\x02\x02\x02\u01D9\u0201\x03\x02\x02\x02\u01DA\u01DB\f\f\x02" +
-		"\x02\u01DB\u01DC\x070\x02\x02\u01DC\u0200\x05`1\f\u01DD\u01DE\f\v\x02" +
-		"\x02\u01DE\u01DF\x07/\x02\x02\u01DF\u0200\x05`1\f\u01E0\u01E1\f\n\x02" +
-		"\x02\u01E1\u01E2\x07.\x02\x02\u01E2\u0200\x05`1\v\u01E3\u01E4\f\t\x02" +
-		"\x02\u01E4\u01E5\x07-\x02\x02\u01E5\u0200\x05`1\n\u01E6\u01E7\f\b\x02" +
-		"\x02\u01E7\u01E8\x07,\x02\x02\u01E8\u0200\x05`1\t\u01E9\u01EA\f\x07\x02" +
-		"\x02\u01EA\u01EB\t\x03\x02\x02\u01EB\u0200\x05`1\b\u01EC\u01ED\f\x06\x02" +
-		"\x02\u01ED\u01EE\t\x04\x02\x02\u01EE\u0200\x05`1\x07\u01EF\u01F0\f\x0F" +
-		"\x02\x02\u01F0\u01F1\x07(\x02\x02\u01F1\u01FB\x07>\x02\x02\u01F2\u01F7" +
-		"\x05d3\x02\u01F3\u01F4\x07<\x02\x02\u01F4\u01F6\x05d3\x02\u01F5\u01F3" +
-		"\x03\x02\x02\x02\u01F6\u01F9\x03\x02\x02\x02\u01F7\u01F5\x03\x02\x02\x02" +
-		"\u01F7\u01F8\x03\x02\x02\x02\u01F8\u01FC\x03\x02\x02\x02\u01F9\u01F7\x03" +
-		"\x02\x02\x02\u01FA\u01FC\x05`1\x02\u01FB\u01F2\x03\x02\x02\x02\u01FB\u01FA" +
-		"\x03\x02\x02\x02\u01FC\u01FD\x03\x02\x02\x02\u01FD\u01FE\x07=\x02\x02" +
-		"\u01FE\u0200\x03\x02\x02\x02\u01FF\u01DA\x03\x02\x02\x02\u01FF\u01DD\x03" +
-		"\x02\x02\x02\u01FF\u01E0\x03\x02\x02\x02\u01FF\u01E3\x03\x02\x02\x02\u01FF" +
-		"\u01E6\x03\x02\x02\x02\u01FF\u01E9\x03\x02\x02\x02\u01FF\u01EC\x03\x02" +
-		"\x02\x02\u01FF\u01EF\x03\x02\x02\x02\u0200\u0203\x03\x02\x02\x02\u0201" +
-		"\u01FF\x03\x02\x02\x02\u0201\u0202\x03\x02\x02\x02\u0202a\x03\x02\x02" +
-		"\x02\u0203\u0201\x03\x02\x02\x02\u0204\u0209\x05`1\x02\u0205\u0206\x07" +
-		"<\x02\x02\u0206\u0208\x05`1\x02\u0207\u0205\x03\x02\x02\x02\u0208\u020B" +
-		"\x03\x02\x02\x02\u0209\u0207\x03\x02\x02\x02\u0209\u020A\x03\x02\x02\x02" +
-		"\u020Ac\x03\x02\x02\x02\u020B\u0209\x03\x02\x02\x02\u020C\u0217\x07?\x02" +
-		"\x02\u020D\u0217\x07D\x02\x02\u020E\u0217\x07A\x02\x02\u020F\u0217\x07" +
-		"@\x02\x02\u0210\u0217\x07B\x02\x02\u0211\u0217\x07F\x02\x02\u0212\u0217" +
-		"\x07G\x02\x02\u0213\u0217\x07E\x02\x02\u0214\u0217\x07C\x02\x02\u0215" +
-		"\u0217\x05f4\x02\u0216\u020C\x03\x02\x02\x02\u0216\u020D\x03\x02\x02\x02" +
-		"\u0216\u020E\x03\x02\x02\x02\u0216\u020F\x03\x02\x02\x02\u0216\u0210\x03" +
-		"\x02\x02\x02\u0216\u0211\x03\x02\x02\x02\u0216\u0212\x03\x02\x02\x02\u0216" +
-		"\u0213\x03\x02\x02\x02\u0216\u0214\x03\x02\x02\x02\u0216\u0215\x03\x02" +
-		"\x02\x02\u0217e\x03\x02\x02\x02\u0218\u0219\x05h5\x02\u0219\u021A\x07" +
-		"9\x02\x02\u021A\u021B\x05j6\x02\u021B\u021C\x079\x02\x02\u021Cg\x03\x02" +
-		"\x02\x02\u021D\u021E\x05n8\x02\u021E\u021F\x07H\x02\x02\u021Fi\x03\x02" +
-		"\x02\x02\u0220\u0229\x05l7\x02\u0221\u0224\x05l7\x02\u0222\u0223\x07<" +
-		"\x02\x02\u0223\u0225\x05l7\x02\u0224\u0222\x03\x02\x02\x02\u0225\u0226" +
-		"\x03\x02\x02\x02\u0226\u0224\x03\x02\x02\x02\u0226\u0227\x03\x02\x02\x02" +
-		"\u0227\u0229\x03\x02\x02\x02\u0228\u0220\x03\x02\x02\x02\u0228\u0221\x03" +
-		"\x02\x02\x02\u0229k\x03\x02\x02\x02\u022A\u022F\x07F\x02\x02\u022B\u022C" +
-		"\x07H\x02\x02\u022C\u022D\x072\x02\x02\u022D\u022F\x07H\x02\x02\u022E" +
-		"\u022A\x03\x02\x02\x02\u022E\u022B\x03\x02\x02\x02\u022Fm\x03\x02\x02" +
-		"\x02\u0230\u0235\x07H\x02\x02\u0231\u0232\x072\x02\x02\u0232\u0234\x07" +
-		"H\x02\x02\u0233\u0231\x03\x02\x02\x02\u0234\u0237\x03\x02\x02\x02\u0235" +
-		"\u0233\x03\x02\x02\x02\u0235\u0236\x03\x02\x02\x02\u0236\u0238\x03\x02" +
-		"\x02\x02\u0237\u0235\x03\x02\x02\x02\u0238\u0239\x072\x02\x02\u0239o\x03" +
-		"\x02\x02\x02:s{\x86\x89\x91\x97\x9B\x9E\xA2\xB1\xBE\xCE";
+		"\u01CB\u01D8\x07=\x02\x02\u01CC\u01CD\x07>\x02\x02\u01CD\u01CE\x05`1\x02" +
+		"\u01CE\u01CF\x07=\x02\x02\u01CF\u01D8\x03\x02\x02\x02\u01D0\u01D1\t\x02" +
+		"\x02\x02\u01D1\u01D8\x05`1\x0E\u01D2\u01D3\x076\x02\x02\u01D3\u01D8\x05" +
+		"`1\r\u01D4\u01D8\x05d3\x02\u01D5\u01D8\x05\x12\n\x02\u01D6\u01D8\x05*" +
+		"\x16\x02\u01D7\u01C5\x03\x02\x02\x02\u01D7\u01CC\x03\x02\x02\x02\u01D7" +
+		"\u01D0\x03\x02\x02\x02\u01D7\u01D2\x03\x02\x02\x02\u01D7\u01D4\x03\x02" +
+		"\x02\x02\u01D7\u01D5\x03\x02\x02\x02\u01D7\u01D6\x03\x02\x02\x02\u01D8" +
+		"\u0200\x03\x02\x02\x02\u01D9\u01DA\f\f\x02\x02\u01DA\u01DB\x070\x02\x02" +
+		"\u01DB\u01FF\x05`1\f\u01DC\u01DD\f\v\x02\x02\u01DD\u01DE\x07/\x02\x02" +
+		"\u01DE\u01FF\x05`1\f\u01DF\u01E0\f\n\x02\x02\u01E0\u01E1\x07.\x02\x02" +
+		"\u01E1\u01FF\x05`1\v\u01E2\u01E3\f\t\x02\x02\u01E3\u01E4\x07-\x02\x02" +
+		"\u01E4\u01FF\x05`1\n\u01E5\u01E6\f\b\x02\x02\u01E6\u01E7\x07,\x02\x02" +
+		"\u01E7\u01FF\x05`1\t\u01E8\u01E9\f\x07\x02\x02\u01E9\u01EA\t\x03\x02\x02" +
+		"\u01EA\u01FF\x05`1\b\u01EB\u01EC\f\x06\x02\x02\u01EC\u01ED\t\x04\x02\x02" +
+		"\u01ED\u01FF\x05`1\x07\u01EE\u01EF\f\x0F\x02\x02\u01EF\u01F0\x07(\x02" +
+		"\x02\u01F0\u01FA\x07>\x02\x02\u01F1\u01F6\x05d3\x02\u01F2\u01F3\x07<\x02" +
+		"\x02\u01F3\u01F5\x05d3\x02\u01F4\u01F2\x03\x02\x02\x02\u01F5\u01F8\x03" +
+		"\x02\x02\x02\u01F6\u01F4\x03\x02\x02\x02\u01F6\u01F7\x03\x02\x02\x02\u01F7" +
+		"\u01FB\x03\x02\x02\x02\u01F8\u01F6\x03\x02\x02\x02\u01F9\u01FB\x05`1\x02" +
+		"\u01FA\u01F1\x03\x02\x02\x02\u01FA\u01F9\x03\x02\x02\x02\u01FB\u01FC\x03" +
+		"\x02\x02\x02\u01FC\u01FD\x07=\x02\x02\u01FD\u01FF\x03\x02\x02\x02\u01FE" +
+		"\u01D9\x03\x02\x02\x02\u01FE\u01DC\x03\x02\x02\x02\u01FE\u01DF\x03\x02" +
+		"\x02\x02\u01FE\u01E2\x03\x02\x02\x02\u01FE\u01E5\x03\x02\x02\x02\u01FE" +
+		"\u01E8\x03\x02\x02\x02\u01FE\u01EB\x03\x02\x02\x02\u01FE\u01EE\x03\x02" +
+		"\x02\x02\u01FF\u0202\x03\x02\x02\x02\u0200\u01FE\x03\x02\x02\x02\u0200" +
+		"\u0201\x03\x02\x02\x02\u0201a\x03\x02\x02\x02\u0202\u0200\x03\x02\x02" +
+		"\x02\u0203\u0208\x05`1\x02\u0204\u0205\x07<\x02\x02\u0205\u0207\x05`1" +
+		"\x02\u0206\u0204\x03\x02\x02\x02\u0207\u020A\x03\x02\x02\x02\u0208\u0206" +
+		"\x03\x02\x02\x02\u0208\u0209\x03\x02\x02\x02\u0209c\x03\x02\x02\x02\u020A" +
+		"\u0208\x03\x02\x02\x02\u020B\u0216\x07?\x02\x02\u020C\u0216\x07D\x02\x02" +
+		"\u020D\u0216\x07A\x02\x02\u020E\u0216\x07@\x02\x02\u020F\u0216\x07B\x02" +
+		"\x02\u0210\u0216\x07F\x02\x02\u0211\u0216\x07G\x02\x02\u0212\u0216\x07" +
+		"E\x02\x02\u0213\u0216\x07C\x02\x02\u0214\u0216\x05f4\x02\u0215\u020B\x03" +
+		"\x02\x02\x02\u0215\u020C\x03\x02\x02\x02\u0215\u020D\x03\x02\x02\x02\u0215" +
+		"\u020E\x03\x02\x02\x02\u0215\u020F\x03\x02\x02\x02\u0215\u0210\x03\x02" +
+		"\x02\x02\u0215\u0211\x03\x02\x02\x02\u0215\u0212\x03\x02\x02\x02\u0215" +
+		"\u0213\x03\x02\x02\x02\u0215\u0214\x03\x02\x02\x02\u0216e\x03\x02\x02" +
+		"\x02\u0217\u0218\x05h5\x02\u0218\u0219\x079\x02\x02\u0219\u021A\x05j6" +
+		"\x02\u021A\u021B\x079\x02\x02\u021Bg\x03\x02\x02\x02\u021C\u021D\x05n" +
+		"8\x02\u021D\u021E\x07H\x02\x02\u021Ei\x03\x02\x02\x02\u021F\u0228\x05" +
+		"l7\x02\u0220\u0223\x05l7\x02\u0221\u0222\x07<\x02\x02\u0222\u0224\x05" +
+		"l7\x02\u0223\u0221\x03\x02\x02\x02\u0224\u0225\x03\x02\x02\x02\u0225\u0223" +
+		"\x03\x02\x02\x02\u0225\u0226\x03\x02\x02\x02\u0226\u0228\x03\x02\x02\x02" +
+		"\u0227\u021F\x03\x02\x02\x02\u0227\u0220\x03\x02\x02\x02\u0228k\x03\x02" +
+		"\x02\x02\u0229\u022E\x07F\x02\x02\u022A\u022B\x07H\x02\x02\u022B\u022C" +
+		"\x072\x02\x02\u022C\u022E\x07H\x02\x02\u022D\u0229\x03\x02\x02\x02\u022D" +
+		"\u022A\x03\x02\x02\x02\u022Em\x03\x02\x02\x02\u022F\u0234\x07H\x02\x02" +
+		"\u0230\u0231\x072\x02\x02\u0231\u0233\x07H\x02\x02\u0232\u0230\x03\x02" +
+		"\x02\x02\u0233\u0236\x03\x02\x02\x02\u0234\u0232\x03\x02\x02\x02\u0234" +
+		"\u0235\x03\x02\x02\x02\u0235\u0237\x03\x02\x02\x02\u0236\u0234\x03\x02" +
+		"\x02\x02\u0237\u0238\x072\x02\x02\u0238o\x03\x02\x02\x02:s{\x86\x89\x91" +
+		"\x97\x9B\x9E\xA2\xB1\xBE\xCE\xD8\xDD\xE5\xFD\u0102\u0109\u0113\u011B";
 	private static readonly _serializedATNSegment1: string =
-		"\xD8\xDD\xE5\xFD\u0102\u0109\u0113\u011B\u0122\u0126\u012E\u0134\u013B" +
-		"\u0141\u0144\u014D\u0150\u015C\u015E\u0164\u0168\u0176\u018F\u0191\u0196" +
-		"\u019D\u01A2\u01A9\u01AD\u01B3\u01BA\u01C3\u01C9\u01D8\u01F7\u01FB\u01FF" +
-		"\u0201\u0209\u0216\u0226\u0228\u022E\u0235";
+		"\u0122\u0126\u012E\u0134\u013B\u0141\u0144\u014D\u0150\u015C\u015E\u0164" +
+		"\u0168\u0176\u018F\u0191\u0196\u019D\u01A2\u01A9\u01AD\u01B3\u01BA\u01C3" +
+		"\u01C9\u01D7\u01F6\u01FA\u01FE\u0200\u0208\u0215\u0225\u0227\u022D\u0234";
 	public static readonly _serializedATN: string = Utils.join(
 		[
 			OData4LiteParser._serializedATNSegment0,
@@ -5160,9 +5159,7 @@ export class ExpressionContext extends ParserRuleContext {
 	}
 }
 export class FunctionExpressionContext extends ExpressionContext {
-	public propertyPath(): PropertyPathContext {
-		return this.getRuleContext(0, PropertyPathContext);
-	}
+	public IDENTIFIER(): TerminalNode { return this.getToken(OData4LiteParser.IDENTIFIER, 0); }
 	public LPAREN(): TerminalNode { return this.getToken(OData4LiteParser.LPAREN, 0); }
 	public RPAREN(): TerminalNode { return this.getToken(OData4LiteParser.RPAREN, 0); }
 	public expressionList(): ExpressionListContext | undefined {

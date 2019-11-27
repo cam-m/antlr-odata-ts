@@ -276,7 +276,7 @@ expandQueryOption
 //  - rename to align with abnf (if possible?)
 //
 expression
-    : propertyPath LPAREN expressionList? RPAREN                               # functionExpression
+    : IDENTIFIER LPAREN expressionList? RPAREN                                 # functionExpression
     | LPAREN expression RPAREN                                                 # parenthesisExpression
     | expression OP_IN LPAREN
         ( primitiveLiteral (COMMA primitiveLiteral)*
