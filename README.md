@@ -14,9 +14,16 @@ it will not build.
 
 ## Releases
 ### Version 0.0.3
-- Adds partial support for aggregation via the $apply option. Supports the following operators: 
-  - groupby 
-  - aggregate
+#### New features
+- Added partial support for $apply. Supported operations include: groupby & aggregate
+- Added support for 'in' expressions. E.g. PropertyName in (1,2,3)
+
+Breaking Changes:
+- replaced expression rule for IDENTIFIER with propertyPath (which effectively includes IDENTIFIER).
+- renamed rule navigationProperty to property (non-normative). property replaced several rules including the abnf rule called navigationProperty.
+- renamed collectionNavigation to collectionNavigationExpr in line with abnf grammar
+  
+#### Breaking changes  
   
 ### Version 0.0.2
 - Added support for Unbound Function Import with primitiveLiterals and alias's as parameters
