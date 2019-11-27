@@ -1,9 +1,10 @@
 import {describe} from 'mocha'
 import {
+    AggregateAsContext,
     BinaryExpressionContext,
     ExpressionContext,
     FilterContext,
-    FunctionImportCallContext,
+    FunctionImportCallContext, IdExpressionContext,
     LogicalExpressionContext,
     OData4LiteLexer,
     OData4LiteParser,
@@ -171,7 +172,7 @@ describe('OData Parser and Lexer Tests', function() {
                 assert.equal(tree.resourcePath().functionImportCall().IDENTIFIER().text, 'MyDummyFunction');
                 assert.equal(tree.resourcePath().functionImportCall().functionParameters().LPAREN().text, '(');
                 assert.equal(tree.resourcePath().functionImportCall().functionParameters().RPAREN().text, ')');
-            })
+            });
 
             it('Should correctly parse an unbound function with 1 literal argument', function () {
                 const tree: OdataRelativeURIContext = getODataLiteParser(`MyDummyFunction(EnvironmentIdList='1,2,3')`).odataRelativeURI();
@@ -180,7 +181,7 @@ describe('OData Parser and Lexer Tests', function() {
                 assert.equal(tree.resourcePath().functionImportCall().functionParameters().functionParameter()[0].functionParameterName().text, 'EnvironmentIdList');
                 assert.equal(tree.resourcePath().functionImportCall().functionParameters().functionParameter()[0].primitiveLiteral().text, '\'1,2,3\'');
                 assert.equal(tree.resourcePath().functionImportCall().functionParameters().RPAREN().text, ')');
-            })
+            });
 
             it('Should correctly parse an unbound function with 1 alias argument', function () {
                 const tree: OdataRelativeURIContext = getODataLiteParser(`MyDummyFunction(EnvironmentIdList=@EnvironmentIdList)`).odataRelativeURI();
@@ -189,7 +190,7 @@ describe('OData Parser and Lexer Tests', function() {
                 assert.equal(tree.resourcePath().functionImportCall().functionParameters().functionParameter()[0].functionParameterName().text, 'EnvironmentIdList');
                 assert.equal(tree.resourcePath().functionImportCall().functionParameters().functionParameter()[0].parameterAlias().text, '@EnvironmentIdList');
                 assert.equal(tree.resourcePath().functionImportCall().functionParameters().RPAREN().text, ')');
-            })
+            });
 
             it('Should correctly parse an unbound function with 2 alias argument', function () {
                 const tree: OdataRelativeURIContext = getODataLiteParser(`MyDummyFunction(EnvironmentIdList=@EnvironmentIdList,AnotherOne=@AnotherOne)`).odataRelativeURI();
@@ -200,6 +201,35 @@ describe('OData Parser and Lexer Tests', function() {
                 assert.equal(tree.resourcePath().functionImportCall().functionParameters().functionParameter()[1].functionParameterName().text, 'AnotherOne');
                 assert.equal(tree.resourcePath().functionImportCall().functionParameters().functionParameter()[1].parameterAlias().text, '@AnotherOne');
                 assert.equal(tree.resourcePath().functionImportCall().functionParameters().RPAREN().text, ')');
+            });
+
+        })
+
+        describe('$apply transformations', function () {
+            it('should correctly parse an $apply groupby tranformation', function () {
+                const tree: OdataRelativeURIContext = getODataLiteParser('SomeResource?$apply=groupby((SimpleProperty,NavigationPropertyRoot/Property),aggregate(NavigationPropertyRoot/Property with countdistinct as PropertyCount))&$filter=NavigationPropertyRoot/Property eq 1 and SimpleProperty in (1,2) and AssignedTo eq @AssignedTo').odataRelativeURI();
+                assert.equal(tree.resourcePath().IDENTIFIER().text, 'SomeResource');
+                assert.notEqual(tree.queryOptions().queryOption()[0].systemQueryOption().apply(), null);
+                const apply = tree.queryOptions().queryOption()[0].systemQueryOption().apply();
+                assert.notEqual(apply, null);
+                const groupByTransformation = apply.applyExpression().applyTrafo()[0].groupbyTrafo();
+                assert.notEqual(groupByTransformation, null);
+                assert.equal(groupByTransformation.groupByList().groupbyElement().length, 2 );
+                assert.notEqual(groupByTransformation.applyExpression(), null);
+                const aggregateTransformation = groupByTransformation.applyExpression().applyTrafo()[0].aggregateTrafo().aggregationParam()[0];
+                assert.notEqual(aggregateTransformation, null);
+                const aggregateExpression = aggregateTransformation.aggregationExpr().expression();
+
+                assert.equal(aggregateExpression.constructor, IdExpressionContext);
+                assert.equal(aggregateExpression.text, 'NavigationPropertyRoot/Property');
+                const aggregateAs = aggregateTransformation.aggregationExpr().aggregateAs();
+                assert.equal(aggregateAs.text, ' as PropertyCount');
+                const aggregateWith = aggregateTransformation.aggregationExpr().aggregateWith();
+                assert.equal(aggregateWith.text, ' with countdistinct');
+
+                const filter = tree.queryOptions().queryOption()[1].systemQueryOption().filter();
+                assert.equal(filter.FILTER(), '$filter');
+                // Not testing the filter here..
             })
         })
     })

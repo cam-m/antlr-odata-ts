@@ -11,4 +11,18 @@ https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/4.01%20spec
 
 ...has been copied to this project, however it will need refactoring to be of practical use. In its current state
 it will not build.
+
+## Releases
+### Version 0.0.3
+- Adds partial support for aggregation via the $apply option. Supports the following operators: 
+  - groupby 
+  - aggregate
+  
+### Version 0.0.2
+- Added support for Unbound Function Import with primitiveLiterals and alias's as parameters
+- Removed support (temporary) for collectionNavigation in a resource path due to ambiguity.
+
+### Version 0.0.1
+First release.
+Supports $filter, $expand, $select 
   

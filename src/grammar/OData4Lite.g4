@@ -1,5 +1,5 @@
 grammar OData4Lite;
-// This lexer/parser is roughtly based on the ODatav4.0.abnf grammar, noting that the ODatav4 is currently a shambles.
+// This lexer/parser is roughly based on the ODatav4.0.abnf grammar, noting that the ODatav4 is currently a work in progress.
 // rules are being named consistently with the ODatav4.0.abnf (where possible) so support for extended syntax can be
 // added later.
 
@@ -9,8 +9,9 @@ odataRelativeURI
 
 resourcePath
     : IDENTIFIER
-    // This is ambiguous and results in some functionImportCalls not being matched. Odata is not context free. We
-    // will need to have some endpoint metadata and predicates to match this correctly.
+    // collectionNavigation is ambiguous and would result in functionImportCalls not being matched. Odata is not context free.
+    // Consumption of Endpoint metadata by the parser and use of semantic predicates will be needed for this level of parser
+    // intelligence
 //    | IDENTIFIER collectionNavigation
     | IDENTIFIER singleNavigation
     | functionImportCall
@@ -34,21 +35,14 @@ functionParameters    : LPAREN ( functionParameter ( COMMA functionParameter )* 
 functionParameter     : functionParameterName EQ ( parameterAlias | primitiveLiteral ) ;
 functionParameterName : IDENTIFIER ;
 
-collectionNavigation
-    : (FWD_SLASH qualifiedName)? collectionNavPath;
-
-collectionNavPath
-    : keyPredicate singleNavigation?
-    | collectionPath
-    // Unsupported...
-    // | ref
-    ;
+collectionNavigationExpr
+    : (FWD_SLASH qualifiedName)?  ( keyPredicate singleNavigation? | collectionPath ) ;
 
 singleNavigation
     :
     (FWD_SLASH qualifiedName)?
         ( FWD_SLASH propertyPath
-        // Unsupported...
+// Unsupported...
 //        | boundOperation
 //        | REF
 //        | VALUE
@@ -65,49 +59,46 @@ singleNavigation
 //        )
 //    ;
 
-
 propertyPath
-    : navigationProperty collectionNavigation
-    | navigationProperty singleNavigation
-    // Unsupported
-//    | navigationProperty complexPath   // recursive!
-    | navigationProperty collectionPath
-    | navigationProperty singlePath
-    | navigationProperty
-    // Unsupported
-//    | streamProperty           boundOperation?
+    : property collectionNavigationExpr
+    | property singleNavigation
+    | property singlePath
+    | property
+// Unsupported
+// | navigationProperty complexPath   // recursive!
+// | property collectionPath // also matched by 'property collectionNavigationExpr' above
+// | streamProperty           boundOperation?
     ;
 
 collectionPath
     : count
-    // Unsupported
-    // | boundOperation
+// Unsupported
+// | boundOperation
     ;
 
 singlePath
     : VALUE
 // Unsupported
-    // | boundOperation
+// | boundOperation
     ;
 
-navigationProperty: IDENTIFIER ;
-// navigationProperty rule replaces all of:
-    //entityColNavigationProperty: ;
-    //entityNavigationProperty: ;
-    //complexColProperty: ;
-    //complexProperty: ;
-    //primitiveColProperty: ;
-    //primitiveProperty: ;
-// from the abnf grammar
+// property rule replaces the following rules from the abnf grammar:
+//  - navigationProperty
+//  - entityColNavigationProperty: ; // transitive
+//  - entityNavigationProperty: ;  // transitive
+//  - complexColProperty: ;
+//  - complexProperty: ;
+//  - primitiveColProperty: ;
+//  - primitiveProperty: ;
+property: IDENTIFIER ;
 
+// qualifiedName rule replaces the following rules from abnf grammar:
+//  - qualifiedEntityTypeName
+//  - qualifiedComplexTypeName
+//  - qualifiedTypeDefinitionName
+//  - qualifiedEnumTypeName
 qualifiedName
     : namespace IDENTIFIER;
-// qualifiedName rule replaces all of:
-    //qualifiedEntityTypeName
-    //qualifiedComplexTypeName
-    //qualifiedTypeDefinitionName
-    //qualifiedEnumTypeName
-// from the abnf grammar
 
 keyPredicate
     : simpleKey
@@ -125,6 +116,7 @@ queryOptions: queryOption (AMPERSAND queryOption)* ;
 
 queryOption  : systemQueryOption
              | aliasAndValue
+             //    Unsupported
              // | parameterNameAndValue
              // | customQueryOption
              ;
@@ -135,11 +127,12 @@ systemQueryOption
     | top
     | expand
     | select
+    | apply
+//    Unsupported
 //    | aggregate
 //    | orderby
 //    | inlinecount
 //    | skiptoken
-//    Unsupported
 //    | format
     ;
 
@@ -161,6 +154,70 @@ parameterValue : primitiveLiteral;
 
 // search: ; // TODO
 filter: FILTER EQ expression ;
+apply:  APPLY EQ applyExpression;
+applyExpression: applyTrafo (FWD_SLASH applyTrafo)*;
+applyTrafo
+    : groupbyTrafo
+    | aggregateTrafo
+    ;
+
+// groupbyTrafo   = 'groupby' OPEN BWS groupbyList *( BWS COMMA BWS applyExpr)  BWS CLOSE
+groupbyTrafo
+    : 'groupby' LPAREN groupByList (COMMA applyExpression)? RPAREN
+    ;
+
+groupByList : LPAREN groupbyElement (COMMA groupbyElement)* RPAREN ;
+groupbyElement
+    : groupingProperty
+    // | rollupSpec // Not supported
+    ;
+
+groupingProperty
+    : pathPrefix? ( property (FWD_SLASH qualifiedName)* | property ) ;
+
+pathPrefix
+    : qualifiedName FWD_SLASH
+    | ( property ( FWD_SLASH qualifiedName )? FWD_SLASH )+
+    | qualifiedName FWD_SLASH ( property ( FWD_SLASH qualifiedName )? FWD_SLASH )*
+    ;
+
+aggregateTrafo
+    : AGGREGATE_TRANS LPAREN (aggregationParam (COMMA aggregationParam)*)? RPAREN
+    ;
+
+aggregationParam
+    : expandPath LPAREN aggregationExpr RPAREN
+    | aggregationExpr
+    | aggregatedProperty aggregateWith?
+    ;
+
+// TODO: Add support for *( aggregateFrom ) per abnf rule:
+//aggregateExpr   = ( '$count'                     aggregateAs
+//                  / commonExpr [ aggregateWith ] aggregateAs *( aggregateFrom )
+//                  )
+aggregationExpr
+    :
+    ( COUNT aggregateAs
+    | expression aggregateWith? aggregateAs
+    )
+    ;
+
+aggregateAs : OP_AS IDENTIFIER ;
+aggregateWith : OP_WITH aggregateMethod;
+// aggregateFrom : OP_FROM IDENTIFIER ;
+
+aggregateMethod
+    : SUM_AGGREGATION
+    | MIN_AGGREGATION
+    | MAX_AGGREGATION
+    | AVERAGE_AGGREGATION
+    | COUNTDISTINCT_AGGREGATION
+    | qualifiedName
+    ;
+
+aggregatedProperty
+    : pathPrefix property ;
+
 count: COUNT EQ LIT_BOOLEAN ;
 // orderby: ; // TODO
 // skip: ; // TODO
@@ -171,6 +228,36 @@ select: SELECT EQ (IDENTIFIER | IDENTIFIER (COMMA IDENTIFIER)+);
 
 expandItemList: expandItem (COMMA expandItem)?;
 expandItem: IDENTIFIER ( LPAREN expandQueryOptions RPAREN )? ;
+
+// TODO: expandPath should also be used in expandItem
+expandPath :  ( qualifiedName FWD_SLASH )?
+              ( property FWD_SLASH (qualifiedName FWD_SLASH)? )*
+              property (FWD_SLASH qualifiedName)?
+;
+// TODO: Currently expandItem can only start with a simple property name, but it will eventually need to support the full
+//  grammar below...
+//
+// expandItem        = STAR [ ref / OPEN levels CLOSE ]
+//                   / expandPath
+//                     [ ref   [ OPEN expandRefOption   *( SEMI expandRefOption   ) CLOSE ]
+//                     / count [ OPEN expandCountOption *( SEMI expandCountOption ) CLOSE ]
+//                     /         OPEN expandOption      *( SEMI expandOption      ) CLOSE
+//                     ]
+// expandPath        = [ ( qualifiedEntityTypeName / qualifiedComplexTypeName ) "/" ]
+//                     *( ( complexProperty / complexColProperty ) "/" [ qualifiedComplexTypeName "/" ] )
+//                     navigationProperty
+//                     [ "/" qualifiedEntityTypeName ]
+// expandCountOption = filter
+//                   / search
+// expandRefOption   = expandCountOption
+//                   / orderby
+//                   / skip
+//                   / top
+//                   / inlinecount
+// expandOption      = expandRefOption
+//                   / select
+//                   / expand
+//                   / levels
 
 expandQueryOptions: expandQueryOption (SEMICOLON expandQueryOption)* ;
 expandQueryOption
@@ -183,15 +270,19 @@ expandQueryOption
     | expand
     | select
     ;
-//entityName: IDENTIFIER;
-// entityName replaces both of:
-    //entitySetName  : IDENTIFIER;
-    //singletonEntity: IDENTIFIER;
-// from the abnf grammar
 
+// TODO: Expressions need alot of work:
+//  - define boolean expressions
+//  - rename to align with abnf (if possible?)
+//
 expression
-    : IDENTIFIER LPAREN expressionList? RPAREN                                 # functionExpression
+    : propertyPath LPAREN expressionList? RPAREN                               # functionExpression
     | LPAREN expression RPAREN                                                 # parenthesisExpression
+    | expression OP_IN LPAREN
+        ( primitiveLiteral (COMMA primitiveLiteral)*
+        | expression
+        )
+        RPAREN                                                                 # inExpression
     | ( OP_NOT | OP_HAS | MINUS ) expression                                   # unaryExpression
     | MINUS expression                                                         # negativeExpression
     | <assoc=right> expression OP_MOD expression                               # modulusExpression
@@ -202,7 +293,8 @@ expression
     | expression ( OP_EQ | OP_NE | OP_GT | OP_GE | OP_LT | OP_LE ) expression  # binaryExpression
     | expression ( OP_AND | OP_OR ) expression                                 # logicalExpression
     | primitiveLiteral                                                         # literalExpression
-    | IDENTIFIER                                                               # idExpression
+    | propertyPath                                                             # idExpression
+    | parameterAlias                                                           # aliasExpression
     ;
 
 expressionList
@@ -300,9 +392,9 @@ namespace
     : IDENTIFIER (DOT IDENTIFIER)* DOT
     ;
 
-
 // QueryOptions
 SELECT              : DOLLAR S E L E C T;
+APPLY               : DOLLAR A P P L Y;
 EXPAND              : DOLLAR E X P A N D;
 FILTER              : DOLLAR F I L T E R;
 TOP                 : DOLLAR T O P;
@@ -311,6 +403,26 @@ COUNT               : DOLLAR C O U N T ;
 ORDERBY             : DOLLAR O R D E R B Y;
 REF                 : DOLLAR R E F;
 VALUE               : DOLLAR V A L U E;
+
+// set transformations
+AGGREGATE_TRANS      :'aggregate';
+TOPCOUNT_TRANS       :'topcount';
+TOPSUM_TRANS         :'topsum';
+TOPPERCENT_TRANS     :'toppercent';
+BOTTOMCOUNT_TRANS    :'bottomcount';
+BOTTOMSUM_TRANS      :'bottomsum';
+BOTTOMPERCENT_TRANS  :'bottompercent';
+IDENTITY_TRANS       :'identity';
+CONCAT_TRANS         :'concat';
+GROUPBY_TRANS        :'groupby';
+FILTER_TRANS         :'filter';
+EXPAND_TRANS         :'expand';
+
+SUM_AGGREGATION            : S U M ;
+MIN_AGGREGATION            : M I N ;
+MAX_AGGREGATION            : M A X ;
+AVERAGE_AGGREGATION        : A V E R A G E;
+COUNTDISTINCT_AGGREGATION  : C O U N T D I S T I N C T;
 
 // Filter Operators
 // Comparison
@@ -321,6 +433,11 @@ OP_GE               : RWS G E RWS ;
 OP_LT               : RWS L T RWS ;
 OP_LE               : RWS L E RWS ;
 OP_HAS              : RWS H A S RWS ;
+
+OP_AS               : RWS A S RWS ;
+OP_WITH             : RWS W I T H RWS ;
+OP_FROM             : RWS F R O M RWS ;
+OP_IN               : RWS I N RWS ;
 
 // Logical
 OP_AND              : RWS A N D RWS;
@@ -333,6 +450,8 @@ OP_SUB              : RWS S U B RWS;
 OP_DIV              : RWS D I V RWS;
 OP_MUL              : RWS M U L RWS;
 OP_MOD              : RWS M O D RWS;
+
+
 
 //// Functions
 //FN_CONTAINS            : C O N T A I N S;

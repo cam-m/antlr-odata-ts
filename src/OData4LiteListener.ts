@@ -5,6 +5,7 @@ import { ParseTreeListener } from "antlr4ts/tree/ParseTreeListener";
 
 import { FunctionExpressionContext } from "./OData4LiteParser";
 import { ParenthesisExpressionContext } from "./OData4LiteParser";
+import { InExpressionContext } from "./OData4LiteParser";
 import { UnaryExpressionContext } from "./OData4LiteParser";
 import { NegativeExpressionContext } from "./OData4LiteParser";
 import { ModulusExpressionContext } from "./OData4LiteParser";
@@ -16,19 +17,19 @@ import { BinaryExpressionContext } from "./OData4LiteParser";
 import { LogicalExpressionContext } from "./OData4LiteParser";
 import { LiteralExpressionContext } from "./OData4LiteParser";
 import { IdExpressionContext } from "./OData4LiteParser";
+import { AliasExpressionContext } from "./OData4LiteParser";
 import { OdataRelativeURIContext } from "./OData4LiteParser";
 import { ResourcePathContext } from "./OData4LiteParser";
 import { FunctionImportCallContext } from "./OData4LiteParser";
 import { FunctionParametersContext } from "./OData4LiteParser";
 import { FunctionParameterContext } from "./OData4LiteParser";
 import { FunctionParameterNameContext } from "./OData4LiteParser";
-import { CollectionNavigationContext } from "./OData4LiteParser";
-import { CollectionNavPathContext } from "./OData4LiteParser";
+import { CollectionNavigationExprContext } from "./OData4LiteParser";
 import { SingleNavigationContext } from "./OData4LiteParser";
 import { PropertyPathContext } from "./OData4LiteParser";
 import { CollectionPathContext } from "./OData4LiteParser";
 import { SinglePathContext } from "./OData4LiteParser";
-import { NavigationPropertyContext } from "./OData4LiteParser";
+import { PropertyContext } from "./OData4LiteParser";
 import { QualifiedNameContext } from "./OData4LiteParser";
 import { KeyPredicateContext } from "./OData4LiteParser";
 import { SimpleKeyContext } from "./OData4LiteParser";
@@ -40,12 +41,28 @@ import { AliasAndValueContext } from "./OData4LiteParser";
 import { ParameterAliasContext } from "./OData4LiteParser";
 import { ParameterValueContext } from "./OData4LiteParser";
 import { FilterContext } from "./OData4LiteParser";
+import { ApplyContext } from "./OData4LiteParser";
+import { ApplyExpressionContext } from "./OData4LiteParser";
+import { ApplyTrafoContext } from "./OData4LiteParser";
+import { GroupbyTrafoContext } from "./OData4LiteParser";
+import { GroupByListContext } from "./OData4LiteParser";
+import { GroupbyElementContext } from "./OData4LiteParser";
+import { GroupingPropertyContext } from "./OData4LiteParser";
+import { PathPrefixContext } from "./OData4LiteParser";
+import { AggregateTrafoContext } from "./OData4LiteParser";
+import { AggregationParamContext } from "./OData4LiteParser";
+import { AggregationExprContext } from "./OData4LiteParser";
+import { AggregateAsContext } from "./OData4LiteParser";
+import { AggregateWithContext } from "./OData4LiteParser";
+import { AggregateMethodContext } from "./OData4LiteParser";
+import { AggregatedPropertyContext } from "./OData4LiteParser";
 import { CountContext } from "./OData4LiteParser";
 import { TopContext } from "./OData4LiteParser";
 import { ExpandContext } from "./OData4LiteParser";
 import { SelectContext } from "./OData4LiteParser";
 import { ExpandItemListContext } from "./OData4LiteParser";
 import { ExpandItemContext } from "./OData4LiteParser";
+import { ExpandPathContext } from "./OData4LiteParser";
 import { ExpandQueryOptionsContext } from "./OData4LiteParser";
 import { ExpandQueryOptionContext } from "./OData4LiteParser";
 import { ExpressionContext } from "./OData4LiteParser";
@@ -88,6 +105,19 @@ export interface OData4LiteListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitParenthesisExpression?: (ctx: ParenthesisExpressionContext) => void;
+
+	/**
+	 * Enter a parse tree produced by the `inExpression`
+	 * labeled alternative in `OData4LiteParser.expression`.
+	 * @param ctx the parse tree
+	 */
+	enterInExpression?: (ctx: InExpressionContext) => void;
+	/**
+	 * Exit a parse tree produced by the `inExpression`
+	 * labeled alternative in `OData4LiteParser.expression`.
+	 * @param ctx the parse tree
+	 */
+	exitInExpression?: (ctx: InExpressionContext) => void;
 
 	/**
 	 * Enter a parse tree produced by the `unaryExpression`
@@ -233,6 +263,19 @@ export interface OData4LiteListener extends ParseTreeListener {
 	exitIdExpression?: (ctx: IdExpressionContext) => void;
 
 	/**
+	 * Enter a parse tree produced by the `aliasExpression`
+	 * labeled alternative in `OData4LiteParser.expression`.
+	 * @param ctx the parse tree
+	 */
+	enterAliasExpression?: (ctx: AliasExpressionContext) => void;
+	/**
+	 * Exit a parse tree produced by the `aliasExpression`
+	 * labeled alternative in `OData4LiteParser.expression`.
+	 * @param ctx the parse tree
+	 */
+	exitAliasExpression?: (ctx: AliasExpressionContext) => void;
+
+	/**
 	 * Enter a parse tree produced by `OData4LiteParser.odataRelativeURI`.
 	 * @param ctx the parse tree
 	 */
@@ -299,26 +342,15 @@ export interface OData4LiteListener extends ParseTreeListener {
 	exitFunctionParameterName?: (ctx: FunctionParameterNameContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `OData4LiteParser.collectionNavigation`.
+	 * Enter a parse tree produced by `OData4LiteParser.collectionNavigationExpr`.
 	 * @param ctx the parse tree
 	 */
-	enterCollectionNavigation?: (ctx: CollectionNavigationContext) => void;
+	enterCollectionNavigationExpr?: (ctx: CollectionNavigationExprContext) => void;
 	/**
-	 * Exit a parse tree produced by `OData4LiteParser.collectionNavigation`.
+	 * Exit a parse tree produced by `OData4LiteParser.collectionNavigationExpr`.
 	 * @param ctx the parse tree
 	 */
-	exitCollectionNavigation?: (ctx: CollectionNavigationContext) => void;
-
-	/**
-	 * Enter a parse tree produced by `OData4LiteParser.collectionNavPath`.
-	 * @param ctx the parse tree
-	 */
-	enterCollectionNavPath?: (ctx: CollectionNavPathContext) => void;
-	/**
-	 * Exit a parse tree produced by `OData4LiteParser.collectionNavPath`.
-	 * @param ctx the parse tree
-	 */
-	exitCollectionNavPath?: (ctx: CollectionNavPathContext) => void;
+	exitCollectionNavigationExpr?: (ctx: CollectionNavigationExprContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `OData4LiteParser.singleNavigation`.
@@ -365,15 +397,15 @@ export interface OData4LiteListener extends ParseTreeListener {
 	exitSinglePath?: (ctx: SinglePathContext) => void;
 
 	/**
-	 * Enter a parse tree produced by `OData4LiteParser.navigationProperty`.
+	 * Enter a parse tree produced by `OData4LiteParser.property`.
 	 * @param ctx the parse tree
 	 */
-	enterNavigationProperty?: (ctx: NavigationPropertyContext) => void;
+	enterProperty?: (ctx: PropertyContext) => void;
 	/**
-	 * Exit a parse tree produced by `OData4LiteParser.navigationProperty`.
+	 * Exit a parse tree produced by `OData4LiteParser.property`.
 	 * @param ctx the parse tree
 	 */
-	exitNavigationProperty?: (ctx: NavigationPropertyContext) => void;
+	exitProperty?: (ctx: PropertyContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `OData4LiteParser.qualifiedName`.
@@ -497,6 +529,171 @@ export interface OData4LiteListener extends ParseTreeListener {
 	exitFilter?: (ctx: FilterContext) => void;
 
 	/**
+	 * Enter a parse tree produced by `OData4LiteParser.apply`.
+	 * @param ctx the parse tree
+	 */
+	enterApply?: (ctx: ApplyContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.apply`.
+	 * @param ctx the parse tree
+	 */
+	exitApply?: (ctx: ApplyContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `OData4LiteParser.applyExpression`.
+	 * @param ctx the parse tree
+	 */
+	enterApplyExpression?: (ctx: ApplyExpressionContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.applyExpression`.
+	 * @param ctx the parse tree
+	 */
+	exitApplyExpression?: (ctx: ApplyExpressionContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `OData4LiteParser.applyTrafo`.
+	 * @param ctx the parse tree
+	 */
+	enterApplyTrafo?: (ctx: ApplyTrafoContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.applyTrafo`.
+	 * @param ctx the parse tree
+	 */
+	exitApplyTrafo?: (ctx: ApplyTrafoContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `OData4LiteParser.groupbyTrafo`.
+	 * @param ctx the parse tree
+	 */
+	enterGroupbyTrafo?: (ctx: GroupbyTrafoContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.groupbyTrafo`.
+	 * @param ctx the parse tree
+	 */
+	exitGroupbyTrafo?: (ctx: GroupbyTrafoContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `OData4LiteParser.groupByList`.
+	 * @param ctx the parse tree
+	 */
+	enterGroupByList?: (ctx: GroupByListContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.groupByList`.
+	 * @param ctx the parse tree
+	 */
+	exitGroupByList?: (ctx: GroupByListContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `OData4LiteParser.groupbyElement`.
+	 * @param ctx the parse tree
+	 */
+	enterGroupbyElement?: (ctx: GroupbyElementContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.groupbyElement`.
+	 * @param ctx the parse tree
+	 */
+	exitGroupbyElement?: (ctx: GroupbyElementContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `OData4LiteParser.groupingProperty`.
+	 * @param ctx the parse tree
+	 */
+	enterGroupingProperty?: (ctx: GroupingPropertyContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.groupingProperty`.
+	 * @param ctx the parse tree
+	 */
+	exitGroupingProperty?: (ctx: GroupingPropertyContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `OData4LiteParser.pathPrefix`.
+	 * @param ctx the parse tree
+	 */
+	enterPathPrefix?: (ctx: PathPrefixContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.pathPrefix`.
+	 * @param ctx the parse tree
+	 */
+	exitPathPrefix?: (ctx: PathPrefixContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `OData4LiteParser.aggregateTrafo`.
+	 * @param ctx the parse tree
+	 */
+	enterAggregateTrafo?: (ctx: AggregateTrafoContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.aggregateTrafo`.
+	 * @param ctx the parse tree
+	 */
+	exitAggregateTrafo?: (ctx: AggregateTrafoContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `OData4LiteParser.aggregationParam`.
+	 * @param ctx the parse tree
+	 */
+	enterAggregationParam?: (ctx: AggregationParamContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.aggregationParam`.
+	 * @param ctx the parse tree
+	 */
+	exitAggregationParam?: (ctx: AggregationParamContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `OData4LiteParser.aggregationExpr`.
+	 * @param ctx the parse tree
+	 */
+	enterAggregationExpr?: (ctx: AggregationExprContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.aggregationExpr`.
+	 * @param ctx the parse tree
+	 */
+	exitAggregationExpr?: (ctx: AggregationExprContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `OData4LiteParser.aggregateAs`.
+	 * @param ctx the parse tree
+	 */
+	enterAggregateAs?: (ctx: AggregateAsContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.aggregateAs`.
+	 * @param ctx the parse tree
+	 */
+	exitAggregateAs?: (ctx: AggregateAsContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `OData4LiteParser.aggregateWith`.
+	 * @param ctx the parse tree
+	 */
+	enterAggregateWith?: (ctx: AggregateWithContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.aggregateWith`.
+	 * @param ctx the parse tree
+	 */
+	exitAggregateWith?: (ctx: AggregateWithContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `OData4LiteParser.aggregateMethod`.
+	 * @param ctx the parse tree
+	 */
+	enterAggregateMethod?: (ctx: AggregateMethodContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.aggregateMethod`.
+	 * @param ctx the parse tree
+	 */
+	exitAggregateMethod?: (ctx: AggregateMethodContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `OData4LiteParser.aggregatedProperty`.
+	 * @param ctx the parse tree
+	 */
+	enterAggregatedProperty?: (ctx: AggregatedPropertyContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.aggregatedProperty`.
+	 * @param ctx the parse tree
+	 */
+	exitAggregatedProperty?: (ctx: AggregatedPropertyContext) => void;
+
+	/**
 	 * Enter a parse tree produced by `OData4LiteParser.count`.
 	 * @param ctx the parse tree
 	 */
@@ -561,6 +758,17 @@ export interface OData4LiteListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitExpandItem?: (ctx: ExpandItemContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `OData4LiteParser.expandPath`.
+	 * @param ctx the parse tree
+	 */
+	enterExpandPath?: (ctx: ExpandPathContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.expandPath`.
+	 * @param ctx the parse tree
+	 */
+	exitExpandPath?: (ctx: ExpandPathContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `OData4LiteParser.expandQueryOptions`.
