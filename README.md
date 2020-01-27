@@ -13,7 +13,8 @@ The main useful classes exported by this library are `ODataLiteLexer` and `OData
 import { CharStreams, CodePointCharStream, CommonTokenStream } from 'antlr4ts';
 import { ParseTree, ParseTreeWalker } from 'antlr4ts/tree';
 
-const odataQuery = 'MyEntity?$select=Property1&$expand=NavProperty1($select=Property2;$expand=NavProperty2)$filter=Property1 eq 1';
+const odataQuery = 'MyEntity?$select=Property1&$expand=NavProperty1($select=Property2;$expand=NavProperty2)$filter=Property1 eq @MyAlias&@MyAlias=1';
+
 const codePointCharStream: CodePointCharStream = CharStreams.fromString(odataQuery);
 const lexer = new OData4LiteLexer(codePointCharStream);
 const tokens: CommonTokenStream = new CommonTokenStream(lexer);
@@ -27,6 +28,7 @@ const walker: ParseTreeWalker = new ParseTreeWalker();
 const aliasResolver: ODataAliasResolver = new ODataAliasResolver();
 
 aliasResolver.forEach(alias => console.log(`${alias} `)); 
+// output: MyAlias
 
 export class ODataAliasResolver implements OData4LiteListener {
     aliases: string[] = [];
