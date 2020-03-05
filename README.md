@@ -61,6 +61,9 @@ https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/4.01%20spec
 ## Releases
 ### Version 0.0.3
 #### New features
+ - Add support for $skip
+### Version 0.0.3
+#### New features
 - Added partial support for $apply. Supported operations include: groupby & aggregate
 - Added support for 'in' expressions. E.g. PropertyName in (1,2,3)
 
