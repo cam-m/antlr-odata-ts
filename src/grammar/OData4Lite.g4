@@ -125,6 +125,7 @@ systemQueryOption
     : filter
     | count
     | top
+    | skip
     | expand
     | select
     | apply
@@ -220,7 +221,7 @@ aggregatedProperty
 
 count: COUNT EQ LIT_BOOLEAN ;
 // orderby: ; // TODO
-// skip: ; // TODO
+skip: SKIP_COUNT EQ LIT_INTEGER;
 top: TOP EQ LIT_INTEGER ;
 expand: EXPAND EQ expandItemList;
 select: SELECT EQ (IDENTIFIER | IDENTIFIER (COMMA IDENTIFIER)+);

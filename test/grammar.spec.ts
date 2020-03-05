@@ -205,6 +205,25 @@ describe('OData Parser and Lexer Tests', function() {
 
         })
 
+        describe('Test skip system query', function () {
+            it('should parse $skip query options', function () {
+                const tree: OdataRelativeURIContext = getODataLiteParser('SomeResource?$count=true&$skip=50&$top=50').odataRelativeURI();
+                assert.equal(tree.resourcePath().IDENTIFIER().text, 'SomeResource');
+                const skip = tree.queryOptions().queryOption()[1].systemQueryOption().skip();
+                assert.equal(skip.LIT_INTEGER().text, '50');
+                assert.equal(skip.SKIP_COUNT(), '$skip');
+
+                const count = tree.queryOptions().queryOption()[0].systemQueryOption().count();
+                assert.equal(count.LIT_BOOLEAN().text, 'true');
+                assert.equal(count.COUNT(), '$count');
+
+                const top = tree.queryOptions().queryOption()[2].systemQueryOption().top();
+                assert.equal(top.LIT_INTEGER().text, '50');
+                assert.equal(top.TOP().text, '$top');
+
+            })
+        });
+
         describe('$apply transformations', function () {
             it('should correctly parse an $apply groupby tranformation', function () {
                 const tree: OdataRelativeURIContext = getODataLiteParser('SomeResource?$apply=groupby((SimpleProperty,NavigationPropertyRoot/Property),aggregate(NavigationPropertyRoot/Property with countdistinct as PropertyCount))&$filter=NavigationPropertyRoot/Property eq 1 and SimpleProperty in (1,2) and AssignedTo eq @AssignedTo').odataRelativeURI();

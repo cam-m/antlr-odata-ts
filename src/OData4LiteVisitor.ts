@@ -57,6 +57,7 @@ import { AggregateWithContext } from "./OData4LiteParser";
 import { AggregateMethodContext } from "./OData4LiteParser";
 import { AggregatedPropertyContext } from "./OData4LiteParser";
 import { CountContext } from "./OData4LiteParser";
+import { SkipContext } from "./OData4LiteParser";
 import { TopContext } from "./OData4LiteParser";
 import { ExpandContext } from "./OData4LiteParser";
 import { SelectContext } from "./OData4LiteParser";
@@ -475,6 +476,13 @@ export interface OData4LiteVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitCount?: (ctx: CountContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `OData4LiteParser.skip`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitSkip?: (ctx: SkipContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `OData4LiteParser.top`.
