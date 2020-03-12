@@ -126,14 +126,13 @@ systemQueryOption
     | count
     | top
     | skip
+    | orderby
     | expand
     | select
     | apply
 //    Unsupported
 //    | aggregate
-//    | orderby
 //    | inlinecount
-//    | skiptoken
 //    | format
     ;
 
@@ -220,7 +219,7 @@ aggregatedProperty
     : pathPrefix property ;
 
 count: COUNT EQ LIT_BOOLEAN ;
-// orderby: ; // TODO
+orderby: ORDERBY EQ (IDENTIFIER | IDENTIFIER (COMMA IDENTIFIER)+) DESC?;
 skip: SKIP_COUNT EQ LIT_INTEGER;
 top: TOP EQ LIT_INTEGER ;
 expand: EXPAND EQ expandItemList;
@@ -265,8 +264,8 @@ expandQueryOption
     :
     | filter
     | count
-//    | orderby
-//    | skip
+    | orderby
+    | skip
     | top
     | expand
     | select
@@ -419,6 +418,8 @@ GROUPBY_TRANS        :'groupby';
 FILTER_TRANS         :'filter';
 EXPAND_TRANS         :'expand';
 
+DESC                 :'desc';
+
 SUM_AGGREGATION            : S U M ;
 MIN_AGGREGATION            : M I N ;
 MAX_AGGREGATION            : M A X ;
@@ -521,7 +522,7 @@ LIT_INTEGER      : DIGIT+                          ; // This covers types INTEGE
 LIT_DOUBLE       : DIGIT+ (DOT DIGIT+)?            ;
 
 // Lexer
-IDENTIFIER          : [a-zA-Z_]+;
+IDENTIFIER          : ALPHA (ALPHA | DIGIT)*;
 
 UNEXPECTED: . ;
 

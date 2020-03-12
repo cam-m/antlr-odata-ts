@@ -59,10 +59,18 @@ https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/4.01%20spec
 ...has been copied to this project purely for my reference. In its current state it will not build with antlr4ts.
 
 ## Releases
+### Version 0.0.6
+#### New features
+- Add support for $orderby
+- Fixed IDENTIFIER definition to allow digits
+
 ### Version 0.0.5
 #### New features
- - Add support for $skip
- 
+- Add support for $skip
+
+### Version 0.0.4
+#### New features
+- Fixed FunctionExpression should start with an Identifier 
  
 ### Version 0.0.3
 #### New features

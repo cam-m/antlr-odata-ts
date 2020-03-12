@@ -26,7 +26,7 @@ describe('OData Parser and Lexer Tests', function() {
     describe('Functional Test', function() {
         it('Should support creating a lexer from a string, parsing the tokens from the lexer into a tree, and walking the tree.', function() {
             const codePointCharStream: CodePointCharStream = CharStreams.fromString(
-                `Incident?$select=Name,CreatedDate&$expand=Issue&$filter=Name eq 'John'`
+                `Incident?$select=Name,CreatedDate&$expand=Issue&$filter=Name eq 'John' and Field2 eq 0`
             );
             const lexer = new OData4LiteLexer(codePointCharStream);
             const tokens: CommonTokenStream  = new CommonTokenStream(lexer);
@@ -104,6 +104,22 @@ describe('OData Parser and Lexer Tests', function() {
                         assert.equal(t.type, OData4LiteLexer.LIT_STRING);
                         break;
                     case 17:
+                        assert.equal(t.text, ' and ');
+                        assert.equal(t.type, OData4LiteLexer.OP_AND);
+                        break;
+                    case 18:
+                        assert.equal(t.text, 'Field2');
+                        assert.equal(t.type, OData4LiteLexer.IDENTIFIER);
+                        break;
+                    case 19:
+                        assert.equal(t.text, ' eq ');
+                        assert.equal(t.type, OData4LiteLexer.OP_EQ);
+                        break;
+                    case 20:
+                        assert.equal(t.text, '0');
+                        assert.equal(t.type, OData4LiteLexer.LIT_INTEGER);
+                        break;
+                    case 21:
                         assert.equal(t.text, '<EOF>');
                         assert.equal(t.type, OData4LiteLexer.EOF);
                         break;
@@ -222,6 +238,25 @@ describe('OData Parser and Lexer Tests', function() {
                 assert.equal(top.TOP().text, '$top');
 
             })
+        });
+
+        describe('Test orderby system query', function () {
+            it('should parse a simple $orderby query option', function () {
+                const tree: OdataRelativeURIContext = getODataLiteParser('SomeResource?$orderby=Field').odataRelativeURI();
+                assert.equal(tree.resourcePath().IDENTIFIER().text, 'SomeResource');
+                const orderby = tree.queryOptions().queryOption()[0].systemQueryOption().orderby();
+                assert.equal(orderby.IDENTIFIER()[0].text, 'Field');
+            });
+
+            it('should parse a multi column $orderby query option', function () {
+                const url = 'SomeResource?$orderby=Field1,Field2,Field3';
+                const tree: OdataRelativeURIContext = getODataLiteParser(url).odataRelativeURI();
+                assert.equal(tree.resourcePath().IDENTIFIER().text, 'SomeResource');
+                const orderby = tree.queryOptions().queryOption()[0].systemQueryOption().orderby();
+                assert.equal(orderby.IDENTIFIER()[0].text, 'Field1');
+                assert.equal(orderby.IDENTIFIER()[1].text, 'Field2');
+                assert.equal(orderby.IDENTIFIER()[2].text, 'Field3');
+            });
         });
 
         describe('$apply transformations', function () {
