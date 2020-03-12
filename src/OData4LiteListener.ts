@@ -49,6 +49,7 @@ import { GroupByListContext } from "./OData4LiteParser";
 import { GroupbyElementContext } from "./OData4LiteParser";
 import { GroupingPropertyContext } from "./OData4LiteParser";
 import { PathPrefixContext } from "./OData4LiteParser";
+import { FilterTrafoContext } from "./OData4LiteParser";
 import { AggregateTrafoContext } from "./OData4LiteParser";
 import { AggregationParamContext } from "./OData4LiteParser";
 import { AggregationExprContext } from "./OData4LiteParser";
@@ -62,6 +63,7 @@ import { SkipContext } from "./OData4LiteParser";
 import { TopContext } from "./OData4LiteParser";
 import { ExpandContext } from "./OData4LiteParser";
 import { SelectContext } from "./OData4LiteParser";
+import { OrderbyItemContext } from "./OData4LiteParser";
 import { ExpandItemListContext } from "./OData4LiteParser";
 import { ExpandItemContext } from "./OData4LiteParser";
 import { ExpandPathContext } from "./OData4LiteParser";
@@ -619,6 +621,17 @@ export interface OData4LiteListener extends ParseTreeListener {
 	exitPathPrefix?: (ctx: PathPrefixContext) => void;
 
 	/**
+	 * Enter a parse tree produced by `OData4LiteParser.filterTrafo`.
+	 * @param ctx the parse tree
+	 */
+	enterFilterTrafo?: (ctx: FilterTrafoContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.filterTrafo`.
+	 * @param ctx the parse tree
+	 */
+	exitFilterTrafo?: (ctx: FilterTrafoContext) => void;
+
+	/**
 	 * Enter a parse tree produced by `OData4LiteParser.aggregateTrafo`.
 	 * @param ctx the parse tree
 	 */
@@ -760,6 +773,17 @@ export interface OData4LiteListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitSelect?: (ctx: SelectContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `OData4LiteParser.orderbyItem`.
+	 * @param ctx the parse tree
+	 */
+	enterOrderbyItem?: (ctx: OrderbyItemContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.orderbyItem`.
+	 * @param ctx the parse tree
+	 */
+	exitOrderbyItem?: (ctx: OrderbyItemContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `OData4LiteParser.expandItemList`.

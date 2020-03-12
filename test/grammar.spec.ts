@@ -245,7 +245,7 @@ describe('OData Parser and Lexer Tests', function() {
                 const tree: OdataRelativeURIContext = getODataLiteParser('SomeResource?$orderby=Field').odataRelativeURI();
                 assert.equal(tree.resourcePath().IDENTIFIER().text, 'SomeResource');
                 const orderby = tree.queryOptions().queryOption()[0].systemQueryOption().orderby();
-                assert.equal(orderby.IDENTIFIER()[0].text, 'Field');
+                assert.equal(orderby.orderbyItem()[0].IDENTIFIER().text, 'Field');
             });
 
             it('should parse a multi column $orderby query option', function () {
@@ -253,9 +253,21 @@ describe('OData Parser and Lexer Tests', function() {
                 const tree: OdataRelativeURIContext = getODataLiteParser(url).odataRelativeURI();
                 assert.equal(tree.resourcePath().IDENTIFIER().text, 'SomeResource');
                 const orderby = tree.queryOptions().queryOption()[0].systemQueryOption().orderby();
-                assert.equal(orderby.IDENTIFIER()[0].text, 'Field1');
-                assert.equal(orderby.IDENTIFIER()[1].text, 'Field2');
-                assert.equal(orderby.IDENTIFIER()[2].text, 'Field3');
+                assert.equal(orderby.orderbyItem()[0].IDENTIFIER().text, 'Field1');
+                assert.equal(orderby.orderbyItem()[1].IDENTIFIER().text, 'Field2');
+                assert.equal(orderby.orderbyItem()[2].IDENTIFIER().text, 'Field3');
+            });
+
+            it('should parse a multi column $orderby query option with asc or desc specified', function () {
+                const url = 'SomeResource?$orderby=Field1 desc,Field2,Field3 asc';
+                const tree: OdataRelativeURIContext = getODataLiteParser(url).odataRelativeURI();
+                assert.equal(tree.resourcePath().IDENTIFIER().text, 'SomeResource');
+                const orderby = tree.queryOptions().queryOption()[0].systemQueryOption().orderby();
+                assert.equal(orderby.orderbyItem()[0].IDENTIFIER().text, 'Field1');
+                assert.equal(orderby.orderbyItem()[0].DESC().text, ' desc');
+                assert.equal(orderby.orderbyItem()[1].IDENTIFIER().text, 'Field2');
+                assert.equal(orderby.orderbyItem()[2].IDENTIFIER().text, 'Field3');
+                assert.equal(orderby.orderbyItem()[2].ASC().text, ' asc');
             });
         });
 

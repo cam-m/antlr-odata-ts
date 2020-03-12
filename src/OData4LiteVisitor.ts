@@ -49,6 +49,7 @@ import { GroupByListContext } from "./OData4LiteParser";
 import { GroupbyElementContext } from "./OData4LiteParser";
 import { GroupingPropertyContext } from "./OData4LiteParser";
 import { PathPrefixContext } from "./OData4LiteParser";
+import { FilterTrafoContext } from "./OData4LiteParser";
 import { AggregateTrafoContext } from "./OData4LiteParser";
 import { AggregationParamContext } from "./OData4LiteParser";
 import { AggregationExprContext } from "./OData4LiteParser";
@@ -62,6 +63,7 @@ import { SkipContext } from "./OData4LiteParser";
 import { TopContext } from "./OData4LiteParser";
 import { ExpandContext } from "./OData4LiteParser";
 import { SelectContext } from "./OData4LiteParser";
+import { OrderbyItemContext } from "./OData4LiteParser";
 import { ExpandItemListContext } from "./OData4LiteParser";
 import { ExpandItemContext } from "./OData4LiteParser";
 import { ExpandPathContext } from "./OData4LiteParser";
@@ -423,6 +425,13 @@ export interface OData4LiteVisitor<Result> extends ParseTreeVisitor<Result> {
 	visitPathPrefix?: (ctx: PathPrefixContext) => Result;
 
 	/**
+	 * Visit a parse tree produced by `OData4LiteParser.filterTrafo`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitFilterTrafo?: (ctx: FilterTrafoContext) => Result;
+
+	/**
 	 * Visit a parse tree produced by `OData4LiteParser.aggregateTrafo`.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -512,6 +521,13 @@ export interface OData4LiteVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitSelect?: (ctx: SelectContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `OData4LiteParser.orderbyItem`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitOrderbyItem?: (ctx: OrderbyItemContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `OData4LiteParser.expandItemList`.

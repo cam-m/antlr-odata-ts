@@ -159,6 +159,7 @@ applyExpression: applyTrafo (FWD_SLASH applyTrafo)*;
 applyTrafo
     : groupbyTrafo
     | aggregateTrafo
+    | filterTrafo
     ;
 
 // groupbyTrafo   = 'groupby' OPEN BWS groupbyList *( BWS COMMA BWS applyExpr)  BWS CLOSE
@@ -179,6 +180,10 @@ pathPrefix
     : qualifiedName FWD_SLASH
     | ( property ( FWD_SLASH qualifiedName )? FWD_SLASH )+
     | qualifiedName FWD_SLASH ( property ( FWD_SLASH qualifiedName )? FWD_SLASH )*
+    ;
+
+filterTrafo
+    : FILTER_TRANS LPAREN expression RPAREN
     ;
 
 aggregateTrafo
@@ -219,15 +224,18 @@ aggregatedProperty
     : pathPrefix property ;
 
 count: COUNT EQ LIT_BOOLEAN ;
-orderby: ORDERBY EQ (IDENTIFIER | IDENTIFIER (COMMA IDENTIFIER)+) DESC?;
+orderby: ORDERBY EQ (orderbyItem | orderbyItem (COMMA orderbyItem )+);
 skip: SKIP_COUNT EQ LIT_INTEGER;
 top: TOP EQ LIT_INTEGER ;
 expand: EXPAND EQ expandItemList;
 select: SELECT EQ (IDENTIFIER | IDENTIFIER (COMMA IDENTIFIER)+);
-// format: ; // TODO
+// format: ; // Not supported
+
+orderbyItem: IDENTIFIER (DESC | ASC)?;
 
 expandItemList: expandItem (COMMA expandItem)?;
 expandItem: IDENTIFIER ( LPAREN expandQueryOptions RPAREN )? ;
+
 
 // TODO: expandPath should also be used in expandItem
 expandPath :  ( qualifiedName FWD_SLASH )?
@@ -418,7 +426,8 @@ GROUPBY_TRANS        :'groupby';
 FILTER_TRANS         :'filter';
 EXPAND_TRANS         :'expand';
 
-DESC                 :'desc';
+ASC                  : RWS 'asc';
+DESC                 : RWS 'desc';
 
 SUM_AGGREGATION            : S U M ;
 MIN_AGGREGATION            : M I N ;
