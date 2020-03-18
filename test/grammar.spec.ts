@@ -1,10 +1,10 @@
 import {describe} from 'mocha'
 import {
-    AggregateAsContext,
     BinaryExpressionContext,
     ExpressionContext,
     FilterContext,
-    FunctionImportCallContext, IdExpressionContext,
+    FunctionImportCallContext,
+    IdExpressionContext,
     LogicalExpressionContext,
     OData4LiteLexer,
     OData4LiteParser,
@@ -288,7 +288,7 @@ describe('OData Parser and Lexer Tests', function() {
 
                 assert.equal(aggregateExpression.constructor, IdExpressionContext);
                 assert.equal(aggregateExpression.text, 'NavigationPropertyRoot/Property');
-                const aggregateAs = aggregateTransformation.aggregationExpr().aggregateAs();
+                const aggregateAs = aggregateTransformation.aggregationExpr().dynamicPropertyAssignment();
                 assert.equal(aggregateAs.text, ' as PropertyCount');
                 const aggregateWith = aggregateTransformation.aggregationExpr().aggregateWith();
                 assert.equal(aggregateWith.text, ' with countdistinct');
@@ -296,6 +296,18 @@ describe('OData Parser and Lexer Tests', function() {
                 const filter = tree.queryOptions().queryOption()[1].systemQueryOption().filter();
                 assert.equal(filter.FILTER(), '$filter');
                 // Not testing the filter here..
+            });
+
+            it('should understand valid compute transformations', function () {
+                const tree: OdataRelativeURIContext = getODataLiteParser('SomeResource?$apply=compute(day(date(EffectiveDate)) as Day)/groupby((Day),aggregate($count as Count))').odataRelativeURI();
+                assert.equal(tree.resourcePath().IDENTIFIER().text, 'SomeResource');
+                assert.notEqual(tree.queryOptions().queryOption()[0].systemQueryOption().apply(), null);
+                const apply = tree.queryOptions().queryOption()[0].systemQueryOption().apply();
+                assert.notEqual(apply, null);
+                const computeTransformation = apply.applyExpression().applyTrafo()[0].computeTrafo();
+                assert.equal(computeTransformation.text, 'compute(day(date(EffectiveDate)) as Day)');
+                assert.equal(computeTransformation.computeExpression()[0].text, 'day(date(EffectiveDate)) as Day');
+                assert.equal(computeTransformation.computeExpression()[0].dynamicPropertyAssignment().text, ' as Day');
             })
         })
     })

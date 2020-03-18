@@ -136,6 +136,8 @@ systemQueryOption
 //    | format
     ;
 
+dynamicPropertyAssignment : OP_AS IDENTIFIER ;
+
 aliasAndValue
     : parameterAlias EQ parameterValue
     ;
@@ -157,14 +159,26 @@ filter: FILTER EQ expression ;
 apply:  APPLY EQ applyExpression;
 applyExpression: applyTrafo (FWD_SLASH applyTrafo)*;
 applyTrafo
-    : groupbyTrafo
+    : computeTrafo
+    | groupbyTrafo
     | aggregateTrafo
     | filterTrafo
     ;
 
+computeTrafo
+    : COMPUTE_TRANS LPAREN (
+        computeExpression |
+        computeExpression (COMMA computeExpression)+
+    ) RPAREN
+    ;
+
+computeExpression
+    : expression dynamicPropertyAssignment
+    ;
+
 // groupbyTrafo   = 'groupby' OPEN BWS groupbyList *( BWS COMMA BWS applyExpr)  BWS CLOSE
 groupbyTrafo
-    : 'groupby' LPAREN groupByList (COMMA applyExpression)? RPAREN
+    : GROUPBY_TRANS LPAREN groupByList (COMMA applyExpression)? RPAREN
     ;
 
 groupByList : LPAREN groupbyElement (COMMA groupbyElement)* RPAREN ;
@@ -202,12 +216,11 @@ aggregationParam
 //                  )
 aggregationExpr
     :
-    ( COUNT aggregateAs
-    | expression aggregateWith? aggregateAs
+    ( COUNT dynamicPropertyAssignment
+    | expression aggregateWith? dynamicPropertyAssignment
     )
     ;
 
-aggregateAs : OP_AS IDENTIFIER ;
 aggregateWith : OP_WITH aggregateMethod;
 // aggregateFrom : OP_FROM IDENTIFIER ;
 
@@ -423,6 +436,7 @@ BOTTOMPERCENT_TRANS  :'bottompercent';
 IDENTITY_TRANS       :'identity';
 CONCAT_TRANS         :'concat';
 GROUPBY_TRANS        :'groupby';
+COMPUTE_TRANS        :'compute';
 FILTER_TRANS         :'filter';
 EXPAND_TRANS         :'expand';
 

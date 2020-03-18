@@ -37,6 +37,7 @@ import { CompoundKeyContext } from "./OData4LiteParser";
 import { QueryOptionsContext } from "./OData4LiteParser";
 import { QueryOptionContext } from "./OData4LiteParser";
 import { SystemQueryOptionContext } from "./OData4LiteParser";
+import { DynamicPropertyAssignmentContext } from "./OData4LiteParser";
 import { AliasAndValueContext } from "./OData4LiteParser";
 import { ParameterAliasContext } from "./OData4LiteParser";
 import { ParameterValueContext } from "./OData4LiteParser";
@@ -44,6 +45,8 @@ import { FilterContext } from "./OData4LiteParser";
 import { ApplyContext } from "./OData4LiteParser";
 import { ApplyExpressionContext } from "./OData4LiteParser";
 import { ApplyTrafoContext } from "./OData4LiteParser";
+import { ComputeTrafoContext } from "./OData4LiteParser";
+import { ComputeExpressionContext } from "./OData4LiteParser";
 import { GroupbyTrafoContext } from "./OData4LiteParser";
 import { GroupByListContext } from "./OData4LiteParser";
 import { GroupbyElementContext } from "./OData4LiteParser";
@@ -53,7 +56,6 @@ import { FilterTrafoContext } from "./OData4LiteParser";
 import { AggregateTrafoContext } from "./OData4LiteParser";
 import { AggregationParamContext } from "./OData4LiteParser";
 import { AggregationExprContext } from "./OData4LiteParser";
-import { AggregateAsContext } from "./OData4LiteParser";
 import { AggregateWithContext } from "./OData4LiteParser";
 import { AggregateMethodContext } from "./OData4LiteParser";
 import { AggregatedPropertyContext } from "./OData4LiteParser";
@@ -489,6 +491,17 @@ export interface OData4LiteListener extends ParseTreeListener {
 	exitSystemQueryOption?: (ctx: SystemQueryOptionContext) => void;
 
 	/**
+	 * Enter a parse tree produced by `OData4LiteParser.dynamicPropertyAssignment`.
+	 * @param ctx the parse tree
+	 */
+	enterDynamicPropertyAssignment?: (ctx: DynamicPropertyAssignmentContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.dynamicPropertyAssignment`.
+	 * @param ctx the parse tree
+	 */
+	exitDynamicPropertyAssignment?: (ctx: DynamicPropertyAssignmentContext) => void;
+
+	/**
 	 * Enter a parse tree produced by `OData4LiteParser.aliasAndValue`.
 	 * @param ctx the parse tree
 	 */
@@ -564,6 +577,28 @@ export interface OData4LiteListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitApplyTrafo?: (ctx: ApplyTrafoContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `OData4LiteParser.computeTrafo`.
+	 * @param ctx the parse tree
+	 */
+	enterComputeTrafo?: (ctx: ComputeTrafoContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.computeTrafo`.
+	 * @param ctx the parse tree
+	 */
+	exitComputeTrafo?: (ctx: ComputeTrafoContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `OData4LiteParser.computeExpression`.
+	 * @param ctx the parse tree
+	 */
+	enterComputeExpression?: (ctx: ComputeExpressionContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.computeExpression`.
+	 * @param ctx the parse tree
+	 */
+	exitComputeExpression?: (ctx: ComputeExpressionContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `OData4LiteParser.groupbyTrafo`.
@@ -663,17 +698,6 @@ export interface OData4LiteListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitAggregationExpr?: (ctx: AggregationExprContext) => void;
-
-	/**
-	 * Enter a parse tree produced by `OData4LiteParser.aggregateAs`.
-	 * @param ctx the parse tree
-	 */
-	enterAggregateAs?: (ctx: AggregateAsContext) => void;
-	/**
-	 * Exit a parse tree produced by `OData4LiteParser.aggregateAs`.
-	 * @param ctx the parse tree
-	 */
-	exitAggregateAs?: (ctx: AggregateAsContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `OData4LiteParser.aggregateWith`.

@@ -37,6 +37,7 @@ import { CompoundKeyContext } from "./OData4LiteParser";
 import { QueryOptionsContext } from "./OData4LiteParser";
 import { QueryOptionContext } from "./OData4LiteParser";
 import { SystemQueryOptionContext } from "./OData4LiteParser";
+import { DynamicPropertyAssignmentContext } from "./OData4LiteParser";
 import { AliasAndValueContext } from "./OData4LiteParser";
 import { ParameterAliasContext } from "./OData4LiteParser";
 import { ParameterValueContext } from "./OData4LiteParser";
@@ -44,6 +45,8 @@ import { FilterContext } from "./OData4LiteParser";
 import { ApplyContext } from "./OData4LiteParser";
 import { ApplyExpressionContext } from "./OData4LiteParser";
 import { ApplyTrafoContext } from "./OData4LiteParser";
+import { ComputeTrafoContext } from "./OData4LiteParser";
+import { ComputeExpressionContext } from "./OData4LiteParser";
 import { GroupbyTrafoContext } from "./OData4LiteParser";
 import { GroupByListContext } from "./OData4LiteParser";
 import { GroupbyElementContext } from "./OData4LiteParser";
@@ -53,7 +56,6 @@ import { FilterTrafoContext } from "./OData4LiteParser";
 import { AggregateTrafoContext } from "./OData4LiteParser";
 import { AggregationParamContext } from "./OData4LiteParser";
 import { AggregationExprContext } from "./OData4LiteParser";
-import { AggregateAsContext } from "./OData4LiteParser";
 import { AggregateWithContext } from "./OData4LiteParser";
 import { AggregateMethodContext } from "./OData4LiteParser";
 import { AggregatedPropertyContext } from "./OData4LiteParser";
@@ -341,6 +343,13 @@ export interface OData4LiteVisitor<Result> extends ParseTreeVisitor<Result> {
 	visitSystemQueryOption?: (ctx: SystemQueryOptionContext) => Result;
 
 	/**
+	 * Visit a parse tree produced by `OData4LiteParser.dynamicPropertyAssignment`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitDynamicPropertyAssignment?: (ctx: DynamicPropertyAssignmentContext) => Result;
+
+	/**
 	 * Visit a parse tree produced by `OData4LiteParser.aliasAndValue`.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -388,6 +397,20 @@ export interface OData4LiteVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitApplyTrafo?: (ctx: ApplyTrafoContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `OData4LiteParser.computeTrafo`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitComputeTrafo?: (ctx: ComputeTrafoContext) => Result;
+
+	/**
+	 * Visit a parse tree produced by `OData4LiteParser.computeExpression`.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	visitComputeExpression?: (ctx: ComputeExpressionContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `OData4LiteParser.groupbyTrafo`.
@@ -451,13 +474,6 @@ export interface OData4LiteVisitor<Result> extends ParseTreeVisitor<Result> {
 	 * @return the visitor result
 	 */
 	visitAggregationExpr?: (ctx: AggregationExprContext) => Result;
-
-	/**
-	 * Visit a parse tree produced by `OData4LiteParser.aggregateAs`.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	visitAggregateAs?: (ctx: AggregateAsContext) => Result;
 
 	/**
 	 * Visit a parse tree produced by `OData4LiteParser.aggregateWith`.
