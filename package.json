@@ -1,6 +1,6 @@
 {
   "name": "antlr-odata",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Antlr 4 OData Typescript parser",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
