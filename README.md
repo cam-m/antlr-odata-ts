@@ -59,6 +59,12 @@ https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/4.01%20spec
 ...has been copied to this project purely for my reference. In its current state it will not build with antlr4ts.
 
 ## Releases
+### Version 0.0.8
+#### New features
+- $apply=compute()
+#### Breaking change
+- renamed aggregateAs rule to dynamicPropertyAssignment
+
 ### Version 0.0.7
 #### New features
 - Add support for $orderby desc and asc
