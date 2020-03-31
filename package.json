@@ -6,10 +6,15 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "clean": "rimraf dist",
-    "build": "npm run-script antlr & tsc -t ES6 -p tsconfig.json",
-    "full-grammar-build": "npm run-script antlr & tsc -t ES6 -p tsconfig.json",
-    "test": "npm run-script antlr & ts-mocha --paths -t ES6 -p test/tsconfig.json test/**/*.spec.ts",
-    "test-watch": "npm run-script antlr & ts-mocha --paths -t ES6 -p test/tsconfig.json test/**/*.spec.ts -w --watch-extensions ts",
+    "build": "npm run-script clean & npm run-script antlr & npm run-script compile-src-dist",
+    "test": "npm run-script build & npm run-script mocha-tests",
+    "dev": "concurrently --kill-others \"npm run compile-src-watch\" \"npm run mocha-tests-watch\"",
+    "full-grammar-build": "npm run-script antlr & npm run-script compile-src",
+    "compile-src-dist": "tsc -t ES6 -p tsconfig.dist.json",
+    "compile-src": "tsc -t ES6 -p tsconfig.json",
+    "compile-src-watch": "tsc -w -t ES6 -p tsconfig.json",
+    "mocha-tests": "ts-mocha --paths -t ES6 -p test/tsconfig.json test/**/*.spec.ts",
+    "mocha-tests-watch": "ts-mocha --paths -t ES6 -p test/tsconfig.json test/**/*.spec.ts -w --watch-extensions ts",
     "antlr": "antlr4ts -visitor -listener src/grammar/OData4Lite.g4 -o src",
     "antlr-full": "antlr4ts src/grammar/ODataLexer.g4 -o src && antlr4ts -visitor -listener src/grammar/ODataParser.g4 -o src"
   },
@@ -27,19 +32,26 @@
   "author": "Cameron Maunder",
   "license": "MIT",
   "dependencies": {
-    "antlr4ts": "^0.5.0-alpha.3"
+    "antlr4ts": "^0.5.0-alpha.3",
+    "trie-prefix-tree": "^1.5.1",
+    "xpath": "^0.0.27"
   },
   "devDependencies": {
-    "antlr4ts-cli": "^0.5.0-alpha.3",
+    "@types/xmldom": "^0.1.29",
     "@types/assert": "^1.4.3",
     "@types/mocha": "^5.2.7",
+    "@types/trie-prefix-tree": "^1.5.0",
+    "antlr4ts-cli": "^0.5.0-alpha.3",
     "assert": "^2.0.0",
+    "concurrently": "^5.1.0",
     "mocha": "^6.2.0",
+    "npm-watch": "^0.6.0",
+    "rimraf": "^3.0.0",
     "ts-mocha": "^6.0.0",
     "ts-node": "^8.3.0",
     "tsconfig-paths": "^3.9.0",
-    "rimraf": "^3.0.0",
     "tslint": "^5.19.0",
-    "typescript": "^3.6.2"
+    "typescript": "^3.8.3",
+    "xmldom": "^0.3.0"
   }
 }

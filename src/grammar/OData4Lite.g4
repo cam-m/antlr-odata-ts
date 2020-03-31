@@ -2,19 +2,49 @@ grammar OData4Lite;
 // This lexer/parser is roughly based on the ODatav4.0.abnf grammar, noting that the ODatav4 is currently a work in progress.
 // rules are being named consistently with the ODatav4.0.abnf (where possible) so support for extended syntax can be
 // added later.
+@header {
+import { Schema } from './lang/edm/Schema';
+}
 
+@lexer::members {
+public odataSchema: Schema;
+
+public static buildOData4LiteParser(input: CharStream, schema: Schema): OData4LiteLexer {
+    const instance: OData4LiteLexer = new OData4LiteLexer(input);
+    instance.odataSchema = schema;
+    return instance;
+}
+}
+
+@parser::members {
+private odataSchema: Schema;
+
+public static buildOData4LiteParser(input: TokenStream, schema: Schema): OData4LiteParser {
+    const instance: OData4LiteParser = new OData4LiteParser(input);
+    instance.odataSchema = schema;
+    return instance;
+}
+
+private isUnboundFunctionName(name: string): boolean {
+    if (!name) {
+        return false;
+    }
+    return this.odataSchema ? !!this.odataSchema.functionByName(name) : false;
+}
+}
 // Parser
 odataRelativeURI
     : resourcePath (QUESTION queryOptions )? EOF;
 
 resourcePath
-    : IDENTIFIER
+    : id = IDENTIFIER (
+          functionImportCall[$id.text]
+        | singleNavigation
+        | collectionNavigationExpr
+    )?
     // collectionNavigation is ambiguous and would result in functionImportCalls not being matched. Odata is not context free.
     // Consumption of Endpoint metadata by the parser and use of semantic predicates will be needed for this level of parser
     // intelligence
-//    | IDENTIFIER collectionNavigation
-    | IDENTIFIER singleNavigation
-    | functionImportCall
     // Unsupported...
 //    | actionImportCall
 //    | entityColFunctionImportCall    [ collectionNavigation ]
@@ -27,16 +57,23 @@ resourcePath
 //    | '$all'
     ;
 
-functionImportCall
-    : IDENTIFIER functionParameters
+functionImportCall [string identifier]
+    : {this.isUnboundFunctionName($identifier)}? functionParameters
     ;
 
 functionParameters    : LPAREN ( functionParameter ( COMMA functionParameter )* )? RPAREN ;
 functionParameter     : functionParameterName EQ ( parameterAlias | primitiveLiteral ) ;
 functionParameterName : IDENTIFIER ;
 
+// collectionNavigation from abnf
 collectionNavigationExpr
-    : (FWD_SLASH qualifiedName)?  ( keyPredicate singleNavigation? | collectionPath ) ;
+    : (FWD_SLASH qualifiedName)?
+    (
+          keyPredicate singleNavigation?
+        | collectionPath
+        // Unsupported...
+        // | ref
+    ) ;
 
 singleNavigation
     :
@@ -105,7 +142,7 @@ keyPredicate
     | compoundKey
     ;
 
-simpleKey: LPAREN LIT_INTEGER RPAREN;
+simpleKey: LPAREN primitiveLiteral RPAREN;
 compoundKey
     : LPAREN (
         IDENTIFIER EQ primitiveLiteral ( COMMA IDENTIFIER EQ primitiveLiteral )*
@@ -545,7 +582,7 @@ LIT_INTEGER      : DIGIT+                          ; // This covers types INTEGE
 LIT_DOUBLE       : DIGIT+ (DOT DIGIT+)?            ;
 
 // Lexer
-IDENTIFIER          : ALPHA (ALPHA | DIGIT)*;
+IDENTIFIER : (UNDERSCORE | ALPHA) (ALPHA | UNDERSCORE | DIGIT)*;
 
 UNEXPECTED: . ;
 
@@ -558,9 +595,10 @@ fragment MINUTE             : [0-5] DIGIT ;
 fragment SECOND             : [0-5] DIGIT ('.' DIGIT+)?;
 fragment TIMEZONE           : 'Z' | ('+' | '-') (('0' DIGIT | '1' [0-3]) ':' MINUTE | '14:00');
 fragment ENDOFDAY           : '24:00:00' ('.' '0'+)?;
-fragment F_DU_YEAR_MONTH    : ;
-fragment F_DU_DAY_TIME      : ;
-fragment ALPHA              : [a-zA-Z_];
+//fragment F_DU_YEAR_MONTH    : ;
+//fragment F_DU_DAY_TIME      : ;
+fragment UNDERSCORE         : '_' ;
+fragment ALPHA              : [a-zA-Z];
 fragment DIGIT              : [0-9];
 fragment RWS                : [ \t] | '%20' | '%09';
 fragment A                  : [aA];

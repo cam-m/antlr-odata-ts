@@ -1,6 +1,9 @@
 // Generated from src/grammar/OData4Lite.g4 by ANTLR 4.7.3-SNAPSHOT
 
 
+import { Schema } from './lang/edm/Schema';
+
+
 import { ParseTreeListener } from "antlr4ts/tree/ParseTreeListener";
 
 import { FunctionExpressionContext } from "./OData4LiteParser";
