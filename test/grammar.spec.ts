@@ -319,6 +319,22 @@ describe('OData Lite', function () {
                 const inExpressionContext: InExpressionContext = <InExpressionContext>anyExpression.expression();
                 assert.equal(inExpressionContext.parameterAlias().text, '@ApplicationEntityIdList');
             })
+
+            it('should support lambda expressions (any and all)', function () {
+                const tree: OdataRelativeURIContext = getODataLiteParser('Applications?$filter=ApplicationId eq 1').odataRelativeURI();
+                assert.equal(tree.resourcePath().IDENTIFIER().text, 'Applications');
+                const filter = tree.queryOptions().queryOption()[0].systemQueryOption().filter();
+                assert.ok(filter, '$filter not found');
+                const filterExpression = filter.expression();
+                assert.equal(filterExpression.text, 'ApplicationId eq 1');
+                const binaryExpressionContext: BinaryExpressionContext = <BinaryExpressionContext>filterExpression;
+                assert.equal(binaryExpressionContext.expression()[0].text, 'ApplicationId');
+                assert.equal(binaryExpressionContext.OP_EQ().text, ' eq ');
+                const firstMemberExprContext: FirstMemberExpressionContext = <FirstMemberExpressionContext>binaryExpressionContext.expression()[0];
+                assert.equal(firstMemberExprContext.firstMemberExpr().IDENTIFIER().text, 'ApplicationId');
+                //assert.equal(firstMemberExprContext.firstMemberExpr().memberExpr().propertyPathExpr().property().IDENTIFIER().text, 'ApplicationId');
+                assert.equal(binaryExpressionContext.expression()[1].text, '1');
+            })
         })
 
         describe('$apply transformations', function () {

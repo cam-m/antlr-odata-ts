@@ -390,8 +390,8 @@ expressionList
 //    ;
 
 firstMemberExpr
-    : memberExpr
-    | (IDENTIFIER | IT) (FWD_SLASH memberExpr)?
+    : (IDENTIFIER | IT) (FWD_SLASH memberExpr)?
+    | memberExpr
     ;
 
 memberExpr

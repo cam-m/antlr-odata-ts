@@ -3054,14 +3054,6 @@ export class OData4LiteParser extends Parser {
 				this.enterOuterAlt(_localctx, 1);
 				{
 				this.state = 599;
-				this.memberExpr();
-				}
-				break;
-
-			case 2:
-				this.enterOuterAlt(_localctx, 2);
-				{
-				this.state = 600;
 				_la = this._input.LA(1);
 				if (!(_la === OData4LiteParser.IT || _la === OData4LiteParser.IDENTIFIER)) {
 				this._errHandler.recoverInline(this);
@@ -3073,18 +3065,26 @@ export class OData4LiteParser extends Parser {
 					this._errHandler.reportMatch(this);
 					this.consume();
 				}
-				this.state = 603;
+				this.state = 602;
 				this._errHandler.sync(this);
 				switch ( this.interpreter.adaptivePredict(this._input, 56, this._ctx) ) {
 				case 1:
 					{
-					this.state = 601;
+					this.state = 600;
 					this.match(OData4LiteParser.FWD_SLASH);
-					this.state = 602;
+					this.state = 601;
 					this.memberExpr();
 					}
 					break;
 				}
+				}
+				break;
+
+			case 2:
+				this.enterOuterAlt(_localctx, 2);
+				{
+				this.state = 604;
+				this.memberExpr();
 				}
 				break;
 			}
@@ -3871,7 +3871,7 @@ export class OData4LiteParser extends Parser {
 		"\x037\x037\x037\x037\x037\x037\x037\x037\x037\x037\x037\x037\x037\x03" +
 		"7\x037\x037\x037\x037\x037\x037\x037\x037\x037\x037\x057\u024B\n7\x07" +
 		"7\u024D\n7\f7\x0E7\u0250\v7\x038\x038\x038\x078\u0255\n8\f8\x0E8\u0258" +
-		"\v8\x039\x039\x039\x039\x059\u025E\n9\x059\u0260\n9\x03:\x03:\x03:\x05" +
+		"\v8\x039\x039\x039\x059\u025D\n9\x039\x059\u0260\n9\x03:\x03:\x03:\x05" +
 		":\u0265\n:\x03:\x03:\x03;\x03;\x05;\u026B\n;\x03<\x03<\x05<\u026F\n<\x03" +
 		"<\x03<\x05<\u0273\n<\x03<\x05<\u0276\n<\x03=\x03=\x03=\x03>\x03>\x03>" +
 		"\x03>\x03>\x05>\u0280\n>\x03?\x03?\x03?\x03?\x03?\x03?\x05?\u0288\n?\x03" +
@@ -4108,10 +4108,10 @@ export class OData4LiteParser extends Parser {
 		"\x02\u0250\u024E\x03\x02\x02\x02\u0251\u0256\x05l7\x02\u0252\u0253\x07" +
 		"C\x02\x02\u0253\u0255\x05l7\x02\u0254\u0252\x03\x02\x02\x02\u0255\u0258" +
 		"\x03\x02\x02\x02\u0256\u0254\x03\x02\x02\x02\u0256\u0257\x03\x02\x02\x02" +
-		"\u0257o\x03\x02\x02\x02\u0258\u0256\x03\x02\x02\x02\u0259\u0260\x05r:" +
-		"\x02\u025A\u025D\t\x06\x02\x02\u025B\u025C\x07>\x02\x02\u025C\u025E\x05" +
-		"r:\x02\u025D\u025B\x03\x02\x02\x02\u025D\u025E\x03\x02\x02\x02\u025E\u0260" +
-		"\x03\x02\x02\x02\u025F\u0259\x03\x02\x02\x02\u025F\u025A\x03\x02\x02\x02" +
+		"\u0257o\x03\x02\x02\x02\u0258\u0256\x03\x02\x02\x02\u0259\u025C\t\x06" +
+		"\x02\x02\u025A\u025B\x07>\x02\x02\u025B\u025D\x05r:\x02\u025C\u025A\x03" +
+		"\x02\x02\x02\u025C\u025D\x03\x02\x02\x02\u025D\u0260\x03\x02\x02\x02\u025E" +
+		"\u0260\x05r:\x02\u025F\u0259\x03\x02\x02\x02\u025F\u025E\x03\x02\x02\x02" +
 		"\u0260q\x03\x02\x02\x02\u0261\u0262\x05\x1A\x0E\x02\u0262\u0263\x07>\x02" +
 		"\x02\u0263\u0265\x03\x02\x02\x02\u0264\u0261\x03\x02\x02\x02\u0264\u0265" +
 		"\x03\x02\x02\x02\u0265\u0266\x03\x02\x02\x02\u0266\u0267\x05t;\x02\u0267" +
@@ -4164,7 +4164,7 @@ export class OData4LiteParser extends Parser {
 		"\xD8\xE5\xF5\xFF\u0104\u010E\u0129\u0130\u013A\u013C\u0148\u0152\u015A" +
 		"\u0161\u0165\u016D\u0173\u017A\u0180\u0183\u0191\u0194\u01A0\u01A2\u01A8" +
 		"\u01AC\u01B7\u01C8\u01CA\u01E0\u01E2\u01E6\u01EB\u01F2\u01F7\u01FE\u0202" +
-		"\u0208\u020F\u021A\u022C\u022F\u024A\u024C\u024E\u0256\u025D\u025F\u0264" +
+		"\u0208\u020F\u021A\u022C\u022F\u024A\u024C\u024E\u0256\u025C\u025F\u0264" +
 		"\u026A\u026E\u0272\u0275\u027F\u0287\u029A\u02A9\u02B9\u02BB\u02C1\u02C8";
 	public static readonly _serializedATN: string = Utils.join(
 		[
@@ -6901,12 +6901,12 @@ export class ExpressionListContext extends ParserRuleContext {
 
 
 export class FirstMemberExprContext extends ParserRuleContext {
-	public memberExpr(): MemberExprContext | undefined {
-		return this.tryGetRuleContext(0, MemberExprContext);
-	}
 	public IDENTIFIER(): TerminalNode | undefined { return this.tryGetToken(OData4LiteParser.IDENTIFIER, 0); }
 	public IT(): TerminalNode | undefined { return this.tryGetToken(OData4LiteParser.IT, 0); }
 	public FWD_SLASH(): TerminalNode | undefined { return this.tryGetToken(OData4LiteParser.FWD_SLASH, 0); }
+	public memberExpr(): MemberExprContext | undefined {
+		return this.tryGetRuleContext(0, MemberExprContext);
+	}
 	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
 		super(parent, invokingState);
 	}
