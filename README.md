@@ -59,6 +59,17 @@ https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/4.01%20spec
 ...has been copied to this project purely for my reference. In its current state it will not build with antlr4ts.
 
 ## Releases
+### Version 0.0.10
+#### Features:
+- support for any/all lambda functions
+- initial support for $it, $ref
+
+#### Breaking Changes
+  - null token incorrectly defined as 'ull'
+  - fixed definition of Alias's and collection literals
+  - renamed collectionNavigationExpr to collectionNavigation to enable inclusion of actual collectionNavigationExpr rule (see abnf grammar for differences).
+  - replaced simple ID Expression rule with more complete FirstMemberExpr rule which includes collection navigation.
+
 ### Version 0.0.9
 #### New features
  - support collection navigations: Entity(x)
