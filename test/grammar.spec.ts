@@ -4,10 +4,10 @@ import * as assert from "assert";
 import {CharStreams, CodePointCharStream, CommonTokenStream} from "antlr4ts";
 import {ParseTree} from "antlr4ts/tree";
 import {
+    AnyExprContext,
     BinaryExpressionContext,
     ExpressionContext,
-    FilterContext,
-    IdExpressionContext,
+    FilterContext, FirstMemberExpressionContext, InExpressionContext,
     LogicalExpressionContext,
     OData4LiteLexer,
     OData4LiteParser,
@@ -203,7 +203,7 @@ describe('OData Lite', function () {
             const tree: OdataRelativeURIContext = parser.odataRelativeURI();
             const functionImport = tree.resourcePath().functionImportCall();
             assert.ok(!functionImport, 'Should not find a function import call');
-            const collectionNavigation = tree.resourcePath().collectionNavigationExpr();
+            const collectionNavigation = tree.resourcePath().collectionNavigation();
             assert.ok(collectionNavigation, 'Should find a collection navigation');
             assert.equal(collectionNavigation.keyPredicate().simpleKey().primitiveLiteral().LIT_INTEGER().text, '1');
         });
@@ -298,6 +298,29 @@ describe('OData Lite', function () {
             });
         });
 
+        describe('$filter', function () {
+            it('should support lambda expressions (any and all)', function () {
+                const tree: OdataRelativeURIContext = getODataLiteParser('Applications?$filter=ApplicationEntity/any(a:a/ApplicationEntityId in @ApplicationEntityIdList)').odataRelativeURI();
+                assert.equal(tree.resourcePath().IDENTIFIER().text, 'Applications');
+                const filter = tree.queryOptions().queryOption()[0].systemQueryOption().filter();
+                assert.ok(filter, '$filter not found');
+                const filterExpression = filter.expression();
+                assert.equal(filterExpression.text, 'ApplicationEntity/any(a:a/ApplicationEntityId in @ApplicationEntityIdList)');
+                assert.equal(filterExpression.constructor,  FirstMemberExpressionContext);
+                const fmec: FirstMemberExpressionContext = <FirstMemberExpressionContext>filterExpression;
+                assert.equal(fmec.firstMemberExpr().memberExpr().propertyPathExpr().property().text, 'ApplicationEntity');
+                assert.equal(fmec.firstMemberExpr().memberExpr().propertyPathExpr().collectionPathExpr().text, '/any(a:a/ApplicationEntityId in @ApplicationEntityIdList)');
+                assert.equal(fmec.firstMemberExpr().memberExpr().propertyPathExpr().collectionPathExpr().FWD_SLASH().text, '/');
+                assert.equal(fmec.firstMemberExpr().memberExpr().propertyPathExpr().collectionPathExpr().anyExpr().text, 'any(a:a/ApplicationEntityId in @ApplicationEntityIdList)');
+                assert.equal(fmec.firstMemberExpr().memberExpr().propertyPathExpr().collectionPathExpr().anyExpr().expression().text, 'a/ApplicationEntityId in @ApplicationEntityIdList');
+                const anyExpression: AnyExprContext = fmec.firstMemberExpr().memberExpr().propertyPathExpr().collectionPathExpr().anyExpr();
+                assert.equal(anyExpression.lambdaParameterIdentifier().IDENTIFIER().text, 'a');
+                assert.equal(anyExpression.expression().text, 'a/ApplicationEntityId in @ApplicationEntityIdList');
+                const inExpressionContext: InExpressionContext = <InExpressionContext>anyExpression.expression();
+                assert.equal(inExpressionContext.parameterAlias().text, '@ApplicationEntityIdList');
+            })
+        })
+
         describe('$apply transformations', function () {
             it('should correctly parse an $apply groupby tranformation', function () {
                 const tree: OdataRelativeURIContext = getODataLiteParser('SomeResource?$apply=groupby((SimpleProperty,NavigationPropertyRoot/Property),aggregate(NavigationPropertyRoot/Property with countdistinct as PropertyCount))&$filter=NavigationPropertyRoot/Property eq 1 and SimpleProperty in (1,2) and AssignedTo eq @AssignedTo').odataRelativeURI();
@@ -313,7 +336,7 @@ describe('OData Lite', function () {
                 assert.notEqual(aggregateTransformation, null);
                 const aggregateExpression = aggregateTransformation.aggregationExpr().expression();
 
-                assert.equal(aggregateExpression.constructor, IdExpressionContext);
+                assert.equal(aggregateExpression.constructor, FirstMemberExpressionContext);
                 assert.equal(aggregateExpression.text, 'NavigationPropertyRoot/Property');
                 const aggregateAs = aggregateTransformation.aggregationExpr().dynamicPropertyAssignment();
                 assert.equal(aggregateAs.text, ' as PropertyCount');

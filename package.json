@@ -8,7 +8,7 @@
     "clean": "rimraf dist",
     "build": "npm run-script clean & npm run-script antlr & npm run-script compile-src-dist",
     "test": "npm run-script build & npm run-script mocha-tests",
-    "dev": "concurrently --kill-others \"npm run compile-src-watch\" \"npm run mocha-tests-watch\"",
+    "dev": "npm run-script antlr & concurrently --kill-others \"npm run compile-src-watch\" \"npm run mocha-tests-watch\"",
     "full-grammar-build": "npm run-script antlr & npm run-script compile-src",
     "compile-src-dist": "tsc -t ES6 -p tsconfig.dist.json",
     "compile-src": "tsc -t ES6 -p tsconfig.json",

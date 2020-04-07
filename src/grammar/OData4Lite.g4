@@ -37,11 +37,12 @@ odataRelativeURI
     : resourcePath (QUESTION queryOptions )? EOF;
 
 resourcePath
-    : id = IDENTIFIER (
+    : id = IDENTIFIER
+        (
           functionImportCall[$id.text]
         | singleNavigation
-        | collectionNavigationExpr
-    )?
+        | collectionNavigation
+        )?
     // collectionNavigation is ambiguous and would result in functionImportCalls not being matched. Odata is not context free.
     // Consumption of Endpoint metadata by the parser and use of semantic predicates will be needed for this level of parser
     // intelligence
@@ -66,13 +67,12 @@ functionParameter     : functionParameterName EQ ( parameterAlias | primitiveLit
 functionParameterName : IDENTIFIER ;
 
 // collectionNavigation from abnf
-collectionNavigationExpr
+collectionNavigation
     : (FWD_SLASH qualifiedName)?
     (
           keyPredicate singleNavigation?
         | collectionPath
-        // Unsupported...
-        // | ref
+        | FWD_SLASH REF
     ) ;
 
 singleNavigation
@@ -81,8 +81,8 @@ singleNavigation
         ( FWD_SLASH propertyPath
 // Unsupported...
 //        | boundOperation
-//        | REF
-//        | VALUE
+        | FWD_SLASH REF
+        | FWD_SLASH VALUE
         )
     ;
 
@@ -97,15 +97,15 @@ singleNavigation
 //    ;
 
 propertyPath
-    : property collectionNavigationExpr
+    : property collectionNavigation
     | property singleNavigation
     | property singlePath
     | property
+    ;
 // Unsupported
 // | navigationProperty complexPath   // recursive!
 // | property collectionPath // also matched by 'property collectionNavigationExpr' above
 // | streamProperty           boundOperation?
-    ;
 
 collectionPath
     : count
@@ -334,13 +334,9 @@ expandQueryOption
 //  - rename to align with abnf (if possible?)
 //
 expression
-    : IDENTIFIER LPAREN expressionList? RPAREN                                 # functionExpression
+    : primitiveLiteralCollection                                               # literalCollectionExpression
+    | expression OP_IN ( primitiveLiteralCollection | parameterAlias )         # inExpression
     | LPAREN expression RPAREN                                                 # parenthesisExpression
-    | expression OP_IN LPAREN
-        ( primitiveLiteral (COMMA primitiveLiteral)*
-        | expression
-        )
-        RPAREN                                                                 # inExpression
     | ( OP_NOT | OP_HAS | MINUS ) expression                                   # unaryExpression
     | MINUS expression                                                         # negativeExpression
     | <assoc=right> expression OP_MOD expression                               # modulusExpression
@@ -351,8 +347,9 @@ expression
     | expression ( OP_EQ | OP_NE | OP_GT | OP_GE | OP_LT | OP_LE ) expression  # binaryExpression
     | expression ( OP_AND | OP_OR ) expression                                 # logicalExpression
     | primitiveLiteral                                                         # literalExpression
-    | propertyPath                                                             # idExpression
+    | firstMemberExpr                                                          # firstMemberExpression
     | parameterAlias                                                           # aliasExpression
+    | IDENTIFIER LPAREN expressionList? RPAREN                                 # functionExpression
     ;
 
 expressionList
@@ -391,6 +388,49 @@ expressionList
 //    | FN_GEOLENGTH
 //    | FN_GEOINTERSECTS
 //    ;
+
+firstMemberExpr
+    : memberExpr
+    | (IDENTIFIER | IT) (FWD_SLASH memberExpr)?
+    ;
+
+memberExpr
+    : (qualifiedName FWD_SLASH)? propertyPathExpr
+    // | boundFunctionExpr // unsupported
+    ;
+
+propertyPathExpr
+    : property collectionPathExpr?
+    ;
+//    : property collectionNavigationExpr?
+//    | property singleNavigationExpr?
+//    | property collectionPathExpr?
+//    ;
+
+collectionNavigationExpr
+    : (FWD_SLASH qualifiedName)?
+        (
+              keyPredicate singleNavigationExpr?
+            | collectionPathExpr
+        )
+    ;
+
+singleNavigationExpr : FWD_SLASH memberExpr ;
+
+collectionPathExpr
+    : count
+    // | FWD_SLASH boundFunctionExpr // Unsupported
+    | FWD_SLASH anyExpr
+    | FWD_SLASH allExpr
+    ;
+
+anyExpr : ANY LPAREN (lambdaParameterIdentifier COLON expression)? RPAREN;
+allExpr : ALL LPAREN lambdaParameterIdentifier COLON expression RPAREN;
+
+lambdaParameterIdentifier: IDENTIFIER;
+
+primitiveLiteralCollection
+    : LPAREN primitiveLiteral (COMMA primitiveLiteral)* RPAREN ;
 
 primitiveLiteral
     : NULL                 // plain values up to int64Value
@@ -461,6 +501,7 @@ COUNT               : DOLLAR C O U N T ;
 ORDERBY             : DOLLAR O R D E R B Y;
 REF                 : DOLLAR R E F;
 VALUE               : DOLLAR V A L U E;
+IT                  : DOLLAR I T;
 
 // set transformations
 AGGREGATE_TRANS      :'aggregate';
@@ -476,6 +517,9 @@ GROUPBY_TRANS        :'groupby';
 COMPUTE_TRANS        :'compute';
 FILTER_TRANS         :'filter';
 EXPAND_TRANS         :'expand';
+
+ALL                  : 'all' ;
+ANY                  : 'any';
 
 ASC                  : RWS 'asc';
 DESC                 : RWS 'desc';
@@ -553,6 +597,7 @@ DOT              : '.'   ;
 DOLLAR           : '$'   ;
 AMPERSAND        : '&'   ;
 SEMICOLON        : ';'   ;
+COLON            : ':'   ;
 MINUS            : '-'   ;
 FWD_SLASH        : '/'   ;
 QUESTION         : '?'   ;
@@ -562,7 +607,7 @@ EQ               : '='   ;
 COMMA            : ','   ;
 RPAREN           : ')'   ;
 LPAREN           : '('   ;
-NULL             : '\'null\'';
+NULL             : SQUOTE 'null' SQUOTE;
 
 LIT_DATETIME     : YEAR '-' MONTH '-' DAY 'T' HOUR ':' MINUTE ':' SECOND TIMEZONE;
 LIT_DATE         : YEAR '-' MONTH '-' DAY;
