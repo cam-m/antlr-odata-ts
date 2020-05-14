@@ -18,10 +18,20 @@ const odataQuery = 'MyEntity?$select=Property1&$expand=NavProperty1($select=Prop
 const codePointCharStream: CodePointCharStream = CharStreams.fromString(odataQuery);
 const lexer = new OData4LiteLexer(codePointCharStream);
 const tokens: CommonTokenStream = new CommonTokenStream(lexer);
-const parser: OData4LiteParser = new OData4LiteParser(tokens);
-const tree: ParseTree = parser.odataRelativeURI();
 
-// Now we have a parse tree we can do stuff like this...
+// Alternative 1: Context unaware parser - fine if you a) don't have metadata, or do not support unbound functions.
+const parser: OData4LiteParser = new OData4LiteParser(tokens);
+
+// Alternative 2 (from version 0.0.12): Context aware parser
+// A metadata sybmbol table has been provided with an api for querying EntitySet, EntityType and UnboundFunction symbols.
+// The user can select a desired Schema and provide it to the parser, which can then distinguish between urls /EntitySet(1) and /UnBoundFunction(1) by querying the symbol table.
+
+const metaDataSymbol: MetadataSymbols = new MetadataSymbols(xml);
+const schema: Schema = metaDataSymbol.defaultSchema;
+const parser: OData4LiteParser = OData4LiteParser.buildOData4LiteParser(tokens, schema);
+
+const tree: ParseTree = parser.odataRelativeURI();
+// Now we have a parse tree we can use like this...
 
 // Whats a list of all the aliases in the query string?
 const walker: ParseTreeWalker = new ParseTreeWalker();
