@@ -69,6 +69,10 @@ https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/4.01%20spec
 ...has been copied to this project purely for my reference. In its current state it will not build with antlr4ts.
 
 ## Releases
+### Version 0.0.13
+- Type now throws an error if no rawType is provided.
+- added github repo details
+
 ### Version 0.0.12
 - fixed precendence of firstMemberExpression Context so IDENTIFIER is matched if its only a simple property
 

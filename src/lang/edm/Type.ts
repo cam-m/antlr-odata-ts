@@ -34,6 +34,9 @@ export class Type {
     public referencedType: EntityType | ComplexType;
 
     constructor(public rawType: string) {
+        if (!rawType) {
+            throw new Error('Type construction requires a non empty string');
+        }
         this.isCollection = rawType.startsWith(Type.collectionPrefix);
         this.fullName = this.isCollection ? rawType.substr(Type.collectionPrefixLen, rawType.length - (Type.collectionPrefixLen + 1)) : rawType;
         const namespacedNameArr: string[] = this.fullName.split(Type.nsSeparator);

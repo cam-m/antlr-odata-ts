@@ -1,5 +1,9 @@
 {
   "name": "antlr-odata",
+  "repository": {
+    "url": "https://github.com/cam-m/antlr-odata",
+    "type": "git"
+  },
   "version": "0.0.12",
   "description": "Antlr 4 OData Typescript parser",
   "main": "dist/index.js",
