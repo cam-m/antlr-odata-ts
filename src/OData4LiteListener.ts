@@ -78,6 +78,7 @@ import { ExpandQueryOptionContext } from "./OData4LiteParser";
 import { ExpressionContext } from "./OData4LiteParser";
 import { ExpressionListContext } from "./OData4LiteParser";
 import { FirstMemberExprContext } from "./OData4LiteParser";
+import { LambdaPredicatePrefixExprContext } from "./OData4LiteParser";
 import { MemberExprContext } from "./OData4LiteParser";
 import { PropertyPathExprContext } from "./OData4LiteParser";
 import { CollectionNavigationExprContext } from "./OData4LiteParser";
@@ -923,6 +924,17 @@ export interface OData4LiteListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitFirstMemberExpr?: (ctx: FirstMemberExprContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `OData4LiteParser.lambdaPredicatePrefixExpr`.
+	 * @param ctx the parse tree
+	 */
+	enterLambdaPredicatePrefixExpr?: (ctx: LambdaPredicatePrefixExprContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.lambdaPredicatePrefixExpr`.
+	 * @param ctx the parse tree
+	 */
+	exitLambdaPredicatePrefixExpr?: (ctx: LambdaPredicatePrefixExprContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `OData4LiteParser.memberExpr`.

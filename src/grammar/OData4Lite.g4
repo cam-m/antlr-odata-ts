@@ -390,8 +390,11 @@ expressionList
 //    ;
 
 firstMemberExpr
-    : (IDENTIFIER | IT) (FWD_SLASH memberExpr)?
-    | memberExpr
+    : lambdaPredicatePrefixExpr? memberExpr
+    ;
+
+lambdaPredicatePrefixExpr
+    : IT FWD_SLASH
     ;
 
 memberExpr
@@ -400,7 +403,9 @@ memberExpr
     ;
 
 propertyPathExpr
-    : property collectionPathExpr?
+    : property singleNavigationExpr
+    | property collectionPathExpr
+    | property
     ;
 //    : property collectionNavigationExpr?
 //    | property singleNavigationExpr?
@@ -426,6 +431,10 @@ collectionPathExpr
 
 anyExpr : ANY LPAREN (lambdaParameterIdentifier COLON expression)? RPAREN;
 allExpr : ALL LPAREN lambdaParameterIdentifier COLON expression RPAREN;
+
+// in any allExpr or allExpr, the 'expression' _should_ be a lambdaPredicateExpr, but this
+// is just a boolCommonExpr with a condition:
+//lambdaPredicateExpr : boolCommonExpr ; // containing at least one lambdaPredicatePrefixExpr
 
 lambdaParameterIdentifier: IDENTIFIER;
 

@@ -7,15 +7,24 @@ import {
     AnyExprContext,
     BinaryExpressionContext,
     ExpressionContext,
-    FilterContext, FirstMemberExpressionContext, InExpressionContext,
+    FilterContext,
+    FilterTrafoContext,
+    FirstMemberExprContext,
+    FirstMemberExpressionContext,
+    InExpressionContext,
+    LiteralExpressionContext,
     LogicalExpressionContext,
+    MemberExprContext,
     OData4LiteLexer,
     OData4LiteParser,
-    OdataRelativeURIContext
+    OdataRelativeURIContext,
+    PropertyPathExprContext,
+    SingleNavigationExprContext
 } from "../src";
 import {MetadataSymbols} from "../src/lang/edm/MetadataSymbols";
 import * as xmldom from "xmldom";
 import {Schema} from "../src/lang/edm/Schema";
+import {fileExistsAsync} from "tsconfig-paths/lib/filesystem";
 
 describe('OData Lite', function () {
     const parser = new xmldom.DOMParser();
@@ -330,10 +339,38 @@ describe('OData Lite', function () {
                 const binaryExpressionContext: BinaryExpressionContext = <BinaryExpressionContext>filterExpression;
                 assert.equal(binaryExpressionContext.expression()[0].text, 'ApplicationId');
                 assert.equal(binaryExpressionContext.OP_EQ().text, ' eq ');
-                const firstMemberExprContext: FirstMemberExpressionContext = <FirstMemberExpressionContext>binaryExpressionContext.expression()[0];
-                assert.equal(firstMemberExprContext.firstMemberExpr().IDENTIFIER().text, 'ApplicationId');
-                //assert.equal(firstMemberExprContext.firstMemberExpr().memberExpr().propertyPathExpr().property().IDENTIFIER().text, 'ApplicationId');
+                const firstMemberExpressionContext: FirstMemberExpressionContext = <FirstMemberExpressionContext>binaryExpressionContext.expression()[0];
+                const firstMemberExpr: FirstMemberExprContext = firstMemberExpressionContext.firstMemberExpr();
+                const memberExpr: MemberExprContext = firstMemberExpr.memberExpr();
+                const propertyPathExpresssion = memberExpr.propertyPathExpr();
+                const propertyExpr = propertyPathExpresssion.property();
+                const identifier = propertyExpr.IDENTIFIER();
+                assert.equal(identifier.text, 'ApplicationId');
+                assert.equal(firstMemberExpressionContext.firstMemberExpr().memberExpr().propertyPathExpr().property().text, 'ApplicationId');
                 assert.equal(binaryExpressionContext.expression()[1].text, '1');
+            })
+        })
+
+        describe('First Member Expressions', function () {
+            it('should recognised Single Navigation Expressions that are 2 or more properties deep', function () {
+                const codePointCharStream: CodePointCharStream = CharStreams.fromString('Property1/Property2/Leaf');
+                const lexer = new OData4LiteLexer(codePointCharStream);
+                const tokens: CommonTokenStream = new CommonTokenStream(lexer);
+                const parser: OData4LiteParser = new OData4LiteParser(tokens)
+                const firstMemberExprContext = parser.firstMemberExpr();
+                assert.notEqual(firstMemberExprContext, null);
+                assert.notEqual(firstMemberExprContext.memberExpr(), null);
+                assert.equal(firstMemberExprContext.text, 'Property1/Property2/Leaf');
+                assert.notEqual(firstMemberExprContext.memberExpr(), null);
+                const memberExpr: MemberExprContext = firstMemberExprContext.memberExpr();
+                assert.equal(memberExpr.text, 'Property1/Property2/Leaf');
+                const propertyPathExpr: PropertyPathExprContext = memberExpr.propertyPathExpr();
+                assert.equal(propertyPathExpr.property().text, 'Property1');
+                const deepMemberExpr: MemberExprContext = propertyPathExpr.singleNavigationExpr().memberExpr();
+                assert.equal(deepMemberExpr.text, 'Property2/Leaf');
+                const deepSingleNavProperty: SingleNavigationExprContext = deepMemberExpr.propertyPathExpr().singleNavigationExpr();
+                assert.equal(deepSingleNavProperty.text, '/Leaf');
+                assert.equal(deepSingleNavProperty.memberExpr().propertyPathExpr().property().text, 'Leaf');
             })
         })
 
@@ -345,6 +382,47 @@ describe('OData Lite', function () {
                 const apply = tree.queryOptions().queryOption()[0].systemQueryOption().apply();
                 assert.notEqual(apply, null);
                 const groupByTransformation = apply.applyExpression().applyTrafo()[0].groupbyTrafo();
+                assert.notEqual(groupByTransformation, null);
+                assert.equal(groupByTransformation.groupByList().groupbyElement().length, 2);
+                assert.notEqual(groupByTransformation.applyExpression(), null);
+                const aggregateTransformation = groupByTransformation.applyExpression().applyTrafo()[0].aggregateTrafo().aggregationParam()[0];
+                assert.notEqual(aggregateTransformation, null);
+                const aggregateExpression = aggregateTransformation.aggregationExpr().expression();
+
+                assert.equal(aggregateExpression.constructor, FirstMemberExpressionContext);
+                assert.equal(aggregateExpression.text, 'NavigationPropertyRoot/Property');
+                const aggregateAs = aggregateTransformation.aggregationExpr().dynamicPropertyAssignment();
+                assert.equal(aggregateAs.text, ' as PropertyCount');
+                const aggregateWith = aggregateTransformation.aggregationExpr().aggregateWith();
+                assert.equal(aggregateWith.text, ' with countdistinct');
+
+                const filter = tree.queryOptions().queryOption()[1].systemQueryOption().filter();
+                assert.equal(filter.FILTER(), '$filter');
+                // Not testing the filter here..
+            });
+
+            it('should correctly parse an $apply with a filter plus groupby', function () {
+                const tree: OdataRelativeURIContext = getODataLiteParser('SomeResource?$apply=filter(P1/P2/P3 eq 1)/groupby((SimpleProperty,NavigationPropertyRoot/Property),aggregate(NavigationPropertyRoot/Property with countdistinct as PropertyCount))&$filter=NavigationPropertyRoot/Property eq 1 and SimpleProperty in (1,2) and AssignedTo eq @AssignedTo').odataRelativeURI();
+                assert.equal(tree.resourcePath().IDENTIFIER().text, 'SomeResource');
+                assert.notEqual(tree.queryOptions().queryOption()[0].systemQueryOption().apply(), null);
+                const apply = tree.queryOptions().queryOption()[0].systemQueryOption().apply();
+                assert.notEqual(apply, null);
+                const filterTransformation: FilterTrafoContext = apply.applyExpression().applyTrafo()[0].filterTrafo();
+                assert.notEqual(filterTransformation, null);
+                assert.equal(filterTransformation.expression().text, 'P1/P2/P3 eq 1');
+                const binaryExpression: BinaryExpressionContext = <BinaryExpressionContext>filterTransformation.expression();
+
+                // check the property expression on the binary filter expression
+                const firstMemberExprContext: FirstMemberExpressionContext = <FirstMemberExpressionContext>binaryExpression.expression()[0];
+                assert.equal(firstMemberExprContext.firstMemberExpr().memberExpr().propertyPathExpr().property().text, 'P1');
+                assert.equal(firstMemberExprContext.firstMemberExpr().memberExpr().propertyPathExpr().singleNavigationExpr().memberExpr().text, 'P2/P3');
+                assert.equal(firstMemberExprContext.firstMemberExpr().memberExpr().propertyPathExpr().singleNavigationExpr().memberExpr().propertyPathExpr().property().text, 'P2');
+                assert.equal(firstMemberExprContext.firstMemberExpr().memberExpr().propertyPathExpr().singleNavigationExpr().memberExpr().propertyPathExpr().singleNavigationExpr().memberExpr().propertyPathExpr().property().text, 'P3');
+                //const literalExpr: LiteralExpressionContext = <LiteralExpressionContext>binaryExpression.expression()[1];
+                // const firstMemberExprContext: FirstMemberExprContext = filterTransformation.expression();
+                // assert.equal(firstMemberExprContext.memberExpr().propertyPathExpr().property().text, 'P1');
+
+                const groupByTransformation = apply.applyExpression().applyTrafo()[1].groupbyTrafo();
                 assert.notEqual(groupByTransformation, null);
                 assert.equal(groupByTransformation.groupByList().groupbyElement().length, 2);
                 assert.notEqual(groupByTransformation.applyExpression(), null);
