@@ -69,6 +69,10 @@ https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/4.01%20spec
 ...has been copied to this project purely for my reference. In its current state it will not build with antlr4ts.
 
 ## Releases
+### Version 0.0.15
+#### Fixes
+- Definition of literal collections fixed to use [] not () and to support empty collections
+
 ### Version 0.0.14
 #### Breaking Changes
 - Definition of First Member Expressions updated to include 
