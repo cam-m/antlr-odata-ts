@@ -196,6 +196,11 @@ describe('OData Lite', function () {
             }
         });
 
+        it('Should recognise literal arrays within sq brackets', function() {
+            const tree: OdataRelativeURIContext = getODataLiteParser(`Entity?$filter=[] eq []`).odataRelativeURI();
+            assert.equal(tree.queryOptions().queryOption()[0].systemQueryOption().filter().expression().text, '[] eq []');
+        });
+
         it('Should recognise a function import being able to look up unbound functions by name.', function () {
             const tree: OdataRelativeURIContext = getODataLiteParser(`GetIncidentBreakdown(EnvironmentId='1,2,3',InternalReferenceIdList='1,2,3',AssignedToList='admin')`).odataRelativeURI();
             const functionImport = tree.resourcePath().functionImportCall();
@@ -376,7 +381,7 @@ describe('OData Lite', function () {
 
         describe('$apply transformations', function () {
             it('should correctly parse an $apply groupby tranformation', function () {
-                const tree: OdataRelativeURIContext = getODataLiteParser('SomeResource?$apply=groupby((SimpleProperty,NavigationPropertyRoot/Property),aggregate(NavigationPropertyRoot/Property with countdistinct as PropertyCount))&$filter=NavigationPropertyRoot/Property eq 1 and SimpleProperty in (1,2) and AssignedTo eq @AssignedTo').odataRelativeURI();
+                const tree: OdataRelativeURIContext = getODataLiteParser('SomeResource?$apply=groupby((SimpleProperty,NavigationPropertyRoot/Property),aggregate(NavigationPropertyRoot/Property with countdistinct as PropertyCount))&$filter=NavigationPropertyRoot/Property eq 1 and SimpleProperty in [1,2] and AssignedTo eq @AssignedTo').odataRelativeURI();
                 assert.equal(tree.resourcePath().IDENTIFIER().text, 'SomeResource');
                 assert.notEqual(tree.queryOptions().queryOption()[0].systemQueryOption().apply(), null);
                 const apply = tree.queryOptions().queryOption()[0].systemQueryOption().apply();
@@ -402,7 +407,7 @@ describe('OData Lite', function () {
             });
 
             it('should correctly parse an $apply with a filter plus groupby', function () {
-                const tree: OdataRelativeURIContext = getODataLiteParser('SomeResource?$apply=filter(P1/P2/P3 eq 1)/groupby((SimpleProperty,NavigationPropertyRoot/Property),aggregate(NavigationPropertyRoot/Property with countdistinct as PropertyCount))&$filter=NavigationPropertyRoot/Property eq 1 and SimpleProperty in (1,2) and AssignedTo eq @AssignedTo').odataRelativeURI();
+                const tree: OdataRelativeURIContext = getODataLiteParser('SomeResource?$apply=filter(P1/P2/P3 eq 1)/groupby((SimpleProperty,NavigationPropertyRoot/Property),aggregate(NavigationPropertyRoot/Property with countdistinct as PropertyCount))&$filter=NavigationPropertyRoot/Property eq 1 and SimpleProperty in [1,2] and AssignedTo eq @AssignedTo').odataRelativeURI();
                 assert.equal(tree.resourcePath().IDENTIFIER().text, 'SomeResource');
                 assert.notEqual(tree.queryOptions().queryOption()[0].systemQueryOption().apply(), null);
                 const apply = tree.queryOptions().queryOption()[0].systemQueryOption().apply();

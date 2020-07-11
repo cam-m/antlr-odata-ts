@@ -439,7 +439,7 @@ allExpr : ALL LPAREN lambdaParameterIdentifier COLON expression RPAREN;
 lambdaParameterIdentifier: IDENTIFIER;
 
 primitiveLiteralCollection
-    : LPAREN primitiveLiteral (COMMA primitiveLiteral)* RPAREN ;
+    : LBRACKET (primitiveLiteral (COMMA primitiveLiteral)*)? RBRACKET ;
 
 primitiveLiteral
     : NULL                 // plain values up to int64Value
@@ -616,6 +616,8 @@ EQ               : '='   ;
 COMMA            : ','   ;
 RPAREN           : ')'   ;
 LPAREN           : '('   ;
+RBRACKET         : ']'   ;
+LBRACKET         : '['   ;
 NULL             : SQUOTE 'null' SQUOTE;
 
 LIT_DATETIME     : YEAR '-' MONTH '-' DAY 'T' HOUR ':' MINUTE ':' SECOND TIMEZONE;
