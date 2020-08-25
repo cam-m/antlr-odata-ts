@@ -281,7 +281,7 @@ expand: EXPAND EQ expandItemList;
 select: SELECT EQ (IDENTIFIER | IDENTIFIER (COMMA IDENTIFIER)+);
 // format: ; // Not supported
 
-orderbyItem: IDENTIFIER (DESC | ASC)?;
+orderbyItem: expression (DESC | ASC)?;
 
 expandItemList: expandItem (COMMA expandItem)?;
 expandItem: IDENTIFIER ( LPAREN expandQueryOptions RPAREN )? ;
@@ -423,7 +423,7 @@ collectionNavigationExpr
 singleNavigationExpr : FWD_SLASH memberExpr ;
 
 collectionPathExpr
-    : count
+    : COUNT
     // | FWD_SLASH boundFunctionExpr // Unsupported
     | FWD_SLASH anyExpr
     | FWD_SLASH allExpr

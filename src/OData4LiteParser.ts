@@ -2355,7 +2355,7 @@ export class OData4LiteParser extends Parser {
 			this.enterOuterAlt(_localctx, 1);
 			{
 			this.state = 484;
-			this.match(OData4LiteParser.IDENTIFIER);
+			this.expression(0);
 			this.state = 486;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
@@ -3300,7 +3300,7 @@ export class OData4LiteParser extends Parser {
 				this.enterOuterAlt(_localctx, 1);
 				{
 				this.state = 639;
-				this.count();
+				this.match(OData4LiteParser.COUNT);
 				}
 				break;
 
@@ -4082,11 +4082,11 @@ export class OData4LiteParser extends Parser {
 		"\u01E1\x07Q\x02\x02\u01E0\u01DE\x03\x02\x02\x02\u01E1\u01E2\x03\x02\x02" +
 		"\x02\u01E2\u01E0\x03\x02\x02\x02\u01E2\u01E3\x03\x02\x02\x02\u01E3\u01E5" +
 		"\x03\x02\x02\x02\u01E4\u01DC\x03\x02\x02\x02\u01E4\u01DD\x03\x02\x02\x02" +
-		"\u01E5_\x03\x02\x02\x02\u01E6\u01E8\x07Q\x02\x02\u01E7\u01E9\t\x02\x02" +
-		"\x02\u01E8\u01E7\x03\x02\x02\x02\u01E8\u01E9\x03\x02\x02\x02\u01E9a\x03" +
-		"\x02\x02\x02\u01EA\u01ED\x05d3\x02\u01EB\u01EC\x07C\x02\x02\u01EC\u01EE" +
-		"\x05d3\x02\u01ED\u01EB\x03\x02\x02\x02\u01ED\u01EE\x03\x02\x02\x02\u01EE" +
-		"c\x03\x02\x02\x02\u01EF\u01F4\x07Q\x02\x02\u01F0\u01F1\x07E\x02\x02\u01F1" +
+		"\u01E5_\x03\x02\x02\x02\u01E6\u01E8\x05l7\x02\u01E7\u01E9\t\x02\x02\x02" +
+		"\u01E8\u01E7\x03\x02\x02\x02\u01E8\u01E9\x03\x02\x02\x02\u01E9a\x03\x02" +
+		"\x02\x02\u01EA\u01ED\x05d3\x02\u01EB\u01EC\x07C\x02\x02\u01EC\u01EE\x05" +
+		"d3\x02\u01ED\u01EB\x03\x02\x02\x02\u01ED\u01EE\x03\x02\x02\x02\u01EEc" +
+		"\x03\x02\x02\x02\u01EF\u01F4\x07Q\x02\x02\u01F0\u01F1\x07E\x02\x02\u01F1" +
 		"\u01F2\x05h5\x02\u01F2\u01F3\x07D\x02\x02\u01F3\u01F5\x03\x02\x02\x02" +
 		"\u01F4\u01F0\x03\x02\x02\x02\u01F4\u01F5\x03\x02\x02\x02\u01F5e\x03\x02" +
 		"\x02\x02\u01F6\u01F7\x05\x1A\x0E\x02\u01F7\u01F8\x07>\x02\x02\u01F8\u01FA" +
@@ -4154,16 +4154,16 @@ export class OData4LiteParser extends Parser {
 		"\u027A\x03\x02\x02\x02\u027A\u027D\x03\x02\x02\x02\u027B\u027D\x05|?\x02" +
 		"\u027C\u0277\x03\x02\x02\x02\u027C\u027B\x03\x02\x02\x02\u027Dy\x03\x02" +
 		"\x02\x02\u027E\u027F\x07>\x02\x02\u027F\u0280\x05t;\x02\u0280{\x03\x02" +
-		"\x02\x02\u0281\u0287\x05T+\x02\u0282\u0283\x07>\x02\x02\u0283\u0287\x05" +
-		"~@\x02\u0284\u0285\x07>\x02\x02\u0285\u0287\x05\x80A\x02\u0286\u0281\x03" +
-		"\x02\x02\x02\u0286\u0282\x03\x02\x02\x02\u0286\u0284\x03\x02\x02\x02\u0287" +
-		"}\x03\x02\x02\x02\u0288\u0289\x07\x1C\x02\x02\u0289\u028E\x07E\x02\x02" +
-		"\u028A\u028B\x05\x82B\x02\u028B\u028C\x07<\x02\x02\u028C\u028D\x05l7\x02" +
-		"\u028D\u028F\x03\x02\x02\x02\u028E\u028A\x03\x02\x02\x02\u028E\u028F\x03" +
-		"\x02\x02\x02\u028F\u0290\x03\x02\x02\x02\u0290\u0291\x07D\x02\x02\u0291" +
-		"\x7F\x03\x02\x02\x02\u0292\u0293\x07\x1B\x02\x02\u0293\u0294\x07E\x02" +
-		"\x02\u0294\u0295\x05\x82B\x02\u0295\u0296\x07<\x02\x02\u0296\u0297\x05" +
-		"l7\x02\u0297\u0298\x07D\x02\x02\u0298\x81\x03\x02\x02\x02\u0299\u029A" +
+		"\x02\x02\u0281\u0287\x07\t\x02\x02\u0282\u0283\x07>\x02\x02\u0283\u0287" +
+		"\x05~@\x02\u0284\u0285\x07>\x02\x02\u0285\u0287\x05\x80A\x02\u0286\u0281" +
+		"\x03\x02\x02\x02\u0286\u0282\x03\x02\x02\x02\u0286\u0284\x03\x02\x02\x02" +
+		"\u0287}\x03\x02\x02\x02\u0288\u0289\x07\x1C\x02\x02\u0289\u028E\x07E\x02" +
+		"\x02\u028A\u028B\x05\x82B\x02\u028B\u028C\x07<\x02\x02\u028C\u028D\x05" +
+		"l7\x02\u028D\u028F\x03\x02\x02\x02\u028E\u028A\x03\x02\x02\x02\u028E\u028F" +
+		"\x03\x02\x02\x02\u028F\u0290\x03\x02\x02\x02\u0290\u0291\x07D\x02\x02" +
+		"\u0291\x7F\x03\x02\x02\x02\u0292\u0293\x07\x1B\x02\x02\u0293\u0294\x07" +
+		"E\x02\x02\u0294\u0295\x05\x82B\x02\u0295\u0296\x07<\x02\x02\u0296\u0297" +
+		"\x05l7\x02\u0297\u0298\x07D\x02\x02\u0298\x81\x03\x02\x02\x02\u0299\u029A" +
 		"\x07Q\x02\x02\u029A\x83\x03\x02\x02\x02\u029B\u02A4\x07G\x02\x02\u029C" +
 		"\u02A1\x05\x86D\x02\u029D\u029E\x07C\x02\x02\u029E\u02A0\x05\x86D\x02" +
 		"\u029F\u029D\x03\x02\x02\x02\u02A0\u02A3\x03\x02\x02\x02\u02A1\u029F\x03" +
@@ -6080,7 +6080,9 @@ export class SelectContext extends ParserRuleContext {
 
 
 export class OrderbyItemContext extends ParserRuleContext {
-	public IDENTIFIER(): TerminalNode { return this.getToken(OData4LiteParser.IDENTIFIER, 0); }
+	public expression(): ExpressionContext {
+		return this.getRuleContext(0, ExpressionContext);
+	}
 	public DESC(): TerminalNode | undefined { return this.tryGetToken(OData4LiteParser.DESC, 0); }
 	public ASC(): TerminalNode | undefined { return this.tryGetToken(OData4LiteParser.ASC, 0); }
 	constructor(parent: ParserRuleContext | undefined, invokingState: number) {
@@ -7148,9 +7150,7 @@ export class SingleNavigationExprContext extends ParserRuleContext {
 
 
 export class CollectionPathExprContext extends ParserRuleContext {
-	public count(): CountContext | undefined {
-		return this.tryGetRuleContext(0, CountContext);
-	}
+	public COUNT(): TerminalNode | undefined { return this.tryGetToken(OData4LiteParser.COUNT, 0); }
 	public FWD_SLASH(): TerminalNode | undefined { return this.tryGetToken(OData4LiteParser.FWD_SLASH, 0); }
 	public anyExpr(): AnyExprContext | undefined {
 		return this.tryGetRuleContext(0, AnyExprContext);

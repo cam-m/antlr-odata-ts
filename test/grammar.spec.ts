@@ -17,7 +17,7 @@ import {
     MemberExprContext,
     OData4LiteLexer,
     OData4LiteParser,
-    OdataRelativeURIContext,
+    OdataRelativeURIContext, OrderbyItemContext,
     PropertyPathExprContext,
     SingleNavigationExprContext
 } from "../src";
@@ -286,7 +286,17 @@ describe('OData Lite', function () {
                 const tree: OdataRelativeURIContext = getODataLiteParser('SomeResource?$orderby=Field').odataRelativeURI();
                 assert.equal(tree.resourcePath().IDENTIFIER().text, 'SomeResource');
                 const orderby = tree.queryOptions().queryOption()[0].systemQueryOption().orderby();
-                assert.equal(orderby.orderbyItem()[0].IDENTIFIER().text, 'Field');
+                const orderbyItemContexts: OrderbyItemContext[] = orderby.orderbyItem();
+                
+                assert.equal(orderbyItemContexts[0].text, 'Field');
+            });
+
+            it('should order by a property path correctly', function () {
+                const tree: OdataRelativeURIContext = getODataLiteParser('SomeResource?$orderby=Field/ChildField').odataRelativeURI();
+                assert.equal(tree.resourcePath().IDENTIFIER().text, 'SomeResource');
+                const orderby = tree.queryOptions().queryOption()[0].systemQueryOption().orderby();
+                const orderByProperty = orderby.orderbyItem()[0];
+                assert.equal(orderByProperty.expression().text, 'Field/ChildField');
             });
 
             it('should parse a multi column $orderby query option', function () {
@@ -294,9 +304,9 @@ describe('OData Lite', function () {
                 const tree: OdataRelativeURIContext = getODataLiteParser(url).odataRelativeURI();
                 assert.equal(tree.resourcePath().IDENTIFIER().text, 'SomeResource');
                 const orderby = tree.queryOptions().queryOption()[0].systemQueryOption().orderby();
-                assert.equal(orderby.orderbyItem()[0].IDENTIFIER().text, 'Field1');
-                assert.equal(orderby.orderbyItem()[1].IDENTIFIER().text, 'Field2');
-                assert.equal(orderby.orderbyItem()[2].IDENTIFIER().text, 'Field3');
+                assert.equal(orderby.orderbyItem()[0].text, 'Field1');
+                assert.equal(orderby.orderbyItem()[1].text, 'Field2');
+                assert.equal(orderby.orderbyItem()[2].text, 'Field3');
             });
 
             it('should parse a multi column $orderby query option with asc or desc specified', function () {
@@ -304,10 +314,10 @@ describe('OData Lite', function () {
                 const tree: OdataRelativeURIContext = getODataLiteParser(url).odataRelativeURI();
                 assert.equal(tree.resourcePath().IDENTIFIER().text, 'SomeResource');
                 const orderby = tree.queryOptions().queryOption()[0].systemQueryOption().orderby();
-                assert.equal(orderby.orderbyItem()[0].IDENTIFIER().text, 'Field1');
+                assert.equal(orderby.orderbyItem()[0].expression().text, 'Field1');
                 assert.equal(orderby.orderbyItem()[0].DESC().text, ' desc');
-                assert.equal(orderby.orderbyItem()[1].IDENTIFIER().text, 'Field2');
-                assert.equal(orderby.orderbyItem()[2].IDENTIFIER().text, 'Field3');
+                assert.equal(orderby.orderbyItem()[1].expression().text, 'Field2');
+                assert.equal(orderby.orderbyItem()[2].expression().text, 'Field3');
                 assert.equal(orderby.orderbyItem()[2].ASC().text, ' asc');
             });
         });
