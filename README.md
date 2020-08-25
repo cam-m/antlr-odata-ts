@@ -69,6 +69,11 @@ https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/4.01%20spec
 ...has been copied to this project purely for my reference. In its current state it will not build with antlr4ts.
 
 ## Releases
+### Version 0.0.17
+#### Fixes
+- added expression support to $orderby
+- added reference material - abnf v4.01.  
+
 ### Version 0.0.16
 #### Fixes
 - Version 0.0.15 used a stale distribution in error  
