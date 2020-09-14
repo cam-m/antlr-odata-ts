@@ -69,6 +69,11 @@ https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/4.01%20spec
 ...has been copied to this project purely for my reference. In its current state it will not build with antlr4ts.
 
 ## Releases
+### Version 0.0.18
+#### Changes
+- Bumped devdep Typescript to 4
+- added // @ts-nocheck to generated ts code to workaround https://github.com/tunnelvisionlabs/antlr4ts/issues/485
+
 ### Version 0.0.17
 #### Fixes
 - added expression support to $orderby

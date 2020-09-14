@@ -3,6 +3,7 @@ grammar OData4Lite;
 // rules are being named consistently with the ODatav4.0.abnf (where possible) so support for extended syntax can be
 // added later.
 @header {
+// @ts-nocheck
 import { Schema } from './lang/edm/Schema';
 }
 

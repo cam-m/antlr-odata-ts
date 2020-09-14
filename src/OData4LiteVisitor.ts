@@ -1,6 +1,7 @@
 // Generated from src/grammar/OData4Lite.g4 by ANTLR 4.7.3-SNAPSHOT
 
 
+// @ts-nocheck
 import { Schema } from './lang/edm/Schema';
 
 
