@@ -34,7 +34,7 @@
   "author": "Cameron Maunder",
   "license": "MIT",
   "dependencies": {
-    "antlr4ts": "^0.5.0-alpha.3",
+    "antlr4ts": "^0.5.0-alpha.4",
     "trie-prefix-tree": "^1.5.1",
     "xpath": "^0.0.27"
   },
@@ -53,7 +53,7 @@
     "ts-node": "^8.3.0",
     "tsconfig-paths": "^3.9.0",
     "tslint": "^5.19.0",
-    "typescript": "^4.0.2",
+    "typescript": "^4.2.4",
     "xmldom": "^0.5.0"
   }
 }
