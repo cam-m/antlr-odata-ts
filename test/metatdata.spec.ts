@@ -1,5 +1,5 @@
 import {describe} from 'mocha';
-import * as xmldom from "xmldom";
+import * as xmldom from "@xmldom/xmldom";
 import * as assert from "assert";
 import { MetadataSymbols } from "../src/lang/edm/MetadataSymbols";
 import {EntitySet} from "../src/lang/edm/EntitySet";

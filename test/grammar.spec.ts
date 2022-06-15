@@ -12,7 +12,6 @@ import {
     FirstMemberExprContext,
     FirstMemberExpressionContext,
     InExpressionContext,
-    LiteralExpressionContext,
     LogicalExpressionContext,
     MemberExprContext,
     OData4LiteLexer,
@@ -22,9 +21,8 @@ import {
     SingleNavigationExprContext
 } from "../src";
 import {MetadataSymbols} from "../src/lang/edm/MetadataSymbols";
-import * as xmldom from "xmldom";
+import * as xmldom from "@xmldom/xmldom";
 import {Schema} from "../src/lang/edm/Schema";
-import {fileExistsAsync} from "tsconfig-paths/lib/filesystem";
 
 describe('OData Lite', function () {
     const parser = new xmldom.DOMParser();
