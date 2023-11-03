@@ -13,6 +13,9 @@ import {ReturnType} from "./ReturnType";
 import {NavigationProperty} from "./NavigationProperty";
 import {ReferentialConstraint} from "./ReferentialConstraint";
 import {Type} from "./Type";
+import canonicalize = Mocha.utils.canonicalize;
+import {Annotations} from "./Annotations";
+import {Annotation} from "./Annotation";
 
 export class MetadataSymbols {
     private _schemas: Schema[];
@@ -57,6 +60,7 @@ export class MetadataSymbols {
             schema.ComplexTypes = this.parseComplexTypes(schemaElement);
             schema.Functions = this.parseFunctions(schemaElement);
             schema.EntityTypes = this.parseEntityTypes(schemaElement);
+            schema.Annotations = this.parseAnnotations(schemaElement);
             // index it
             this.schemaLookupMap.set(schema.Namespace, schema);
 
@@ -124,6 +128,32 @@ export class MetadataSymbols {
             this.currentSchema.addEntityTypeToIndex(entityType);
             return entityType;
         });
+    }
+
+    private parseAnnotations(schemaElement: Element): Annotations[] {
+        const annotationsElements = this.select('./edm:Annotations', schemaElement);
+        return annotationsElements.map((annotationElement: Element) => {
+            const annotations: Annotations = new Annotations();
+            annotations.Target = <string>xpath.select('string(@Target)', annotationElement, true);
+            annotations.AnnotationList = this.parseAnnotationList(annotationElement);
+            annotations.AnnotationsByTerm = annotations.AnnotationList.reduce((agg, next) => {
+                agg.set(next.Term, next);
+                return agg;
+            }, new Map<string, Annotation>());
+            this.currentSchema.addAnnotationsToIndex(annotations);
+            return annotations;
+        })
+    }
+
+    private parseAnnotationList(annotationsElement: Element) {
+        const annotationElements = this.select('./edm:Annotation', annotationsElement);
+        const annotations: Annotation[] = annotationElements.map((annotationElement: Element) => {
+            const annotation = new Annotation();
+            annotation.String = annotationElement?.getAttributeNode('String')?.nodeValue;
+            annotation.Term = annotationElement?.getAttributeNode('Term')?.nodeValue;
+            return annotation;
+        });
+        return annotations;
     }
 
     private parseNavigationPropertyBindings(entitySetNode: Element) {
@@ -200,5 +230,4 @@ export class MetadataSymbols {
         }
         return schema;
     }
-
 }

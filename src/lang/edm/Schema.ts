@@ -4,6 +4,8 @@ import {ComplexType} from "./ComplexType";
 import {EdmFunction} from "./EdmFunction";
 import {EntitySet} from "./EntitySet";
 import Trie from "trie-prefix-tree";
+import {Annotations} from "./Annotations";
+import canonicalize = Mocha.utils.canonicalize;
 
 /**
  * Represents a single EDM Schema, and contains helper methods for querying the various
@@ -26,6 +28,10 @@ export class Schema {
     private functionsByNameExact: Map<string, EdmFunction> = new Map<string, EdmFunction>();
     private functionsByPrefixTrie = Trie([]);
 
+    private annotationsByTargetEntityType: Map<string, Annotations> = new Map<string, Annotations>();
+    private annotationsByNameExact: Map<string, Annotations> = new Map<string, Annotations>();
+    private annotationsByPrefixTrie = Trie([]);
+
     public Namespace: string;
     public EntityContainers: EntityContainer[] = [];
 
@@ -33,6 +39,7 @@ export class Schema {
     public EntityTypes: EntityType[] = [];
     public ComplexTypes: ComplexType[] = [];
     public EntitySets: EntitySet[] = [];
+    public Annotations: Annotations[] =[]
 
     public addEntitySetToIndex(entitySet: EntitySet): void {
         this.entitySetsByName.set(entitySet.Name.toLocaleLowerCase(), entitySet);
@@ -60,6 +67,12 @@ export class Schema {
         this.complexTypesByNameExact.set(complexType.Name, complexType);
         this.complexTypesByPrefixTrie.addWord(complexType.Name.toLocaleLowerCase());
         this.ComplexTypes.push(complexType);
+    }
+
+    public addAnnotationsToIndex(annotations: Annotations): void {
+        this.annotationsByTargetEntityType.set(annotations.Target.toLocaleLowerCase(), annotations);
+        this.annotationsByNameExact.set(annotations.Target, annotations);
+        this.Annotations.push(annotations);
     }
 
     /**
@@ -139,6 +152,14 @@ export class Schema {
             .map(name => this.complexTypesByName.get(name));
     }
 
+
+    /**
+     * Gets an Annotation by Name (ignores case).
+     * @param name
+     */
+    public annotationsByName(name: string): Annotations {
+        return this.annotationsByTargetEntityType.get(name.toLocaleLowerCase());
+    }
 }
 
 
