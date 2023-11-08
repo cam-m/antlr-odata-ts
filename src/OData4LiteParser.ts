@@ -1,4 +1,4 @@
-// Generated from src/grammar/OData4Lite.g4 by ANTLR 4.7.3-SNAPSHOT
+// Generated from src/grammar/OData4Lite.g4 by ANTLR 4.9.0-SNAPSHOT
 
 
 // @ts-nocheck
@@ -250,6 +250,10 @@ export class OData4LiteParser extends Parser {
 	// @Override
 	public get serializedATN(): string { return OData4LiteParser._serializedATN; }
 
+	protected createFailedPredicateException(predicate?: string, message?: string): FailedPredicateException {
+		return new FailedPredicateException(this, predicate, message);
+	}
+
 
 	private odataSchema: Schema;
 
@@ -368,7 +372,7 @@ export class OData4LiteParser extends Parser {
 			{
 			this.state = 157;
 			if (!(this.isUnboundFunctionName(_localctx.identifier))) {
-				throw new FailedPredicateException(this, "this.isUnboundFunctionName($identifier)");
+				throw this.createFailedPredicateException("this.isUnboundFunctionName($identifier)");
 			}
 			this.state = 158;
 			this.functionParameters();
@@ -2832,7 +2836,7 @@ export class OData4LiteParser extends Parser {
 						this.pushNewRecursionContext(_localctx, _startState, OData4LiteParser.RULE_expression);
 						this.state = 561;
 						if (!(this.precpred(this._ctx, 11))) {
-							throw new FailedPredicateException(this, "this.precpred(this._ctx, 11)");
+							throw this.createFailedPredicateException("this.precpred(this._ctx, 11)");
 						}
 						this.state = 562;
 						this.match(OData4LiteParser.OP_MOD);
@@ -2847,7 +2851,7 @@ export class OData4LiteParser extends Parser {
 						this.pushNewRecursionContext(_localctx, _startState, OData4LiteParser.RULE_expression);
 						this.state = 564;
 						if (!(this.precpred(this._ctx, 10))) {
-							throw new FailedPredicateException(this, "this.precpred(this._ctx, 10)");
+							throw this.createFailedPredicateException("this.precpred(this._ctx, 10)");
 						}
 						this.state = 565;
 						this.match(OData4LiteParser.OP_MUL);
@@ -2862,7 +2866,7 @@ export class OData4LiteParser extends Parser {
 						this.pushNewRecursionContext(_localctx, _startState, OData4LiteParser.RULE_expression);
 						this.state = 567;
 						if (!(this.precpred(this._ctx, 9))) {
-							throw new FailedPredicateException(this, "this.precpred(this._ctx, 9)");
+							throw this.createFailedPredicateException("this.precpred(this._ctx, 9)");
 						}
 						this.state = 568;
 						this.match(OData4LiteParser.OP_DIV);
@@ -2877,7 +2881,7 @@ export class OData4LiteParser extends Parser {
 						this.pushNewRecursionContext(_localctx, _startState, OData4LiteParser.RULE_expression);
 						this.state = 570;
 						if (!(this.precpred(this._ctx, 8))) {
-							throw new FailedPredicateException(this, "this.precpred(this._ctx, 8)");
+							throw this.createFailedPredicateException("this.precpred(this._ctx, 8)");
 						}
 						this.state = 571;
 						this.match(OData4LiteParser.OP_SUB);
@@ -2892,7 +2896,7 @@ export class OData4LiteParser extends Parser {
 						this.pushNewRecursionContext(_localctx, _startState, OData4LiteParser.RULE_expression);
 						this.state = 573;
 						if (!(this.precpred(this._ctx, 7))) {
-							throw new FailedPredicateException(this, "this.precpred(this._ctx, 7)");
+							throw this.createFailedPredicateException("this.precpred(this._ctx, 7)");
 						}
 						this.state = 574;
 						this.match(OData4LiteParser.OP_ADD);
@@ -2907,7 +2911,7 @@ export class OData4LiteParser extends Parser {
 						this.pushNewRecursionContext(_localctx, _startState, OData4LiteParser.RULE_expression);
 						this.state = 576;
 						if (!(this.precpred(this._ctx, 6))) {
-							throw new FailedPredicateException(this, "this.precpred(this._ctx, 6)");
+							throw this.createFailedPredicateException("this.precpred(this._ctx, 6)");
 						}
 						this.state = 577;
 						_la = this._input.LA(1);
@@ -2932,7 +2936,7 @@ export class OData4LiteParser extends Parser {
 						this.pushNewRecursionContext(_localctx, _startState, OData4LiteParser.RULE_expression);
 						this.state = 579;
 						if (!(this.precpred(this._ctx, 5))) {
-							throw new FailedPredicateException(this, "this.precpred(this._ctx, 5)");
+							throw this.createFailedPredicateException("this.precpred(this._ctx, 5)");
 						}
 						this.state = 580;
 						_la = this._input.LA(1);
@@ -2957,7 +2961,7 @@ export class OData4LiteParser extends Parser {
 						this.pushNewRecursionContext(_localctx, _startState, OData4LiteParser.RULE_expression);
 						this.state = 582;
 						if (!(this.precpred(this._ctx, 15))) {
-							throw new FailedPredicateException(this, "this.precpred(this._ctx, 15)");
+							throw this.createFailedPredicateException("this.precpred(this._ctx, 15)");
 						}
 						this.state = 583;
 						this.match(OData4LiteParser.OP_IN);
@@ -4255,7 +4259,7 @@ export class OdataRelativeURIContext extends ParserRuleContext {
 
 
 export class ResourcePathContext extends ParserRuleContext {
-	public _id: Token;
+	public _id!: Token;
 	public IDENTIFIER(): TerminalNode { return this.getToken(OData4LiteParser.IDENTIFIER, 0); }
 	public functionImportCall(): FunctionImportCallContext | undefined {
 		return this.tryGetRuleContext(0, FunctionImportCallContext);
