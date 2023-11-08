@@ -442,7 +442,9 @@ collectionnavigationexpr : ( SLASH qualifiedentitytypename )?
                            | collectionpathexpr
                            );
 
-singlenavigationexpr : SLASH memberexpr;
+singlenavigationexpr
+    : SLASH memberexpr
+    | SLASH parameterAlias { notifyErrorListeners('Aliases are not valid in navigation expressions.');};
 
 collectionpathexpr : count
                    | (SLASH boundfunctionexpr)

@@ -421,7 +421,10 @@ collectionNavigationExpr
         )
     ;
 
-singleNavigationExpr : FWD_SLASH memberExpr ;
+singleNavigationExpr
+    : FWD_SLASH memberExpr
+    | FWD_SLASH parameterAlias {this.notifyErrorListeners('Aliases are not valid in navigation expressions.');}
+    ;
 
 collectionPathExpr
     : COUNT
