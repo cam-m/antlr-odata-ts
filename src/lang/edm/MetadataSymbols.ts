@@ -172,7 +172,7 @@ export class MetadataSymbols {
             const property: Property = new Property();
             property.Name = propertyElement.getAttributeNode('Name').nodeValue;
             property.Type = new Type(propertyElement.getAttributeNode('Type').nodeValue);
-            property.Nullable = propertyElement.hasAttribute('Nullable') ? Boolean(propertyElement.getAttributeNode('Nullable').nodeValue) : true;
+            property.Nullable = propertyElement.hasAttribute('Nullable') ? Boolean(propertyElement.getAttributeNode('Nullable').nodeValue) : undefined;
             return property;
         });
     }
