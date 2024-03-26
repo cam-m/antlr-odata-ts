@@ -65,7 +65,7 @@ describe('OData Lite', function () {
                         break;
                     case 2:
                         assert.equal(t.text, '$select');
-                        assert.equal(t.type, OData4LiteLexer.SELECT);
+                        assert.equal(t.type, OData4LiteLexer.SELECT_OPT);
                         break;
                     case 3:
                         assert.equal(t.text, '=');
@@ -89,7 +89,7 @@ describe('OData Lite', function () {
                         break;
                     case 8:
                         assert.equal(t.text, '$expand');
-                        assert.equal(t.type, OData4LiteLexer.EXPAND);
+                        assert.equal(t.type, OData4LiteLexer.EXPAND_OPT);
                         break;
                     case 9:
                         assert.equal(t.text, '=');
@@ -105,7 +105,7 @@ describe('OData Lite', function () {
                         break;
                     case 12:
                         assert.equal(t.text, '$filter');
-                        assert.equal(t.type, OData4LiteLexer.FILTER);
+                        assert.equal(t.type, OData4LiteLexer.FILTER_OPT);
                         break;
                     case 13:
                         assert.equal(t.text, '=');
@@ -270,11 +270,11 @@ describe('OData Lite', function () {
 
                 const count = tree.queryOptions().queryOption()[0].systemQueryOption().count();
                 assert.equal(count.LIT_BOOLEAN().text, 'true');
-                assert.equal(count.COUNT(), '$count');
+                assert.equal(count.COUNT_OPT(), '$count');
 
                 const top = tree.queryOptions().queryOption()[2].systemQueryOption().top();
                 assert.equal(top.LIT_INTEGER().text, '50');
-                assert.equal(top.TOP().text, '$top');
+                assert.equal(top.TOP_OPT().text, '$top');
 
             })
         });
@@ -410,7 +410,7 @@ describe('OData Lite', function () {
                 assert.equal(aggregateWith.text, ' with countdistinct');
 
                 const filter = tree.queryOptions().queryOption()[1].systemQueryOption().filter();
-                assert.equal(filter.FILTER(), '$filter');
+                assert.equal(filter.FILTER_OPT(), '$filter');
                 // Not testing the filter here..
             });
 
@@ -451,21 +451,33 @@ describe('OData Lite', function () {
                 assert.equal(aggregateWith.text, ' with countdistinct');
 
                 const filter = tree.queryOptions().queryOption()[1].systemQueryOption().filter();
-                assert.equal(filter.FILTER(), '$filter');
+                assert.equal(filter.FILTER_OPT(), '$filter');
                 // Not testing the filter here..
             });
 
             it('should understand valid compute transformations', function () {
-                const tree: OdataRelativeURIContext = getODataLiteParser('SomeResource?$apply=compute(day(date(EffectiveDate)) as Day)/groupby((Day),aggregate($count as Count))').odataRelativeURI();
+                const tree: OdataRelativeURIContext = getODataLiteParser('SomeResource?$apply=compute(day(date(EffectiveDate)) as Blah)/groupby((Blah),aggregate($count as Count))').odataRelativeURI();
                 assert.equal(tree.resourcePath().IDENTIFIER().text, 'SomeResource');
                 assert.notEqual(tree.queryOptions().queryOption()[0].systemQueryOption().apply(), null);
                 const apply = tree.queryOptions().queryOption()[0].systemQueryOption().apply();
                 assert.notEqual(apply, null);
                 const computeTransformation = apply.applyExpression().applyTrafo()[0].computeTrafo();
-                assert.equal(computeTransformation.text, 'compute(day(date(EffectiveDate)) as Day)');
-                assert.equal(computeTransformation.computeExpression()[0].text, 'day(date(EffectiveDate)) as Day');
-                assert.equal(computeTransformation.computeExpression()[0].dynamicPropertyAssignment().text, ' as Day');
-            })
+                assert.equal(computeTransformation.text, 'compute(day(date(EffectiveDate)) as Blah)');
+                assert.equal(computeTransformation.computeExpression()[0].text, 'day(date(EffectiveDate)) as Blah');
+                assert.equal(computeTransformation.computeExpression()[0].dynamicPropertyAssignment().text, ' as Blah');
+            });
+
+            it('should understand valid compute transformations with Navigate properties', function () {
+                const tree: OdataRelativeURIContext = getODataLiteParser('MemberResource?$apply=compute(concat(A,B) as FullName)').odataRelativeURI();
+                assert.equal(tree.resourcePath().IDENTIFIER().text, 'MemberResource');
+                assert.notEqual(tree.queryOptions().queryOption()[0].systemQueryOption().apply(), null);
+                const apply = tree.queryOptions().queryOption()[0].systemQueryOption().apply();
+                assert.notEqual(apply, null);
+                const computeTransformation = apply.applyExpression().applyTrafo()[0].computeTrafo();
+                assert.equal(computeTransformation.text, 'compute(concat(A,B) as FullName)');
+                assert.equal(computeTransformation.computeExpression()[0].text, 'concat(A,B) as FullName');
+                assert.equal(computeTransformation.computeExpression()[0].dynamicPropertyAssignment().text, ' as FullName');
+            });
         })
     })
 });

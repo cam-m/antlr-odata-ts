@@ -10,7 +10,7 @@ import { Schema } from './lang/edm/Schema';
 @lexer::members {
 public odataSchema: Schema;
 
-public static buildOData4LiteParser(input: CharStream, schema: Schema): OData4LiteLexer {
+public static buildOData4LiteLexer(input: CharStream, schema: Schema): OData4LiteLexer {
     const instance: OData4LiteLexer = new OData4LiteLexer(input);
     instance.odataSchema = schema;
     return instance;
@@ -73,7 +73,7 @@ collectionNavigation
     (
           keyPredicate singleNavigation?
         | collectionPath
-        | FWD_SLASH REF
+        | FWD_SLASH REF_OPT
     ) ;
 
 singleNavigation
@@ -82,8 +82,8 @@ singleNavigation
         ( FWD_SLASH propertyPath
 // Unsupported...
 //        | boundOperation
-        | FWD_SLASH REF
-        | FWD_SLASH VALUE
+        | FWD_SLASH REF_OPT
+        | FWD_SLASH VALUE_OPT
         )
     ;
 
@@ -115,7 +115,7 @@ collectionPath
     ;
 
 singlePath
-    : VALUE
+    : VALUE_OPT
 // Unsupported
 // | boundOperation
     ;
@@ -193,18 +193,20 @@ parameterValue : primitiveLiteral;
 
 
 // search: ; // TODO
-filter: FILTER EQ expression ;
-apply:  APPLY EQ applyExpression;
+filter: FILTER_OPT EQ expression ;
+apply:  APPLY_OPT EQ applyExpression;
 applyExpression: applyTrafo (FWD_SLASH applyTrafo)*;
+// rename this to setTransformation at some point...
 applyTrafo
     : computeTrafo
+    | concatTrafo
     | groupbyTrafo
     | aggregateTrafo
     | filterTrafo
     ;
 
 computeTrafo
-    : COMPUTE_TRANS LPAREN (
+    : COMPUTE LPAREN (
         computeExpression |
         computeExpression (COMMA computeExpression)+
     ) RPAREN
@@ -214,9 +216,17 @@ computeExpression
     : expression dynamicPropertyAssignment
     ;
 
+concatTrafo
+    : CONCAT LPAREN (
+        applyTrafo |
+        applyTrafo (COMMA applyTrafo)+
+    ) RPAREN
+    ;
+
+
 // groupbyTrafo   = 'groupby' OPEN BWS groupbyList *( BWS COMMA BWS applyExpr)  BWS CLOSE
 groupbyTrafo
-    : GROUPBY_TRANS LPAREN groupByList (COMMA applyExpression)? RPAREN
+    : GROUPBY LPAREN groupByList (COMMA applyExpression)? RPAREN
     ;
 
 groupByList : LPAREN groupbyElement (COMMA groupbyElement)* RPAREN ;
@@ -235,11 +245,11 @@ pathPrefix
     ;
 
 filterTrafo
-    : FILTER_TRANS LPAREN expression RPAREN
+    : FILTER LPAREN expression RPAREN
     ;
 
 aggregateTrafo
-    : AGGREGATE_TRANS LPAREN (aggregationParam (COMMA aggregationParam)*)? RPAREN
+    : AGGREGATE LPAREN (aggregationParam (COMMA aggregationParam)*)? RPAREN
     ;
 
 aggregationParam
@@ -254,7 +264,7 @@ aggregationParam
 //                  )
 aggregationExpr
     :
-    ( COUNT dynamicPropertyAssignment
+    ( COUNT_OPT dynamicPropertyAssignment
     | expression aggregateWith? dynamicPropertyAssignment
     )
     ;
@@ -274,12 +284,12 @@ aggregateMethod
 aggregatedProperty
     : pathPrefix property ;
 
-count: COUNT EQ LIT_BOOLEAN ;
-orderby: ORDERBY EQ (orderbyItem | orderbyItem (COMMA orderbyItem )+);
+count: COUNT_OPT EQ LIT_BOOLEAN ;
+orderby: ORDERBY_OPT EQ (orderbyItem | orderbyItem (COMMA orderbyItem )+);
 skip: SKIP_COUNT EQ LIT_INTEGER;
-top: TOP EQ LIT_INTEGER ;
-expand: EXPAND EQ expandItemList;
-select: SELECT EQ (IDENTIFIER | IDENTIFIER (COMMA IDENTIFIER)+);
+top: TOP_OPT EQ LIT_INTEGER ;
+expand: EXPAND_OPT EQ expandItemList;
+select: SELECT_OPT EQ (IDENTIFIER | IDENTIFIER (COMMA IDENTIFIER)+);
 // format: ; // Not supported
 
 orderbyItem: expression (DESC | ASC)?;
@@ -335,7 +345,7 @@ expandQueryOption
 //  - rename to align with abnf (if possible?)
 //
 expression
-    : primitiveLiteralCollection                                               # literalCollectionExpression
+    : functionName LPAREN expressionList? RPAREN                               # functionExpression
     | expression OP_IN ( primitiveLiteralCollection | parameterAlias )         # inExpression
     | LPAREN expression RPAREN                                                 # parenthesisExpression
     | ( OP_NOT | OP_HAS | MINUS ) expression                                   # unaryExpression
@@ -348,54 +358,54 @@ expression
     | expression ( OP_EQ | OP_NE | OP_GT | OP_GE | OP_LT | OP_LE ) expression  # binaryExpression
     | expression ( OP_AND | OP_OR ) expression                                 # logicalExpression
     | primitiveLiteral                                                         # literalExpression
+    | primitiveLiteralCollection                                               # literalCollectionExpression
     | firstMemberExpr                                                          # firstMemberExpression
     | parameterAlias                                                           # aliasExpression
-    | IDENTIFIER LPAREN expressionList? RPAREN                                 # functionExpression
     ;
 
 expressionList
     : expression (COMMA expression)* ;
 
-//functionName
-//    : FN_CONTAINS 
-//    | FN_ENDSWITH
-//    | FN_STARTSWITH
-//    | FN_LENGTH
-//    | FN_INDEXOF
-//    | FN_SUBSTRING
-//    | FN_TOLOWER
-//    | FN_TOUPPER
-//    | FN_TRIM
-//    | FN_CONCAT
-//    | FN_YEAR
-//    | FN_MONTH
-//    | FN_DAY
-//    | FN_HOUR
-//    | FN_MINUTE
-//    | FN_SECOND
-//    | FN_FRACTIONALSECONDS
-//    | FN_DATE
-//    | FN_TIME
-//    | FN_TOTALOFFSETMINUTES
-//    | FN_NOW
-//    | FN_MINDATETIME
-//    | FN_MAXDATETIME
-//    | FN_ROUND
-//    | FN_FLOOR
-//    | FN_CEILING
-//    | FN_CAST
-//    | FN_ISOF
-//    | FN_GEODISTANCE
-//    | FN_GEOLENGTH
-//    | FN_GEOINTERSECTS
-//    ;
+functionName
+    : K_CONTAINS
+    | K_ENDSWITH
+    | K_STARTSWITH
+    | K_LENGTH
+    | K_INDEXOF
+    | K_SUBSTRING
+    | K_TOLOWER
+    | K_TOUPPER
+    | K_TRIM
+    | CONCAT
+    | K_YEAR
+    | K_MONTH
+    | K_DAY
+    | K_HOUR
+    | K_MINUTE
+    | K_SECOND
+    | K_FRACTIONALSECONDS
+    | K_DATE
+    | K_TIME
+    | K_TOTALOFFSETMINUTES
+    | K_NOW
+    | K_MINDATETIME
+    | K_MAXDATETIME
+    | K_ROUND
+    | K_FLOOR
+    | K_CEILING
+    | K_CAST
+    | K_ISOF
+    | K_GEODISTANCE
+    | K_GEOLENGTH
+    | K_GEOINTERSECTS
+    ;
 
 firstMemberExpr
     : lambdaPredicatePrefixExpr? memberExpr
     ;
 
 lambdaPredicatePrefixExpr
-    : IT FWD_SLASH
+    : IT_OPT FWD_SLASH
     ;
 
 memberExpr
@@ -427,14 +437,14 @@ singleNavigationExpr
     ;
 
 collectionPathExpr
-    : COUNT
+    : COUNT_OPT
     // | FWD_SLASH boundFunctionExpr // Unsupported
     | FWD_SLASH anyExpr
     | FWD_SLASH allExpr
     ;
 
 anyExpr : ANY LPAREN (lambdaParameterIdentifier COLON expression)? RPAREN;
-allExpr : ALL LPAREN lambdaParameterIdentifier COLON expression RPAREN;
+allExpr : ANY LPAREN lambdaParameterIdentifier COLON expression RPAREN;
 
 // in any allExpr or allExpr, the 'expression' _should_ be a lambdaPredicateExpr, but this
 // is just a boolCommonExpr with a condition:
@@ -504,38 +514,37 @@ namespace
     ;
 
 // QueryOptions
-SELECT              : DOLLAR S E L E C T;
-APPLY               : DOLLAR A P P L Y;
-EXPAND              : DOLLAR E X P A N D;
-FILTER              : DOLLAR F I L T E R;
-TOP                 : DOLLAR T O P;
-SKIP_COUNT          : DOLLAR S K I P ;
-COUNT               : DOLLAR C O U N T ;
-ORDERBY             : DOLLAR O R D E R B Y;
-REF                 : DOLLAR R E F;
-VALUE               : DOLLAR V A L U E;
-IT                  : DOLLAR I T;
+SELECT_OPT     : DOLLAR S E L E C T;
+APPLY_OPT      : DOLLAR A P P L Y;
+EXPAND_OPT     : DOLLAR E X P A N D;
+FILTER_OPT     : DOLLAR F I L T E R;
+TOP_OPT        : DOLLAR T O P;
+SKIP_COUNT     : DOLLAR S K I P ;
+COUNT_OPT      : DOLLAR C O U N T ;
+ORDERBY_OPT    : DOLLAR O R D E R B Y;
+REF_OPT        : DOLLAR R E F;
+VALUE_OPT      : DOLLAR V A L U E;
+IT_OPT         : DOLLAR I T;
 
-// set transformations
-AGGREGATE_TRANS      :'aggregate';
-TOPCOUNT_TRANS       :'topcount';
-TOPSUM_TRANS         :'topsum';
-TOPPERCENT_TRANS     :'toppercent';
-BOTTOMCOUNT_TRANS    :'bottomcount';
-BOTTOMSUM_TRANS      :'bottomsum';
-BOTTOMPERCENT_TRANS  :'bottompercent';
-IDENTITY_TRANS       :'identity';
-CONCAT_TRANS         :'concat';
-GROUPBY_TRANS        :'groupby';
-COMPUTE_TRANS        :'compute';
-FILTER_TRANS         :'filter';
-EXPAND_TRANS         :'expand';
+// KEYWORDS
+AGGREGATE      : A G G R E G A T E;
+TOPCOUNT       : T O P C O U N T;
+TOPSUM         : T O P S U M;
+TOPPERCENT     : T O P P E R C E N T;
+BOTTOMCOUNT    : B O T T O M C O U N T;
+BOTTOMSUM      : B O T T O M S U M;
+BOTTOMPERCENT  : B O T T O M P E R C E N T;
+IDENTITY       : I D E N T I T Y;
+CONCAT         : C O N C A T;
+GROUPBY        : G R O U P B Y;
+COMPUTE        : C O M P U T E;
+FILTER         : F I L T E R;
+EXPAND         : E X P A N D;
+ALL            : A L L;
+ANY            : A N Y;
 
-ALL                  : 'all' ;
-ANY                  : 'any';
-
-ASC                  : RWS 'asc';
-DESC                 : RWS 'desc';
+ASC              : RWS A S C;
+DESC             : RWS D E S C;
 
 SUM_AGGREGATION            : S U M ;
 MIN_AGGREGATION            : M I N ;
@@ -570,40 +579,37 @@ OP_DIV              : RWS D I V RWS;
 OP_MUL              : RWS M U L RWS;
 OP_MOD              : RWS M O D RWS;
 
-
-
-//// Functions
-//FN_CONTAINS            : C O N T A I N S;
-//FN_ENDSWITH            : E N D S W I T H;
-//FN_STARTSWITH          : S T A R T S W I T H;
-//FN_LENGTH              : L E N G T H;
-//FN_INDEXOF             : I N D E X O F;
-//FN_SUBSTRING           : S U B S T R I N G;
-//FN_TOLOWER             : T O L O W E R;
-//FN_TOUPPER             : T O U P P E R;
-//FN_TRIM                : T R I M;
-//FN_CONCAT              : C O N C A T;
-//FN_YEAR                : Y E A R;
-//FN_MONTH               : M O N T H;
-//FN_DAY                 : D A Y;
-//FN_HOUR                : H O U R;
-//FN_MINUTE              : M I N U T E;
-//FN_SECOND              : S E C O N D;
-//FN_FRACTIONALSECONDS   : F R A C T I O N A L S E C O N D S;
-//FN_DATE                : D A T E;
-//FN_TIME                : T I M E;
-//FN_TOTALOFFSETMINUTES  : T O T A L O F F S E T M I N U T E S;
-//FN_NOW                 : N O W;
-//FN_MINDATETIME         : M I N D A T E T I M E;
-//FN_MAXDATETIME         : M A X D A T E T I M E;
-//FN_ROUND               : R O U N D;
-//FN_FLOOR               : F L O O R;
-//FN_CEILING             : C E I L I N G;
-//FN_CAST                : C A S T;
-//FN_ISOF                : I S O F;
-//FN_GEODISTANCE         : G E O D I S T A N C E;
-//FN_GEOLENGTH           : G E O L E N G T H;
-//FN_GEOINTERSECTS       : G E O I N T E R S E C T S;
+// Functions
+K_CONTAINS            : C O N T A I N S;
+K_ENDSWITH            : E N D S W I T H;
+K_STARTSWITH          : S T A R T S W I T H;
+K_LENGTH              : L E N G T H;
+K_INDEXOF             : I N D E X O F;
+K_SUBSTRING           : S U B S T R I N G;
+K_TOLOWER             : T O L O W E R;
+K_TOUPPER             : T O U P P E R;
+K_TRIM                : T R I M;
+K_YEAR                : Y E A R;
+K_MONTH               : M O N T H;
+K_DAY                 : D A Y;
+K_HOUR                : H O U R;
+K_MINUTE              : M I N U T E;
+K_SECOND              : S E C O N D;
+K_FRACTIONALSECONDS   : F R A C T I O N A L S E C O N D S;
+K_DATE                : D A T E;
+K_TIME                : T I M E;
+K_TOTALOFFSETMINUTES  : T O T A L O F F S E T M I N U T E S;
+K_NOW                 : N O W;
+K_MINDATETIME         : M I N D A T E T I M E;
+K_MAXDATETIME         : M A X D A T E T I M E;
+K_ROUND               : R O U N D;
+K_FLOOR               : F L O O R;
+K_CEILING             : C E I L I N G;
+K_CAST                : C A S T;
+K_ISOF                : I S O F;
+K_GEODISTANCE         : G E O D I S T A N C E;
+K_GEOLENGTH           : G E O L E N G T H;
+K_GEOINTERSECTS       : G E O I N T E R S E C T S;
 
 AT_SIGN          : '@'   ;
 DOT              : '.'   ;

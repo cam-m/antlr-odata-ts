@@ -7,7 +7,7 @@ import { Schema } from './lang/edm/Schema';
 
 import { ParseTreeListener } from "antlr4ts/tree/ParseTreeListener";
 
-import { LiteralCollectionExpressionContext } from "./OData4LiteParser";
+import { FunctionExpressionContext } from "./OData4LiteParser";
 import { InExpressionContext } from "./OData4LiteParser";
 import { ParenthesisExpressionContext } from "./OData4LiteParser";
 import { UnaryExpressionContext } from "./OData4LiteParser";
@@ -20,9 +20,9 @@ import { AddExpressionContext } from "./OData4LiteParser";
 import { BinaryExpressionContext } from "./OData4LiteParser";
 import { LogicalExpressionContext } from "./OData4LiteParser";
 import { LiteralExpressionContext } from "./OData4LiteParser";
+import { LiteralCollectionExpressionContext } from "./OData4LiteParser";
 import { FirstMemberExpressionContext } from "./OData4LiteParser";
 import { AliasExpressionContext } from "./OData4LiteParser";
-import { FunctionExpressionContext } from "./OData4LiteParser";
 import { OdataRelativeURIContext } from "./OData4LiteParser";
 import { ResourcePathContext } from "./OData4LiteParser";
 import { FunctionImportCallContext } from "./OData4LiteParser";
@@ -52,6 +52,7 @@ import { ApplyExpressionContext } from "./OData4LiteParser";
 import { ApplyTrafoContext } from "./OData4LiteParser";
 import { ComputeTrafoContext } from "./OData4LiteParser";
 import { ComputeExpressionContext } from "./OData4LiteParser";
+import { ConcatTrafoContext } from "./OData4LiteParser";
 import { GroupbyTrafoContext } from "./OData4LiteParser";
 import { GroupByListContext } from "./OData4LiteParser";
 import { GroupbyElementContext } from "./OData4LiteParser";
@@ -78,6 +79,7 @@ import { ExpandQueryOptionsContext } from "./OData4LiteParser";
 import { ExpandQueryOptionContext } from "./OData4LiteParser";
 import { ExpressionContext } from "./OData4LiteParser";
 import { ExpressionListContext } from "./OData4LiteParser";
+import { FunctionNameContext } from "./OData4LiteParser";
 import { FirstMemberExprContext } from "./OData4LiteParser";
 import { LambdaPredicatePrefixExprContext } from "./OData4LiteParser";
 import { MemberExprContext } from "./OData4LiteParser";
@@ -103,17 +105,17 @@ import { NamespaceContext } from "./OData4LiteParser";
  */
 export interface OData4LiteListener extends ParseTreeListener {
 	/**
-	 * Enter a parse tree produced by the `literalCollectionExpression`
+	 * Enter a parse tree produced by the `functionExpression`
 	 * labeled alternative in `OData4LiteParser.expression`.
 	 * @param ctx the parse tree
 	 */
-	enterLiteralCollectionExpression?: (ctx: LiteralCollectionExpressionContext) => void;
+	enterFunctionExpression?: (ctx: FunctionExpressionContext) => void;
 	/**
-	 * Exit a parse tree produced by the `literalCollectionExpression`
+	 * Exit a parse tree produced by the `functionExpression`
 	 * labeled alternative in `OData4LiteParser.expression`.
 	 * @param ctx the parse tree
 	 */
-	exitLiteralCollectionExpression?: (ctx: LiteralCollectionExpressionContext) => void;
+	exitFunctionExpression?: (ctx: FunctionExpressionContext) => void;
 
 	/**
 	 * Enter a parse tree produced by the `inExpression`
@@ -272,6 +274,19 @@ export interface OData4LiteListener extends ParseTreeListener {
 	exitLiteralExpression?: (ctx: LiteralExpressionContext) => void;
 
 	/**
+	 * Enter a parse tree produced by the `literalCollectionExpression`
+	 * labeled alternative in `OData4LiteParser.expression`.
+	 * @param ctx the parse tree
+	 */
+	enterLiteralCollectionExpression?: (ctx: LiteralCollectionExpressionContext) => void;
+	/**
+	 * Exit a parse tree produced by the `literalCollectionExpression`
+	 * labeled alternative in `OData4LiteParser.expression`.
+	 * @param ctx the parse tree
+	 */
+	exitLiteralCollectionExpression?: (ctx: LiteralCollectionExpressionContext) => void;
+
+	/**
 	 * Enter a parse tree produced by the `firstMemberExpression`
 	 * labeled alternative in `OData4LiteParser.expression`.
 	 * @param ctx the parse tree
@@ -296,19 +311,6 @@ export interface OData4LiteListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitAliasExpression?: (ctx: AliasExpressionContext) => void;
-
-	/**
-	 * Enter a parse tree produced by the `functionExpression`
-	 * labeled alternative in `OData4LiteParser.expression`.
-	 * @param ctx the parse tree
-	 */
-	enterFunctionExpression?: (ctx: FunctionExpressionContext) => void;
-	/**
-	 * Exit a parse tree produced by the `functionExpression`
-	 * labeled alternative in `OData4LiteParser.expression`.
-	 * @param ctx the parse tree
-	 */
-	exitFunctionExpression?: (ctx: FunctionExpressionContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `OData4LiteParser.odataRelativeURI`.
@@ -630,6 +632,17 @@ export interface OData4LiteListener extends ParseTreeListener {
 	exitComputeExpression?: (ctx: ComputeExpressionContext) => void;
 
 	/**
+	 * Enter a parse tree produced by `OData4LiteParser.concatTrafo`.
+	 * @param ctx the parse tree
+	 */
+	enterConcatTrafo?: (ctx: ConcatTrafoContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.concatTrafo`.
+	 * @param ctx the parse tree
+	 */
+	exitConcatTrafo?: (ctx: ConcatTrafoContext) => void;
+
+	/**
 	 * Enter a parse tree produced by `OData4LiteParser.groupbyTrafo`.
 	 * @param ctx the parse tree
 	 */
@@ -914,6 +927,17 @@ export interface OData4LiteListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitExpressionList?: (ctx: ExpressionListContext) => void;
+
+	/**
+	 * Enter a parse tree produced by `OData4LiteParser.functionName`.
+	 * @param ctx the parse tree
+	 */
+	enterFunctionName?: (ctx: FunctionNameContext) => void;
+	/**
+	 * Exit a parse tree produced by `OData4LiteParser.functionName`.
+	 * @param ctx the parse tree
+	 */
+	exitFunctionName?: (ctx: FunctionNameContext) => void;
 
 	/**
 	 * Enter a parse tree produced by `OData4LiteParser.firstMemberExpr`.
