@@ -479,16 +479,24 @@ describe('OData Lite', function () {
                 assert.equal(computeTransformation.computeExpression()[0].dynamicPropertyAssignment().text, ' as FullName');
             });
 
-            it('should understand valid compute transformations with Navigate properties', function () {
+            it('should understand valid ANY-type collection path expressions', function () {
                 const tree: OdataRelativeURIContext = getODataLiteParser('Rules?$filter=RuleReportPropertyLink/any()').odataRelativeURI();
                 assert.equal(tree.resourcePath().IDENTIFIER().text, 'Rules');
+                const filterExpression = tree.queryOptions().queryOption()[0].systemQueryOption().filter().expression();
+                const firstMemberExpression = filterExpression.children[0] as FirstMemberExprContext;
+                const anyExprContext = firstMemberExpression.memberExpr().propertyPathExpr().collectionPathExpr().anyExpr();
+                assert.equal(anyExprContext.ANY().text, "any");
+            });
 
-                const tree2: OdataRelativeURIContext = getODataLiteParser('Rules?$filter=RuleReportPropertyLink/all(link:(true))').odataRelativeURI();
-                assert.equal(tree2.resourcePath().IDENTIFIER().text, 'Rules');
-                const filterExpression = tree2.queryOptions().queryOption()[0].systemQueryOption().filter().expression();
+            it('should understand valid ALL-type collection path expressions', function () {
+                const tree: OdataRelativeURIContext = getODataLiteParser('Rules?$filter=RuleReportPropertyLink/all(link:(true))').odataRelativeURI();
+                assert.equal(tree.resourcePath().IDENTIFIER().text, 'Rules');
+                const filterExpression = tree.queryOptions().queryOption()[0].systemQueryOption().filter().expression();
                 const firstMemberExpression = filterExpression.children[0] as FirstMemberExprContext;
                 const allExpression = firstMemberExpression.memberExpr().propertyPathExpr().collectionPathExpr().allExpr();
                 assert.equal(allExpression.ALL().text, "all");
+                assert.equal(allExpression.lambdaParameterIdentifier().text, "link");
+                assert.equal(allExpression.expression().text, "(true)");
             });
         })
     })
