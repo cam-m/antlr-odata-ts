@@ -478,6 +478,18 @@ describe('OData Lite', function () {
                 assert.equal(computeTransformation.computeExpression()[0].text, 'concat(A,B) as FullName');
                 assert.equal(computeTransformation.computeExpression()[0].dynamicPropertyAssignment().text, ' as FullName');
             });
+
+            it('should understand valid compute transformations with Navigate properties', function () {
+                const tree: OdataRelativeURIContext = getODataLiteParser('Rules?$filter=RuleReportPropertyLink/any()').odataRelativeURI();
+                assert.equal(tree.resourcePath().IDENTIFIER().text, 'Rules');
+
+                const tree2: OdataRelativeURIContext = getODataLiteParser('Rules?$filter=RuleReportPropertyLink/all(link:(true))').odataRelativeURI();
+                assert.equal(tree2.resourcePath().IDENTIFIER().text, 'Rules');
+                const filterExpression = tree2.queryOptions().queryOption()[0].systemQueryOption().filter().expression();
+                const firstMemberExpression = filterExpression.children[0] as FirstMemberExprContext;
+                const allExpression = firstMemberExpression.memberExpr().propertyPathExpr().collectionPathExpr().allExpr();
+                assert.equal(allExpression.ALL().text, "all");
+            });
         })
     })
 });

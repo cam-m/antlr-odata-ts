@@ -3592,7 +3592,7 @@ export class OData4LiteParser extends Parser {
 			this.enterOuterAlt(_localctx, 1);
 			{
 			this.state = 683;
-			this.match(OData4LiteParser.ANY);
+			this.match(OData4LiteParser.ALL);
 			this.state = 684;
 			this.match(OData4LiteParser.LPAREN);
 			this.state = 685;
@@ -4377,7 +4377,7 @@ export class OData4LiteParser extends Parser {
 		"\x02\u02A5\u02A6\x05\x86D\x02\u02A6\u02A7\x07Z\x02\x02\u02A7\u02A8\x05" +
 		"n8\x02\u02A8\u02AA\x03\x02\x02\x02\u02A9\u02A5\x03\x02\x02\x02\u02A9\u02AA" +
 		"\x03\x02\x02\x02\u02AA\u02AB\x03\x02\x02\x02\u02AB\u02AC\x07b\x02\x02" +
-		"\u02AC\x83\x03\x02\x02\x02\u02AD\u02AE\x07\x1C\x02\x02\u02AE\u02AF\x07" +
+		"\u02AC\x83\x03\x02\x02\x02\u02AD\u02AE\x07\x1B\x02\x02\u02AE\u02AF\x07" +
 		"c\x02\x02\u02AF\u02B0\x05\x86D\x02\u02B0\u02B1\x07Z\x02\x02\u02B1\u02B2" +
 		"\x05n8\x02\u02B2\u02B3\x07b\x02\x02\u02B3\x85\x03\x02\x02\x02\u02B4\u02B5" +
 		"\x07o\x02\x02\u02B5\x87\x03\x02\x02\x02\u02B6\u02BF\x07e\x02\x02\u02B7" +
@@ -7561,7 +7561,7 @@ export class AnyExprContext extends ParserRuleContext {
 
 
 export class AllExprContext extends ParserRuleContext {
-	public ANY(): TerminalNode { return this.getToken(OData4LiteParser.ANY, 0); }
+	public ALL(): TerminalNode { return this.getToken(OData4LiteParser.ALL, 0); }
 	public LPAREN(): TerminalNode { return this.getToken(OData4LiteParser.LPAREN, 0); }
 	public lambdaParameterIdentifier(): LambdaParameterIdentifierContext {
 		return this.getRuleContext(0, LambdaParameterIdentifierContext);
