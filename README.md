@@ -1,4 +1,4 @@
-# antlr-odata [![Build Status](https://travis-ci.com/cam-m/antlr-odata.svg?branch=master)](https://travis-ci.com/cam-m/antlr-odata)
+# antlr-odata
 This project provides an antlr generated lexer and parser for OData Queries.
 
 Note this project depends on antlr4ts ^0.5.0-alpha.3 - use in production code at your own risk.
