@@ -5,7 +5,6 @@ import {EdmFunction} from "./EdmFunction";
 import {EntitySet} from "./EntitySet";
 import Trie from "trie-prefix-tree";
 import {Annotations} from "./Annotations";
-import canonicalize = Mocha.utils.canonicalize;
 
 /**
  * Represents a single EDM Schema, and contains helper methods for querying the various
@@ -30,9 +29,7 @@ export class Schema {
 
     private annotationsByTargetEntityType: Map<string, Annotations> = new Map<string, Annotations>();
     private annotationsByNameExact: Map<string, Annotations> = new Map<string, Annotations>();
-    private annotationsByPrefixTrie = Trie([]);
-
-    public Namespace: string;
+    public Namespace!: string;
     public EntityContainers: EntityContainer[] = [];
 
     public Functions: EdmFunction[] = [];
@@ -79,7 +76,7 @@ export class Schema {
      * Gets an EntitySet by Name (ignores case).
      * @param name
      */
-    public entitySetByName(name: string): EntitySet {
+    public entitySetByName(name: string): EntitySet | undefined {
         return this.entitySetsByName.get(name.toLocaleLowerCase());
     }
 
@@ -89,14 +86,14 @@ export class Schema {
      */
     public entitySetsWithPrefix(prefix: string): EntitySet[] {
         return this.entitySetTrie.getPrefix(prefix.toLocaleLowerCase(), true)
-            .map(name => this.entitySetsByName.get(name));
+            .map(name => this.entitySetsByName.get(name)!);
     }
 
     /**
      * Gets an EntityType by Name (ignores case).
      * @param name
      */
-    public entityTypeByName(name: string): EntityType {
+    public entityTypeByName(name: string): EntityType | undefined {
         return this.entityTypesByName.get(name.toLocaleLowerCase());
     }
 
@@ -106,23 +103,23 @@ export class Schema {
      */
     public entityTypesWithPrefix(prefix: string): EntityType[] {
         return this.entityTypeTrie.getPrefix(prefix.toLocaleLowerCase(), true)
-            .map(name => this.entityTypesByName.get(name));
+            .map(name => this.entityTypesByName.get(name)!);
     }
 
     /**
      * Gets a Function by Name (ignores case).
      * @param name
      */
-    public functionByName(name: string): EdmFunction {
+    public functionByName(name: string): EdmFunction | undefined {
         return this.functionsByName.get(name.toLocaleLowerCase());
     }
 
     /**
-     * Gets a Function by Name (ignores case).
+     * Gets a Function by its case-sensitive Name.
      * @param name
      */
-    public functionByNameExact(name: string): EdmFunction {
-        return this.functionsByName.get(name.toLocaleLowerCase());
+    public functionByNameExact(name: string): EdmFunction | undefined {
+        return this.functionsByNameExact.get(name);
     }
 
     /**
@@ -131,7 +128,7 @@ export class Schema {
      */
     public functionsWithPrefix(prefix: string): EdmFunction[] {
         return this.functionsByPrefixTrie.getPrefix(prefix.toLocaleLowerCase(), true)
-            .map(name => this.functionsByName.get(name));
+            .map(name => this.functionsByName.get(name)!);
     }
 
 
@@ -139,7 +136,7 @@ export class Schema {
      * Gets a Function by Name (ignores case).
      * @param name
      */
-    public complexTypeByName(name: string): ComplexType {
+    public complexTypeByName(name: string): ComplexType | undefined {
         return this.complexTypesByName.get(name.toLocaleLowerCase());
     }
 
@@ -149,7 +146,7 @@ export class Schema {
      */
     public complexTypesWithPrefix(prefix: string): ComplexType[] {
         return this.complexTypesByPrefixTrie.getPrefix(prefix.toLocaleLowerCase(), true)
-            .map(name => this.complexTypesByName.get(name));
+            .map(name => this.complexTypesByName.get(name)!);
     }
 
 
@@ -157,7 +154,7 @@ export class Schema {
      * Gets an Annotation by Name (ignores case).
      * @param name
      */
-    public annotationsByName(name: string): Annotations {
+    public annotationsByName(name: string): Annotations | undefined {
         return this.annotationsByTargetEntityType.get(name.toLocaleLowerCase());
     }
 }

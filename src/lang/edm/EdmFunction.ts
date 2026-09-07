@@ -3,8 +3,8 @@ import {Parameter} from "./Parameter";
 import {Schema} from "./Schema";
 
 export class EdmFunction {
-    public Schema: Schema;
-    public Name: string;
-    public Parameters: Parameter[];
-    public ReturnType: ReturnType;
+    public Schema!: Schema;
+    public Name!: string;
+    public Parameters?: Parameter[];
+    public ReturnType!: ReturnType;
 }

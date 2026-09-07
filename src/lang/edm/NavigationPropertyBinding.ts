@@ -1,4 +1,4 @@
 export class NavigationPropertyBinding {
-    public Path: string;
-    public Target: string;
+    public Path!: string;
+    public Target!: string;
 }

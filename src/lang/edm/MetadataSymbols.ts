@@ -13,7 +13,6 @@ import {ReturnType} from "./ReturnType";
 import {NavigationProperty} from "./NavigationProperty";
 import {ReferentialConstraint} from "./ReferentialConstraint";
 import {Type} from "./Type";
-import canonicalize = Mocha.utils.canonicalize;
 import {Annotations} from "./Annotations";
 import {Annotation} from "./Annotation";
 
@@ -26,14 +25,27 @@ export class MetadataSymbols {
         'edm': 'http://docs.oasis-open.org/odata/ns/edm'
     });
 
+    private toNodeArray(result: xpath.SelectReturnType): Element[] {
+        if (Array.isArray(result)) return result.filter(xpath.isElement);
+        return xpath.isElement(result) ? [result] : [];
+    }
+
+    private requiredAttribute(element: Element, attributeName: string): string {
+        const value = element.getAttributeNode(attributeName)?.nodeValue;
+        if (value === null || value === undefined) {
+            throw new Error(`Missing required '${attributeName}' attribute`);
+        }
+        return value;
+    }
+
     /**
      * tracks the current schema during parsing.
      *
      * Should add checks to prevent use once parse is complete.
      */
-    private currentSchema: Schema;
+    private currentSchema?: Schema;
 
-    constructor(private metadataXmlDom) {
+    constructor(private metadataXmlDom: Document) {
         this._schemas = this.parseSchemas(metadataXmlDom);
     }
     
@@ -45,17 +57,16 @@ export class MetadataSymbols {
         return [...this._schemas];
     }
 
-    public schemaByName(name: string): Schema | null {
+    public schemaByName(name: string): Schema | undefined {
         return this.schemaLookupMap.get(name);
     }
 
     private parseSchemas(metadataXmlDom: any): Schema[] {
-        var nodes = this.select('//edmx:Edmx/edmx:DataServices/edm:Schema', metadataXmlDom);
-
+        const nodes = this.toNodeArray(this.select('//edmx:Edmx/edmx:DataServices/edm:Schema', metadataXmlDom));
         return nodes.map((schemaElement: Element) => {
             const schema: Schema = new Schema();
             this.currentSchema = schema;
-            schema.Namespace = <string>xpath.select('string(@Namespace)', schemaElement, true);
+            schema.Namespace = this.requiredAttribute(schemaElement, 'Namespace');
             schema.EntityContainers = this.parseEntityContainers(schemaElement);
             schema.ComplexTypes = this.parseComplexTypes(schemaElement);
             schema.Functions = this.parseFunctions(schemaElement);
@@ -69,157 +80,161 @@ export class MetadataSymbols {
     }
 
     private parseEntityContainers(schema: Node): EntityContainer[] {
-        const entityContainers = this.select('//edm:EntityContainer', schema);
+        const entityContainers = this.toNodeArray(this.select('//edm:EntityContainer', schema));
         return entityContainers.map((entityContainerElement: Element) => {
             const entityContainer = new EntityContainer();
-            entityContainer.Name = <string>xpath.select('string(@Name)', entityContainerElement, true);
+            entityContainer.Name = this.requiredAttribute(entityContainerElement, 'Name');
             entityContainer.EntitySetImports = this.parseEntitySets(entityContainerElement);
             return entityContainer;
         })
     }
 
     private parseEntitySets(entityContainer: Element) {
-        const entitySetElements = this.select('./edm:EntitySet', entityContainer);
+        const entitySetElements = this.toNodeArray(this.select('./edm:EntitySet', entityContainer));
         return entitySetElements.map((entitySetNode: Element) => {
             const es: EntitySet = new EntitySet();
-            es.Schema = this.currentSchema;
-            es.Name = entitySetNode.getAttributeNode('Name').nodeValue;
-            es.EntityType = entitySetNode.getAttributeNode('EntityType').nodeValue;
+            es.Schema = this.currentSchema!;
+            es.Name = this.requiredAttribute(entitySetNode, 'Name');
+            es.EntityType = this.requiredAttribute(entitySetNode, 'EntityType');
             es.NavigationPropertyBindings = this.parseNavigationPropertyBindings(entitySetNode);
-            this.currentSchema.addEntitySetToIndex(es);
+            this.currentSchema!.addEntitySetToIndex(es);
 
             return es;
         });
     }
 
     private parseComplexTypes(schemaElement: Node) {
-        const complexTypeElements = this.select('./edm:ComplexType', schemaElement);
+        const complexTypeElements = this.toNodeArray(this.select('./edm:ComplexType', schemaElement));
         return complexTypeElements.map((complexTypeElement: Element) => {
             const complexType: ComplexType = new ComplexType();
-            complexType.Schema = this.currentSchema;
-            complexType.Name = complexTypeElement.getAttributeNode('Name').nodeValue;
+            complexType.Schema = this.currentSchema!;
+            complexType.Name = this.requiredAttribute(complexTypeElement, 'Name');
             complexType.Properties = this.parseProperties(complexTypeElement);
-            this.currentSchema.addComplexTypesToIndex(complexType);
+            this.currentSchema!.addComplexTypesToIndex(complexType);
             return complexType;
         });
     }
 
     private parseFunctions(schemaElement: Node) {
-        const functions = this.select('./edm:Function', schemaElement);
+        const functions = this.toNodeArray(this.select('./edm:Function', schemaElement));
         return functions.map((functionElement: Element) => {
             const edmFunction: EdmFunction = new EdmFunction();
-            edmFunction.Schema = this.currentSchema;
-            edmFunction.Name = functionElement.getAttributeNode('Name').nodeValue;
-            edmFunction.ReturnType = MetadataSymbols.parseReturnType(functionElement);
+            edmFunction.Schema = this.currentSchema!;
+            edmFunction.Name = this.requiredAttribute(functionElement, 'Name');
+            edmFunction.ReturnType = this.parseReturnType(functionElement);
             edmFunction.Parameters = this.parseParameters(functionElement);
-            this.currentSchema.addFunctionToIndex(edmFunction);
+            this.currentSchema!.addFunctionToIndex(edmFunction);
             return edmFunction;
         });
     }
 
     private parseEntityTypes(schemaElement: Element) {
-        const entityTypeElements = this.select('./edm:EntityType', schemaElement);
+        const entityTypeElements = this.toNodeArray(this.select('./edm:EntityType', schemaElement));
         return entityTypeElements.map((entityTypeElement: Element) => {
             const entityType = new EntityType();
-            entityType.Schema = this.currentSchema;
-            entityType.Name = <string>xpath.select('string(@Name)', entityTypeElement, true);
+            entityType.Schema = this.currentSchema!;
+            entityType.Name = this.requiredAttribute(entityTypeElement, 'Name');
             entityType.Properties = this.parseProperties(entityTypeElement);
             entityType.NavigationProperties = this.parseNavigationProperties(entityTypeElement);
-            this.currentSchema.addEntityTypeToIndex(entityType);
+            this.currentSchema!.addEntityTypeToIndex(entityType);
             return entityType;
         });
     }
 
     private parseAnnotations(schemaElement: Element): Annotations[] {
-        const annotationsElements = this.select('./edm:Annotations', schemaElement);
+        const annotationsElements = this.toNodeArray(this.select('./edm:Annotations', schemaElement));
         return annotationsElements.map((annotationElement: Element) => {
             const annotations: Annotations = new Annotations();
-            annotations.Target = <string>xpath.select('string(@Target)', annotationElement, true);
+            annotations.Target = this.requiredAttribute(annotationElement, 'Target');
             annotations.AnnotationList = this.parseAnnotationList(annotationElement);
             annotations.AnnotationsByTerm = annotations.AnnotationList.reduce((agg, next) => {
                 agg.set(next.Term, next);
                 return agg;
             }, new Map<string, Annotation>());
-            this.currentSchema.addAnnotationsToIndex(annotations);
+            this.currentSchema!.addAnnotationsToIndex(annotations);
             return annotations;
         })
     }
 
     private parseAnnotationList(annotationsElement: Element) {
-        const annotationElements = this.select('./edm:Annotation', annotationsElement);
+        const annotationElements = this.toNodeArray(this.select('./edm:Annotation', annotationsElement));
         const annotations: Annotation[] = annotationElements.map((annotationElement: Element) => {
             const annotation = new Annotation();
-            annotation.String = annotationElement?.getAttributeNode('String')?.nodeValue;
-            annotation.Term = annotationElement?.getAttributeNode('Term')?.nodeValue;
+            annotation.String = annotationElement.getAttributeNode('String')?.nodeValue ?? undefined;
+            annotation.Term = this.requiredAttribute(annotationElement, 'Term');
             return annotation;
         });
         return annotations;
     }
 
     private parseNavigationPropertyBindings(entitySetNode: Element) {
-        const navigationPropertyBindingElements = this.select('./edm:NavigationPropertyBinding', entitySetNode);
+        const navigationPropertyBindingElements = this.toNodeArray(this.select('./edm:NavigationPropertyBinding', entitySetNode));
         return navigationPropertyBindingElements.map((navPropertyNode: Element) => {
             const navPropBinding = new NavigationPropertyBinding();
-            navPropBinding.Path = navPropertyNode?.getAttributeNode('Path')?.nodeValue;
-            navPropBinding.Target = navPropertyNode?.getAttributeNode('Target')?.nodeValue;
+            navPropBinding.Path = this.requiredAttribute(navPropertyNode, 'Path');
+            navPropBinding.Target = this.requiredAttribute(navPropertyNode, 'Target');
             return navPropBinding;
         });
     }
 
     private parseProperties(parentElement: Element) {
-        const propertyElements = this.select('./edm:Property', parentElement);
+        const propertyElements = this.toNodeArray(this.select('./edm:Property', parentElement));
         return propertyElements.map((propertyElement: Element) => {
             const property: Property = new Property();
-            property.Name = propertyElement.getAttributeNode('Name').nodeValue;
-            property.Type = new Type(propertyElement.getAttributeNode('Type').nodeValue);
-            property.Nullable = propertyElement.hasAttribute('Nullable') ? Boolean(propertyElement.getAttributeNode('Nullable').nodeValue) : undefined;
+            property.Name = this.requiredAttribute(propertyElement, 'Name');
+            property.Type = new Type(this.requiredAttribute(propertyElement, 'Type'));
+            const nullable = propertyElement.getAttributeNode('Nullable')?.nodeValue;
+            if (nullable !== null && nullable !== undefined) {
+                property.Nullable = nullable === 'true' || nullable === '1';
+            }
             return property;
         });
     }
 
     private parseParameters(functionElement: Element) {
-        const parameterElements = this.select('./edm:Parameter', functionElement);
+        const parameterElements = this.toNodeArray(this.select('./edm:Parameter', functionElement));
         return parameterElements.map((parameterElement: Element) => {
             const parameter: Parameter = new Parameter();
-            parameter.Name = parameterElement.getAttributeNode('Name').nodeValue;
-            parameter.Type = new Type(parameterElement.getAttributeNode('Type').nodeValue);
+            parameter.Name = this.requiredAttribute(parameterElement, 'Name');
+            parameter.Type = new Type(this.requiredAttribute(parameterElement, 'Type'));
             return parameter;
         });
     }
 
-    private static parseReturnType(functionElement: Element) {
+    private parseReturnType(functionElement: Element): ReturnType {
         const returnTypeElementsCollection: HTMLCollectionOf<Element> = functionElement.getElementsByTagName('ReturnType');
-        if (returnTypeElementsCollection && returnTypeElementsCollection.length === 1) {
-            const returnType: ReturnType = new ReturnType();
-            returnType.Type = new Type(returnTypeElementsCollection.item(0).getAttributeNode('Type')?.nodeValue);
-            return returnType;
+        const returnTypeElement = returnTypeElementsCollection.item(0);
+        if (returnTypeElementsCollection.length !== 1 || returnTypeElement === null) {
+            throw new Error('Function requires exactly one ReturnType element');
         }
-        return undefined;
+        const returnType = new ReturnType();
+        returnType.Type = new Type(this.requiredAttribute(returnTypeElement, 'Type'));
+        return returnType;
     }
 
     private parseNavigationProperties(parentElement: Element) {
-        const navigationPropertyElements = this.select('./edm:NavigationProperty', parentElement);
+        const navigationPropertyElements = this.toNodeArray(this.select('./edm:NavigationProperty', parentElement));
         return navigationPropertyElements.map((navigationPropertyElement: Element) => {
             const navigationProperty: NavigationProperty = new NavigationProperty();
-            navigationProperty.Name = navigationPropertyElement.getAttributeNode('Name').nodeValue;
-            navigationProperty.Type = new Type(navigationPropertyElement.getAttributeNode('Type').nodeValue);
+            navigationProperty.Name = this.requiredAttribute(navigationPropertyElement, 'Name');
+            navigationProperty.Type = new Type(this.requiredAttribute(navigationPropertyElement, 'Type'));
             navigationProperty.ReferentialConstraints = this.parseReferentialConstraints(navigationPropertyElement);
             return navigationProperty;
         });
     }
 
     private parseReferentialConstraints(navigationPropertyElement: Element) {
-        const referentialConstraintElements = this.select('./edm:ReferentialConstraint', navigationPropertyElement);
+        const referentialConstraintElements = this.toNodeArray(this.select('./edm:ReferentialConstraint', navigationPropertyElement));
         return referentialConstraintElements.map((referentialConstraintElement: Element) => {
             const referentialConstraint: ReferentialConstraint = new ReferentialConstraint();
-            referentialConstraint.Property = referentialConstraintElement.getAttributeNode('Property')?.nodeValue;
-            referentialConstraint.ReferencedProperty = referentialConstraintElement.getAttributeNode('ReferencedProperty')?.nodeValue;
+            referentialConstraint.Property = this.requiredAttribute(referentialConstraintElement, 'Property');
+            referentialConstraint.ReferencedProperty = this.requiredAttribute(referentialConstraintElement, 'ReferencedProperty');
             return referentialConstraint;
         });
     }
     
     private resolveSchema(schemaName?: string): Schema {
-        let schema: Schema;
+        let schema: Schema | undefined;
         if (schemaName) {
             schema = this.schemaLookupMap.get(schemaName);
         } else {

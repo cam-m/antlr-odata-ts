@@ -47,7 +47,7 @@ StringLiteral
 
 fragment
 EscapeSequence
-    :   '\\' ('b'|'t'|'n'|'f'|'r'|'\"'|'\''|'\\')
+    :   '\\' ('b'|'t'|'n'|'f'|'r'|'"'|'\''|'\\')
     |   UnicodeEscape
     |   OctalEscape
     ;
@@ -282,7 +282,6 @@ Infinity_LUC : 'INF' ;
 Null_LLC : 'null' ;
 True_LLC : 'true' ;
 False_LLC : 'false' ;
-EmptyString : '' ; // danger will robinson ! FIXME
 
 // refactor below: 
 

@@ -5,10 +5,11 @@ grammar OData4Lite;
 @header {
 // @ts-nocheck
 import { Schema } from './lang/edm/Schema';
+import { CharStream, TokenStream } from "antlr4ng";
 }
 
 @lexer::members {
-public odataSchema: Schema;
+public odataSchema?: Schema;
 
 public static buildOData4LiteLexer(input: CharStream, schema: Schema): OData4LiteLexer {
     const instance: OData4LiteLexer = new OData4LiteLexer(input);
@@ -18,7 +19,7 @@ public static buildOData4LiteLexer(input: CharStream, schema: Schema): OData4Lit
 }
 
 @parser::members {
-private odataSchema: Schema;
+private odataSchema?: Schema;
 
 public static buildOData4LiteParser(input: TokenStream, schema: Schema): OData4LiteParser {
     const instance: OData4LiteParser = new OData4LiteParser(input);
@@ -433,7 +434,7 @@ collectionNavigationExpr
 
 singleNavigationExpr
     : FWD_SLASH memberExpr
-    | FWD_SLASH parameterAlias {this.notifyErrorListeners('Aliases are not valid in navigation expressions.');}
+    | FWD_SLASH parameterAlias {this.notifyErrorListeners('Aliases are not valid in navigation expressions.', null, null);}
     ;
 
 collectionPathExpr

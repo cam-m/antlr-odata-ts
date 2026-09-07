@@ -1,4 +1,4 @@
 export class Annotation {
-    Term: string;
-    String: string;
+    Term!: string;
+    String?: string;
 }

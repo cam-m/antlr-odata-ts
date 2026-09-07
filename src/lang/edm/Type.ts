@@ -13,7 +13,7 @@ export enum TypeClass {
 }
 
 export class Type {
-    private namespaceArr: string[];
+    private namespaceArr: string[] = [];
     private static collectionPrefix = 'Collection(';
     private static nsSeparator = '.';
     private static edm = 'Edm';
@@ -21,8 +21,8 @@ export class Type {
     public fullName: string;
     public name: string;
     public typeClass: TypeClass;
-    public primitiveType: PrimitiveType;
-    public isCollection;
+    public primitiveType?: PrimitiveType;
+    public isCollection: boolean;
 
     get namespace(): string {
         return this.namespaceArr.join(Type.nsSeparator);
@@ -31,14 +31,14 @@ export class Type {
     /**
      * Only available after reference phase complete
      */
-    public referencedType: EntityType | ComplexType;
+    public referencedType?: EntityType | ComplexType;
 
     constructor(public rawType: string) {
         if (!rawType) {
             throw new Error('Type construction requires a non empty string');
         }
         this.isCollection = rawType.startsWith(Type.collectionPrefix);
-        this.fullName = this.isCollection ? rawType.substr(Type.collectionPrefixLen, rawType.length - (Type.collectionPrefixLen + 1)) : rawType;
+        this.fullName = this.isCollection ? rawType.slice(Type.collectionPrefixLen, -1) : rawType;
         const namespacedNameArr: string[] = this.fullName.split(Type.nsSeparator);
         if (namespacedNameArr.length === 1) {
             this.name = namespacedNameArr[0];
@@ -47,7 +47,7 @@ export class Type {
             this.name = namespacedNameArr[0];
         }
         if (this.namespace === Type.edm) {
-            this.primitiveType = PrimitiveType[this.name];
+            this.primitiveType = PrimitiveType[this.name as keyof typeof PrimitiveType];
         }
         this.typeClass = this.primitiveType ? TypeClass.Primitive : TypeClass.Reference;
     }

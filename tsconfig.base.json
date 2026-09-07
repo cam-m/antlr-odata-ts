@@ -1,13 +1,12 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "target": "es6",
-    "module": "commonjs",
+    "types": ["node"],
+    "target": "esnext",
+    "module": "nodenext",
     "declaration": true,
     "esModuleInterop": true,
-    "moduleResolution": "node",
+    "moduleResolution": "nodenext",
     "sourceMap": true
   },
-  "lib": ["es6"],
   "include": ["src"]
 }

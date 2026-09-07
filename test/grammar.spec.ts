@@ -1,8 +1,8 @@
-import {describe} from 'mocha'
-import * as assert from "assert";
+import { describe, it, before } from 'node:test';
+import assert from 'node:assert/strict';
 
-import {CharStreams, CodePointCharStream, CommonTokenStream} from "antlr4ts";
-import {ParseTree} from "antlr4ts/tree";
+import {CharStream, CommonTokenStream} from "antlr4ng";
+import {ParseTree} from "antlr4ng";
 import {
     AnyExprContext,
     BinaryExpressionContext,
@@ -24,6 +24,10 @@ import {MetadataSymbols} from "../src/lang/edm/MetadataSymbols";
 import * as xmldom from "@xmldom/xmldom";
 import {Schema} from "../src/lang/edm/Schema";
 
+function nonNull<T>(value: T | null | undefined): T {
+    return value ?? assert.fail('Expected parse tree node');
+}
+
 describe('OData Lite', function () {
     const parser = new xmldom.DOMParser();
     let xml;
@@ -36,7 +40,7 @@ describe('OData Lite', function () {
         metaDataSymbol = new MetadataSymbols(xml);
         schema = metaDataSymbol.defaultSchema;
         getODataLiteParser = (odataUrl: string): OData4LiteParser => {
-            const codePointCharStream: CodePointCharStream = CharStreams.fromString(odataUrl);
+            const codePointCharStream = CharStream.fromString(odataUrl);
             const lexer = new OData4LiteLexer(codePointCharStream);
             const tokens: CommonTokenStream = new CommonTokenStream(lexer);
             return OData4LiteParser.buildOData4LiteParser(tokens, schema);
@@ -45,7 +49,7 @@ describe('OData Lite', function () {
 
     describe('Lexer', function () {
         it('Should support creating a lexer from a string, parsing the tokens from the lexer into a tree, and walking the tree.', function () {
-            const codePointCharStream: CodePointCharStream = CharStreams.fromString(
+            const codePointCharStream = CharStream.fromString(
                 `Incident?$select=Name,CreatedDate&$expand=Issue&$filter=Name eq 'John' and Field2 eq 0`
             );
             const lexer = new OData4LiteLexer(codePointCharStream);
@@ -154,7 +158,7 @@ describe('OData Lite', function () {
         });
 
         it('Should match true as a literal boolean, not an identifier.', function () {
-            const codePointCharStream: CodePointCharStream = CharStreams.fromString(
+            const codePointCharStream = CharStream.fromString(
                 `Incident?$count=true`
             );
             const lexer = new OData4LiteLexer(codePointCharStream);
@@ -176,7 +180,7 @@ describe('OData Lite', function () {
 
     describe('Parser', function () {
         it('Should create expression nodes with the correct associativity for the pattern "a eq b and c eq d"', function () {
-            const codePointCharStream: CodePointCharStream = CharStreams.fromString(
+            const codePointCharStream = CharStream.fromString(
                 `$filter=Name eq 'John' and IssueId eq 1`
             );
             const lexer = new OData4LiteLexer(codePointCharStream);
@@ -196,7 +200,10 @@ describe('OData Lite', function () {
 
         it('Should recognise literal arrays within sq brackets', function() {
             const tree: OdataRelativeURIContext = getODataLiteParser(`Entity?$filter=[] eq []`).odataRelativeURI();
-            assert.equal(tree.queryOptions().queryOption()[0].systemQueryOption().filter().expression().text, '[] eq []');
+            const queryOptions = nonNull(tree.queryOptions());
+            const systemQueryOption = nonNull(queryOptions.queryOption()[0].systemQueryOption());
+            const filter = nonNull(systemQueryOption.filter());
+            assert.equal(filter.expression().getText(), '[] eq []');
         });
 
         it('Should recognise a function import being able to look up unbound functions by name.', function () {
@@ -206,7 +213,7 @@ describe('OData Lite', function () {
         });
 
         it('Should recognise a collection navigation apart from a function import as it is context (metadata.schema) aware ', function () {
-            const codePointCharStream: CodePointCharStream = CharStreams.fromString(
+            const codePointCharStream = CharStream.fromString(
                 `Incidents(1)?$expand=Issue`
             );
             const lexer = new OData4LiteLexer(codePointCharStream);
@@ -217,44 +224,54 @@ describe('OData Lite', function () {
             assert.ok(!functionImport, 'Should not find a function import call');
             const collectionNavigation = tree.resourcePath().collectionNavigation();
             assert.ok(collectionNavigation, 'Should find a collection navigation');
-            assert.equal(collectionNavigation.keyPredicate().simpleKey().primitiveLiteral().LIT_INTEGER().text, '1');
+            const keyPredicate = nonNull(collectionNavigation.keyPredicate());
+            const simpleKey = nonNull(keyPredicate.simpleKey());
+            const primitiveLiteral = nonNull(simpleKey.primitiveLiteral());
+            assert.equal(nonNull(primitiveLiteral.LIT_INTEGER()).getText(), '1');
         });
 
         describe('Unbound Function tests', function () {
             it('Should parse an unbound function with no arguments', function () {
                 const tree: OdataRelativeURIContext = getODataLiteParser(`GetIncidentBreakdown()`).odataRelativeURI();
-                assert.equal(tree.resourcePath().IDENTIFIER().text, 'GetIncidentBreakdown');
-                assert.equal(tree.resourcePath().functionImportCall().functionParameters().LPAREN().text, '(');
-                assert.equal(tree.resourcePath().functionImportCall().functionParameters().RPAREN().text, ')');
+                assert.equal(tree.resourcePath().IDENTIFIER().getText(), 'GetIncidentBreakdown');
+                const functionImport = nonNull(tree.resourcePath().functionImportCall());
+                assert.equal(functionImport.functionParameters().LPAREN().getText(), '(');
+                assert.equal(functionImport.functionParameters().RPAREN().getText(), ')');
             });
 
             it('Should correctly parse an unbound function with 1 literal argument', function () {
                 const tree: OdataRelativeURIContext = getODataLiteParser(`GetIncidentBreakdown(EnvironmentIdList='1,2,3')`).odataRelativeURI();
-                assert.equal(tree.resourcePath().IDENTIFIER().text, 'GetIncidentBreakdown');
-                assert.equal(tree.resourcePath().functionImportCall().functionParameters().LPAREN().text, '(');
-                assert.equal(tree.resourcePath().functionImportCall().functionParameters().functionParameter()[0].functionParameterName().text, 'EnvironmentIdList');
-                assert.equal(tree.resourcePath().functionImportCall().functionParameters().functionParameter()[0].primitiveLiteral().text, '\'1,2,3\'');
-                assert.equal(tree.resourcePath().functionImportCall().functionParameters().RPAREN().text, ')');
+                assert.equal(tree.resourcePath().IDENTIFIER().getText(), 'GetIncidentBreakdown');
+                const functionImport = nonNull(tree.resourcePath().functionImportCall());
+                const functionParameters = functionImport.functionParameters();
+                assert.equal(functionParameters.LPAREN().getText(), '(');
+                assert.equal(functionParameters.functionParameter()[0].functionParameterName().getText(), 'EnvironmentIdList');
+                assert.equal(nonNull(functionParameters.functionParameter()[0].primitiveLiteral()).getText(), '\'1,2,3\'');
+                assert.equal(functionParameters.RPAREN().getText(), ')');
             });
 
             it('Should correctly parse an unbound function with 1 alias argument', function () {
                 const tree: OdataRelativeURIContext = getODataLiteParser(`GetIncidentBreakdown(EnvironmentIdList=@EnvironmentIdList)`).odataRelativeURI();
-                assert.equal(tree.resourcePath().IDENTIFIER().text, 'GetIncidentBreakdown');
-                assert.equal(tree.resourcePath().functionImportCall().functionParameters().LPAREN().text, '(');
-                assert.equal(tree.resourcePath().functionImportCall().functionParameters().functionParameter()[0].functionParameterName().text, 'EnvironmentIdList');
-                assert.equal(tree.resourcePath().functionImportCall().functionParameters().functionParameter()[0].parameterAlias().text, '@EnvironmentIdList');
-                assert.equal(tree.resourcePath().functionImportCall().functionParameters().RPAREN().text, ')');
+                assert.equal(tree.resourcePath().IDENTIFIER().getText(), 'GetIncidentBreakdown');
+                const functionImport = nonNull(tree.resourcePath().functionImportCall());
+                const functionParameters = functionImport.functionParameters();
+                assert.equal(functionParameters.LPAREN().getText(), '(');
+                assert.equal(functionParameters.functionParameter()[0].functionParameterName().getText(), 'EnvironmentIdList');
+                assert.equal(nonNull(functionParameters.functionParameter()[0].parameterAlias()).getText(), '@EnvironmentIdList');
+                assert.equal(functionParameters.RPAREN().getText(), ')');
             });
 
             it('Should correctly parse an unbound function with 2 alias argument', function () {
                 const tree: OdataRelativeURIContext = getODataLiteParser(`GetIncidentBreakdown(EnvironmentIdList=@EnvironmentIdList,AnotherOne=@AnotherOne)`).odataRelativeURI();
-                assert.equal(tree.resourcePath().IDENTIFIER().text, 'GetIncidentBreakdown');
-                assert.equal(tree.resourcePath().functionImportCall().functionParameters().LPAREN().text, '(');
-                assert.equal(tree.resourcePath().functionImportCall().functionParameters().functionParameter()[0].functionParameterName().text, 'EnvironmentIdList');
-                assert.equal(tree.resourcePath().functionImportCall().functionParameters().functionParameter()[0].parameterAlias().text, '@EnvironmentIdList');
-                assert.equal(tree.resourcePath().functionImportCall().functionParameters().functionParameter()[1].functionParameterName().text, 'AnotherOne');
-                assert.equal(tree.resourcePath().functionImportCall().functionParameters().functionParameter()[1].parameterAlias().text, '@AnotherOne');
-                assert.equal(tree.resourcePath().functionImportCall().functionParameters().RPAREN().text, ')');
+                assert.equal(tree.resourcePath().IDENTIFIER().getText(), 'GetIncidentBreakdown');
+                const functionImport = nonNull(tree.resourcePath().functionImportCall());
+                const functionParameters = functionImport.functionParameters();
+                assert.equal(functionParameters.LPAREN().getText(), '(');
+                assert.equal(functionParameters.functionParameter()[0].functionParameterName().getText(), 'EnvironmentIdList');
+                assert.equal(nonNull(functionParameters.functionParameter()[0].parameterAlias()).getText(), '@EnvironmentIdList');
+                assert.equal(functionParameters.functionParameter()[1].functionParameterName().getText(), 'AnotherOne');
+                assert.equal(nonNull(functionParameters.functionParameter()[1].parameterAlias()).getText(), '@AnotherOne');
+                assert.equal(functionParameters.RPAREN().getText(), ')');
             });
 
         })
@@ -262,19 +279,23 @@ describe('OData Lite', function () {
         describe('Test skip system query', function () {
             it('should parse $skip query options', function () {
                 const tree: OdataRelativeURIContext = getODataLiteParser('SomeResource?$count=true&$skip=50&$top=50').odataRelativeURI();
-                assert.equal(tree.resourcePath().IDENTIFIER().text, 'SomeResource');
+                assert.equal(tree.resourcePath().IDENTIFIER().getText(), 'SomeResource');
+                const queryOptions = nonNull(tree.queryOptions());
 
-                const skip = tree.queryOptions().queryOption()[1].systemQueryOption().skip();
-                assert.equal(skip.LIT_INTEGER().text, '50');
-                assert.equal(skip.SKIP_COUNT(), '$skip');
+                const skipOption = nonNull(queryOptions.queryOption()[1].systemQueryOption());
+                const skip = nonNull(skipOption.skip());
+                assert.equal(skip.LIT_INTEGER().getText(), '50');
+                assert.equal(skip.SKIP_COUNT().getText(), '$skip');
 
-                const count = tree.queryOptions().queryOption()[0].systemQueryOption().count();
-                assert.equal(count.LIT_BOOLEAN().text, 'true');
-                assert.equal(count.COUNT_OPT(), '$count');
+                const countOption = nonNull(queryOptions.queryOption()[0].systemQueryOption());
+                const count = nonNull(countOption.count());
+                assert.equal(count.LIT_BOOLEAN().getText(), 'true');
+                assert.equal(count.COUNT_OPT().getText(), '$count');
 
-                const top = tree.queryOptions().queryOption()[2].systemQueryOption().top();
-                assert.equal(top.LIT_INTEGER().text, '50');
-                assert.equal(top.TOP_OPT().text, '$top');
+                const topOption = nonNull(queryOptions.queryOption()[2].systemQueryOption());
+                const top = nonNull(topOption.top());
+                assert.equal(top.LIT_INTEGER().getText(), '50');
+                assert.equal(top.TOP_OPT().getText(), '$top');
 
             })
         });
@@ -282,221 +303,252 @@ describe('OData Lite', function () {
         describe('Test orderby system query', function () {
             it('should parse a simple $orderby query option', function () {
                 const tree: OdataRelativeURIContext = getODataLiteParser('SomeResource?$orderby=Field').odataRelativeURI();
-                assert.equal(tree.resourcePath().IDENTIFIER().text, 'SomeResource');
-                const orderby = tree.queryOptions().queryOption()[0].systemQueryOption().orderby();
+                assert.equal(tree.resourcePath().IDENTIFIER().getText(), 'SomeResource');
+                const queryOptions = nonNull(tree.queryOptions());
+                const systemQueryOption = nonNull(queryOptions.queryOption()[0].systemQueryOption());
+                const orderby = nonNull(systemQueryOption.orderby());
                 const orderbyItemContexts: OrderbyItemContext[] = orderby.orderbyItem();
                 
-                assert.equal(orderbyItemContexts[0].text, 'Field');
+                assert.equal(orderbyItemContexts[0].getText(), 'Field');
             });
 
             it('should order by a property path correctly', function () {
                 const tree: OdataRelativeURIContext = getODataLiteParser('SomeResource?$orderby=Field/ChildField').odataRelativeURI();
-                assert.equal(tree.resourcePath().IDENTIFIER().text, 'SomeResource');
-                const orderby = tree.queryOptions().queryOption()[0].systemQueryOption().orderby();
+                assert.equal(tree.resourcePath().IDENTIFIER().getText(), 'SomeResource');
+                const queryOptions = nonNull(tree.queryOptions());
+                const systemQueryOption = nonNull(queryOptions.queryOption()[0].systemQueryOption());
+                const orderby = nonNull(systemQueryOption.orderby());
                 const orderByProperty = orderby.orderbyItem()[0];
-                assert.equal(orderByProperty.expression().text, 'Field/ChildField');
+                assert.equal(orderByProperty.expression().getText(), 'Field/ChildField');
             });
 
             it('should parse a multi column $orderby query option', function () {
                 const url = 'SomeResource?$orderby=Field1,Field2,Field3';
                 const tree: OdataRelativeURIContext = getODataLiteParser(url).odataRelativeURI();
-                assert.equal(tree.resourcePath().IDENTIFIER().text, 'SomeResource');
-                const orderby = tree.queryOptions().queryOption()[0].systemQueryOption().orderby();
-                assert.equal(orderby.orderbyItem()[0].text, 'Field1');
-                assert.equal(orderby.orderbyItem()[1].text, 'Field2');
-                assert.equal(orderby.orderbyItem()[2].text, 'Field3');
+                assert.equal(tree.resourcePath().IDENTIFIER().getText(), 'SomeResource');
+                const queryOptions = nonNull(tree.queryOptions());
+                const systemQueryOption = nonNull(queryOptions.queryOption()[0].systemQueryOption());
+                const orderby = nonNull(systemQueryOption.orderby());
+                assert.equal(orderby.orderbyItem()[0].getText(), 'Field1');
+                assert.equal(orderby.orderbyItem()[1].getText(), 'Field2');
+                assert.equal(orderby.orderbyItem()[2].getText(), 'Field3');
             });
 
             it('should parse a multi column $orderby query option with asc or desc specified', function () {
                 const url = 'SomeResource?$orderby=Field1 desc,Field2,Field3 asc';
                 const tree: OdataRelativeURIContext = getODataLiteParser(url).odataRelativeURI();
-                assert.equal(tree.resourcePath().IDENTIFIER().text, 'SomeResource');
-                const orderby = tree.queryOptions().queryOption()[0].systemQueryOption().orderby();
-                assert.equal(orderby.orderbyItem()[0].expression().text, 'Field1');
-                assert.equal(orderby.orderbyItem()[0].DESC().text, ' desc');
-                assert.equal(orderby.orderbyItem()[1].expression().text, 'Field2');
-                assert.equal(orderby.orderbyItem()[2].expression().text, 'Field3');
-                assert.equal(orderby.orderbyItem()[2].ASC().text, ' asc');
+                assert.equal(tree.resourcePath().IDENTIFIER().getText(), 'SomeResource');
+                const queryOptions = nonNull(tree.queryOptions());
+                const systemQueryOption = nonNull(queryOptions.queryOption()[0].systemQueryOption());
+                const orderby = nonNull(systemQueryOption.orderby());
+                assert.equal(orderby.orderbyItem()[0].expression().getText(), 'Field1');
+                assert.equal(nonNull(orderby.orderbyItem()[0].DESC()).getText(), ' desc');
+                assert.equal(orderby.orderbyItem()[1].expression().getText(), 'Field2');
+                assert.equal(orderby.orderbyItem()[2].expression().getText(), 'Field3');
+                assert.equal(nonNull(orderby.orderbyItem()[2].ASC()).getText(), ' asc');
             });
         });
 
         describe('$filter', function () {
             it('should support lambda expressions (any and all)', function () {
                 const tree: OdataRelativeURIContext = getODataLiteParser('Applications?$filter=ApplicationEntity/any(a:a/ApplicationEntityId in @ApplicationEntityIdList)').odataRelativeURI();
-                assert.equal(tree.resourcePath().IDENTIFIER().text, 'Applications');
-                const filter = tree.queryOptions().queryOption()[0].systemQueryOption().filter();
-                assert.ok(filter, '$filter not found');
+                assert.equal(tree.resourcePath().IDENTIFIER().getText(), 'Applications');
+                const queryOptions = nonNull(tree.queryOptions());
+                const systemQueryOption = nonNull(queryOptions.queryOption()[0].systemQueryOption());
+                const filter = nonNull(systemQueryOption.filter());
                 const filterExpression = filter.expression();
-                assert.equal(filterExpression.text, 'ApplicationEntity/any(a:a/ApplicationEntityId in @ApplicationEntityIdList)');
+                assert.equal(filterExpression.getText(), 'ApplicationEntity/any(a:a/ApplicationEntityId in @ApplicationEntityIdList)');
                 assert.equal(filterExpression.constructor,  FirstMemberExpressionContext);
-                const fmec: FirstMemberExpressionContext = <FirstMemberExpressionContext>filterExpression;
-                assert.equal(fmec.firstMemberExpr().memberExpr().propertyPathExpr().property().text, 'ApplicationEntity');
-                assert.equal(fmec.firstMemberExpr().memberExpr().propertyPathExpr().collectionPathExpr().text, '/any(a:a/ApplicationEntityId in @ApplicationEntityIdList)');
-                assert.equal(fmec.firstMemberExpr().memberExpr().propertyPathExpr().collectionPathExpr().FWD_SLASH().text, '/');
-                assert.equal(fmec.firstMemberExpr().memberExpr().propertyPathExpr().collectionPathExpr().anyExpr().text, 'any(a:a/ApplicationEntityId in @ApplicationEntityIdList)');
-                assert.equal(fmec.firstMemberExpr().memberExpr().propertyPathExpr().collectionPathExpr().anyExpr().expression().text, 'a/ApplicationEntityId in @ApplicationEntityIdList');
-                const anyExpression: AnyExprContext = fmec.firstMemberExpr().memberExpr().propertyPathExpr().collectionPathExpr().anyExpr();
-                assert.equal(anyExpression.lambdaParameterIdentifier().IDENTIFIER().text, 'a');
-                assert.equal(anyExpression.expression().text, 'a/ApplicationEntityId in @ApplicationEntityIdList');
-                const inExpressionContext: InExpressionContext = <InExpressionContext>anyExpression.expression();
-                assert.equal(inExpressionContext.parameterAlias().text, '@ApplicationEntityIdList');
+                const fmec: FirstMemberExpressionContext = filterExpression as FirstMemberExpressionContext;
+                const memberExpression = nonNull(fmec.firstMemberExpr().memberExpr());
+                const propertyPathExpression = memberExpression.propertyPathExpr();
+                const collectionPathExpression = nonNull(propertyPathExpression.collectionPathExpr());
+                const anyExpression: AnyExprContext = nonNull(collectionPathExpression.anyExpr());
+                const anyBody = nonNull(anyExpression.expression());
+                const lambdaParameter = nonNull(anyExpression.lambdaParameterIdentifier());
+                assert.equal(propertyPathExpression.property().getText(), 'ApplicationEntity');
+                assert.equal(collectionPathExpression.getText(), '/any(a:a/ApplicationEntityId in @ApplicationEntityIdList)');
+                assert.equal(nonNull(collectionPathExpression.FWD_SLASH()).getText(), '/');
+                assert.equal(anyExpression.getText(), 'any(a:a/ApplicationEntityId in @ApplicationEntityIdList)');
+                assert.equal(anyBody.getText(), 'a/ApplicationEntityId in @ApplicationEntityIdList');
+                assert.equal(lambdaParameter.IDENTIFIER().getText(), 'a');
+                assert.equal(anyBody.getText(), 'a/ApplicationEntityId in @ApplicationEntityIdList');
+                const inExpressionContext: InExpressionContext = anyBody as InExpressionContext;
+                assert.equal(nonNull(inExpressionContext.parameterAlias()).getText(), '@ApplicationEntityIdList');
             })
 
             it('should support lambda expressions (any and all)', function () {
                 const tree: OdataRelativeURIContext = getODataLiteParser('Applications?$filter=ApplicationId eq 1').odataRelativeURI();
-                assert.equal(tree.resourcePath().IDENTIFIER().text, 'Applications');
-                const filter = tree.queryOptions().queryOption()[0].systemQueryOption().filter();
-                assert.ok(filter, '$filter not found');
+                assert.equal(tree.resourcePath().IDENTIFIER().getText(), 'Applications');
+                const queryOptions = nonNull(tree.queryOptions());
+                const systemQueryOption = nonNull(queryOptions.queryOption()[0].systemQueryOption());
+                const filter = nonNull(systemQueryOption.filter());
                 const filterExpression = filter.expression();
-                assert.equal(filterExpression.text, 'ApplicationId eq 1');
-                const binaryExpressionContext: BinaryExpressionContext = <BinaryExpressionContext>filterExpression;
-                assert.equal(binaryExpressionContext.expression()[0].text, 'ApplicationId');
-                assert.equal(binaryExpressionContext.OP_EQ().text, ' eq ');
-                const firstMemberExpressionContext: FirstMemberExpressionContext = <FirstMemberExpressionContext>binaryExpressionContext.expression()[0];
+                assert.equal(filterExpression.getText(), 'ApplicationId eq 1');
+                const binaryExpressionContext: BinaryExpressionContext = filterExpression as BinaryExpressionContext;
+                assert.equal(binaryExpressionContext.expression()[0].getText(), 'ApplicationId');
+                assert.equal(nonNull(binaryExpressionContext.OP_EQ()).getText(), ' eq ');
+                const firstMemberExpressionContext: FirstMemberExpressionContext = binaryExpressionContext.expression()[0] as FirstMemberExpressionContext;
                 const firstMemberExpr: FirstMemberExprContext = firstMemberExpressionContext.firstMemberExpr();
                 const memberExpr: MemberExprContext = firstMemberExpr.memberExpr();
                 const propertyPathExpresssion = memberExpr.propertyPathExpr();
                 const propertyExpr = propertyPathExpresssion.property();
                 const identifier = propertyExpr.IDENTIFIER();
-                assert.equal(identifier.text, 'ApplicationId');
-                assert.equal(firstMemberExpressionContext.firstMemberExpr().memberExpr().propertyPathExpr().property().text, 'ApplicationId');
-                assert.equal(binaryExpressionContext.expression()[1].text, '1');
+                assert.equal(identifier.getText(), 'ApplicationId');
+                assert.equal(firstMemberExpressionContext.firstMemberExpr().memberExpr().propertyPathExpr().property().getText(), 'ApplicationId');
+                assert.equal(binaryExpressionContext.expression()[1].getText(), '1');
             })
         })
 
         describe('First Member Expressions', function () {
             it('should recognised Single Navigation Expressions that are 2 or more properties deep', function () {
-                const codePointCharStream: CodePointCharStream = CharStreams.fromString('Property1/Property2/Leaf');
+                const codePointCharStream = CharStream.fromString('Property1/Property2/Leaf');
                 const lexer = new OData4LiteLexer(codePointCharStream);
                 const tokens: CommonTokenStream = new CommonTokenStream(lexer);
                 const parser: OData4LiteParser = new OData4LiteParser(tokens)
                 const firstMemberExprContext = parser.firstMemberExpr();
                 assert.notEqual(firstMemberExprContext, null);
-                assert.notEqual(firstMemberExprContext.memberExpr(), null);
-                assert.equal(firstMemberExprContext.text, 'Property1/Property2/Leaf');
-                assert.notEqual(firstMemberExprContext.memberExpr(), null);
-                const memberExpr: MemberExprContext = firstMemberExprContext.memberExpr();
-                assert.equal(memberExpr.text, 'Property1/Property2/Leaf');
+                assert.equal(firstMemberExprContext.getText(), 'Property1/Property2/Leaf');
+                assert.equal(firstMemberExprContext.getText(), 'Property1/Property2/Leaf');
+                const memberExpr: MemberExprContext = nonNull(firstMemberExprContext.memberExpr());
+                assert.equal(memberExpr.getText(), 'Property1/Property2/Leaf');
                 const propertyPathExpr: PropertyPathExprContext = memberExpr.propertyPathExpr();
-                assert.equal(propertyPathExpr.property().text, 'Property1');
-                const deepMemberExpr: MemberExprContext = propertyPathExpr.singleNavigationExpr().memberExpr();
-                assert.equal(deepMemberExpr.text, 'Property2/Leaf');
-                const deepSingleNavProperty: SingleNavigationExprContext = deepMemberExpr.propertyPathExpr().singleNavigationExpr();
-                assert.equal(deepSingleNavProperty.text, '/Leaf');
-                assert.equal(deepSingleNavProperty.memberExpr().propertyPathExpr().property().text, 'Leaf');
+                assert.equal(propertyPathExpr.property().getText(), 'Property1');
+                const singleNavigationExpression = nonNull(propertyPathExpr.singleNavigationExpr());
+                const deepMemberExpr: MemberExprContext = nonNull(singleNavigationExpression.memberExpr());
+                assert.equal(deepMemberExpr.getText(), 'Property2/Leaf');
+                const deepSingleNavProperty: SingleNavigationExprContext = nonNull(deepMemberExpr.propertyPathExpr().singleNavigationExpr());
+                assert.equal(deepSingleNavProperty.getText(), '/Leaf');
+                assert.equal(nonNull(deepSingleNavProperty.memberExpr()).propertyPathExpr().property().getText(), 'Leaf');
             })
         })
 
         describe('$apply transformations', function () {
             it('should correctly parse an $apply groupby tranformation', function () {
                 const tree: OdataRelativeURIContext = getODataLiteParser('SomeResource?$apply=groupby((SimpleProperty,NavigationPropertyRoot/Property),aggregate(NavigationPropertyRoot/Property with countdistinct as PropertyCount))&$filter=NavigationPropertyRoot/Property eq 1 and SimpleProperty in [1,2] and AssignedTo eq @AssignedTo').odataRelativeURI();
-                assert.equal(tree.resourcePath().IDENTIFIER().text, 'SomeResource');
-                assert.notEqual(tree.queryOptions().queryOption()[0].systemQueryOption().apply(), null);
-                const apply = tree.queryOptions().queryOption()[0].systemQueryOption().apply();
-                assert.notEqual(apply, null);
-                const groupByTransformation = apply.applyExpression().applyTrafo()[0].groupbyTrafo();
-                assert.notEqual(groupByTransformation, null);
+                assert.equal(tree.resourcePath().IDENTIFIER().getText(), 'SomeResource');
+                const queryOptions = nonNull(tree.queryOptions());
+                const applyOption = nonNull(queryOptions.queryOption()[0].systemQueryOption());
+                const apply = nonNull(applyOption.apply());
+                const groupByTransformation = nonNull(apply.applyExpression().applyTrafo()[0].groupbyTrafo());
                 assert.equal(groupByTransformation.groupByList().groupbyElement().length, 2);
-                assert.notEqual(groupByTransformation.applyExpression(), null);
-                const aggregateTransformation = groupByTransformation.applyExpression().applyTrafo()[0].aggregateTrafo().aggregationParam()[0];
-                assert.notEqual(aggregateTransformation, null);
-                const aggregateExpression = aggregateTransformation.aggregationExpr().expression();
+                const groupByApplyExpression = nonNull(groupByTransformation.applyExpression());
+                const aggregateTrafo = nonNull(groupByApplyExpression.applyTrafo()[0].aggregateTrafo());
+                const aggregateTransformation = aggregateTrafo.aggregationParam()[0];
+                const aggregationExpression = nonNull(aggregateTransformation.aggregationExpr());
+                const aggregateExpression = nonNull(aggregationExpression.expression());
 
                 assert.equal(aggregateExpression.constructor, FirstMemberExpressionContext);
-                assert.equal(aggregateExpression.text, 'NavigationPropertyRoot/Property');
-                const aggregateAs = aggregateTransformation.aggregationExpr().dynamicPropertyAssignment();
-                assert.equal(aggregateAs.text, ' as PropertyCount');
-                const aggregateWith = aggregateTransformation.aggregationExpr().aggregateWith();
-                assert.equal(aggregateWith.text, ' with countdistinct');
+                assert.equal(aggregateExpression.getText(), 'NavigationPropertyRoot/Property');
+                const aggregateAs = nonNull(aggregationExpression.dynamicPropertyAssignment());
+                assert.equal(aggregateAs.getText(), ' as PropertyCount');
+                const aggregateWith = nonNull(aggregationExpression.aggregateWith());
+                assert.equal(aggregateWith.getText(), ' with countdistinct');
 
-                const filter = tree.queryOptions().queryOption()[1].systemQueryOption().filter();
-                assert.equal(filter.FILTER_OPT(), '$filter');
+                const filterOption = nonNull(queryOptions.queryOption()[1].systemQueryOption());
+                const filter = nonNull(filterOption.filter());
+                assert.equal(filter.FILTER_OPT().getText(), '$filter');
                 // Not testing the filter here..
             });
 
             it('should correctly parse an $apply with a filter plus groupby', function () {
                 const tree: OdataRelativeURIContext = getODataLiteParser('SomeResource?$apply=filter(P1/P2/P3 eq 1)/groupby((SimpleProperty,NavigationPropertyRoot/Property),aggregate(NavigationPropertyRoot/Property with countdistinct as PropertyCount))&$filter=NavigationPropertyRoot/Property eq 1 and SimpleProperty in [1,2] and AssignedTo eq @AssignedTo').odataRelativeURI();
-                assert.equal(tree.resourcePath().IDENTIFIER().text, 'SomeResource');
-                assert.notEqual(tree.queryOptions().queryOption()[0].systemQueryOption().apply(), null);
-                const apply = tree.queryOptions().queryOption()[0].systemQueryOption().apply();
-                assert.notEqual(apply, null);
-                const filterTransformation: FilterTrafoContext = apply.applyExpression().applyTrafo()[0].filterTrafo();
-                assert.notEqual(filterTransformation, null);
-                assert.equal(filterTransformation.expression().text, 'P1/P2/P3 eq 1');
-                const binaryExpression: BinaryExpressionContext = <BinaryExpressionContext>filterTransformation.expression();
+                assert.equal(tree.resourcePath().IDENTIFIER().getText(), 'SomeResource');
+                const queryOptions = nonNull(tree.queryOptions());
+                const applyOption = nonNull(queryOptions.queryOption()[0].systemQueryOption());
+                const apply = nonNull(applyOption.apply());
+                const filterTransformation: FilterTrafoContext = nonNull(apply.applyExpression().applyTrafo()[0].filterTrafo());
+                assert.equal(filterTransformation.expression().getText(), 'P1/P2/P3 eq 1');
+                const binaryExpression: BinaryExpressionContext = filterTransformation.expression() as BinaryExpressionContext;
 
                 // check the property expression on the binary filter expression
-                const firstMemberExprContext: FirstMemberExpressionContext = <FirstMemberExpressionContext>binaryExpression.expression()[0];
-                assert.equal(firstMemberExprContext.firstMemberExpr().memberExpr().propertyPathExpr().property().text, 'P1');
-                assert.equal(firstMemberExprContext.firstMemberExpr().memberExpr().propertyPathExpr().singleNavigationExpr().memberExpr().text, 'P2/P3');
-                assert.equal(firstMemberExprContext.firstMemberExpr().memberExpr().propertyPathExpr().singleNavigationExpr().memberExpr().propertyPathExpr().property().text, 'P2');
-                assert.equal(firstMemberExprContext.firstMemberExpr().memberExpr().propertyPathExpr().singleNavigationExpr().memberExpr().propertyPathExpr().singleNavigationExpr().memberExpr().propertyPathExpr().property().text, 'P3');
+                const firstMemberExprContext: FirstMemberExpressionContext = binaryExpression.expression()[0] as FirstMemberExpressionContext;
+                assert.equal(firstMemberExprContext.firstMemberExpr().memberExpr().propertyPathExpr().property().getText(), 'P1');
+                const firstMember = nonNull(firstMemberExprContext.firstMemberExpr().memberExpr());
+                const firstNavigation = nonNull(firstMember.propertyPathExpr().singleNavigationExpr());
+                const secondMember = nonNull(firstNavigation.memberExpr());
+                const secondNavigation = nonNull(secondMember.propertyPathExpr().singleNavigationExpr());
+                const thirdMember = nonNull(secondNavigation.memberExpr());
+                assert.equal(secondMember.getText(), 'P2/P3');
+                assert.equal(secondMember.propertyPathExpr().property().getText(), 'P2');
+                assert.equal(thirdMember.propertyPathExpr().property().getText(), 'P3');
                 //const literalExpr: LiteralExpressionContext = <LiteralExpressionContext>binaryExpression.expression()[1];
                 // const firstMemberExprContext: FirstMemberExprContext = filterTransformation.expression();
-                // assert.equal(firstMemberExprContext.memberExpr().propertyPathExpr().property().text, 'P1');
+                // assert.equal(firstMemberExprContext.memberExpr().propertyPathExpr().property().getText(), 'P1');
 
-                const groupByTransformation = apply.applyExpression().applyTrafo()[1].groupbyTrafo();
-                assert.notEqual(groupByTransformation, null);
+                const groupByTransformation = nonNull(apply.applyExpression().applyTrafo()[1].groupbyTrafo());
                 assert.equal(groupByTransformation.groupByList().groupbyElement().length, 2);
-                assert.notEqual(groupByTransformation.applyExpression(), null);
-                const aggregateTransformation = groupByTransformation.applyExpression().applyTrafo()[0].aggregateTrafo().aggregationParam()[0];
-                assert.notEqual(aggregateTransformation, null);
-                const aggregateExpression = aggregateTransformation.aggregationExpr().expression();
+                const groupByApplyExpression = nonNull(groupByTransformation.applyExpression());
+                const aggregateTrafo = nonNull(groupByApplyExpression.applyTrafo()[0].aggregateTrafo());
+                const aggregateTransformation = aggregateTrafo.aggregationParam()[0];
+                const aggregationExpression = nonNull(aggregateTransformation.aggregationExpr());
+                const aggregateExpression = nonNull(aggregationExpression.expression());
 
                 assert.equal(aggregateExpression.constructor, FirstMemberExpressionContext);
-                assert.equal(aggregateExpression.text, 'NavigationPropertyRoot/Property');
-                const aggregateAs = aggregateTransformation.aggregationExpr().dynamicPropertyAssignment();
-                assert.equal(aggregateAs.text, ' as PropertyCount');
-                const aggregateWith = aggregateTransformation.aggregationExpr().aggregateWith();
-                assert.equal(aggregateWith.text, ' with countdistinct');
+                assert.equal(aggregateExpression.getText(), 'NavigationPropertyRoot/Property');
+                const aggregateAs = nonNull(aggregationExpression.dynamicPropertyAssignment());
+                assert.equal(aggregateAs.getText(), ' as PropertyCount');
+                const aggregateWith = nonNull(aggregationExpression.aggregateWith());
+                assert.equal(aggregateWith.getText(), ' with countdistinct');
 
-                const filter = tree.queryOptions().queryOption()[1].systemQueryOption().filter();
-                assert.equal(filter.FILTER_OPT(), '$filter');
+                const filterOption = nonNull(queryOptions.queryOption()[1].systemQueryOption());
+                const filter = nonNull(filterOption.filter());
+                assert.equal(filter.FILTER_OPT().getText(), '$filter');
                 // Not testing the filter here..
             });
 
             it('should understand valid compute transformations', function () {
                 const tree: OdataRelativeURIContext = getODataLiteParser('SomeResource?$apply=compute(day(date(EffectiveDate)) as Blah)/groupby((Blah),aggregate($count as Count))').odataRelativeURI();
-                assert.equal(tree.resourcePath().IDENTIFIER().text, 'SomeResource');
-                assert.notEqual(tree.queryOptions().queryOption()[0].systemQueryOption().apply(), null);
-                const apply = tree.queryOptions().queryOption()[0].systemQueryOption().apply();
-                assert.notEqual(apply, null);
-                const computeTransformation = apply.applyExpression().applyTrafo()[0].computeTrafo();
-                assert.equal(computeTransformation.text, 'compute(day(date(EffectiveDate)) as Blah)');
-                assert.equal(computeTransformation.computeExpression()[0].text, 'day(date(EffectiveDate)) as Blah');
-                assert.equal(computeTransformation.computeExpression()[0].dynamicPropertyAssignment().text, ' as Blah');
+                assert.equal(tree.resourcePath().IDENTIFIER().getText(), 'SomeResource');
+                const queryOptions = nonNull(tree.queryOptions());
+                const systemQueryOption = nonNull(queryOptions.queryOption()[0].systemQueryOption());
+                const apply = nonNull(systemQueryOption.apply());
+                const computeTransformation = nonNull(apply.applyExpression().applyTrafo()[0].computeTrafo());
+                assert.equal(computeTransformation.getText(), 'compute(day(date(EffectiveDate)) as Blah)');
+                assert.equal(computeTransformation.computeExpression()[0].getText(), 'day(date(EffectiveDate)) as Blah');
+                const propertyAssignment = nonNull(computeTransformation.computeExpression()[0].dynamicPropertyAssignment());
+                assert.equal(propertyAssignment.getText(), ' as Blah');
             });
 
             it('should understand valid compute transformations with Navigate properties', function () {
                 const tree: OdataRelativeURIContext = getODataLiteParser('MemberResource?$apply=compute(concat(A,B) as FullName)').odataRelativeURI();
-                assert.equal(tree.resourcePath().IDENTIFIER().text, 'MemberResource');
-                assert.notEqual(tree.queryOptions().queryOption()[0].systemQueryOption().apply(), null);
-                const apply = tree.queryOptions().queryOption()[0].systemQueryOption().apply();
-                assert.notEqual(apply, null);
-                const computeTransformation = apply.applyExpression().applyTrafo()[0].computeTrafo();
-                assert.equal(computeTransformation.text, 'compute(concat(A,B) as FullName)');
-                assert.equal(computeTransformation.computeExpression()[0].text, 'concat(A,B) as FullName');
-                assert.equal(computeTransformation.computeExpression()[0].dynamicPropertyAssignment().text, ' as FullName');
+                assert.equal(tree.resourcePath().IDENTIFIER().getText(), 'MemberResource');
+                const queryOptions = nonNull(tree.queryOptions());
+                const systemQueryOption = nonNull(queryOptions.queryOption()[0].systemQueryOption());
+                const apply = nonNull(systemQueryOption.apply());
+                const computeTransformation = nonNull(apply.applyExpression().applyTrafo()[0].computeTrafo());
+                assert.equal(computeTransformation.getText(), 'compute(concat(A,B) as FullName)');
+                assert.equal(computeTransformation.computeExpression()[0].getText(), 'concat(A,B) as FullName');
+                const propertyAssignment = nonNull(computeTransformation.computeExpression()[0].dynamicPropertyAssignment());
+                assert.equal(propertyAssignment.getText(), ' as FullName');
             });
 
             it('should understand valid ANY-type collection path expressions', function () {
                 const tree: OdataRelativeURIContext = getODataLiteParser('Rules?$filter=RuleReportPropertyLink/any()').odataRelativeURI();
-                assert.equal(tree.resourcePath().IDENTIFIER().text, 'Rules');
-                const filterExpression = tree.queryOptions().queryOption()[0].systemQueryOption().filter().expression();
+                assert.equal(tree.resourcePath().IDENTIFIER().getText(), 'Rules');
+                const queryOptions = nonNull(tree.queryOptions());
+                const systemQueryOption = nonNull(queryOptions.queryOption()[0].systemQueryOption());
+                const filterExpression = nonNull(systemQueryOption.filter()).expression();
                 const firstMemberExpression = filterExpression.children[0] as FirstMemberExprContext;
-                const anyExprContext = firstMemberExpression.memberExpr().propertyPathExpr().collectionPathExpr().anyExpr();
-                assert.equal(anyExprContext.ANY().text, "any");
+                const memberExpression = nonNull(firstMemberExpression.memberExpr());
+                const collectionPathExpression = nonNull(memberExpression.propertyPathExpr().collectionPathExpr());
+                const anyExprContext = nonNull(collectionPathExpression.anyExpr());
+                assert.equal(anyExprContext.ANY().getText(), "any");
             });
 
             it('should understand valid ALL-type collection path expressions', function () {
                 const tree: OdataRelativeURIContext = getODataLiteParser('Rules?$filter=RuleReportPropertyLink/all(link:(true))').odataRelativeURI();
-                assert.equal(tree.resourcePath().IDENTIFIER().text, 'Rules');
-                const filterExpression = tree.queryOptions().queryOption()[0].systemQueryOption().filter().expression();
+                assert.equal(tree.resourcePath().IDENTIFIER().getText(), 'Rules');
+                const queryOptions = nonNull(tree.queryOptions());
+                const systemQueryOption = nonNull(queryOptions.queryOption()[0].systemQueryOption());
+                const filterExpression = nonNull(systemQueryOption.filter()).expression();
                 const firstMemberExpression = filterExpression.children[0] as FirstMemberExprContext;
-                const allExpression = firstMemberExpression.memberExpr().propertyPathExpr().collectionPathExpr().allExpr();
-                assert.equal(allExpression.ALL().text, "all");
-                assert.equal(allExpression.lambdaParameterIdentifier().text, "link");
-                assert.equal(allExpression.expression().text, "(true)");
+                const memberExpression = nonNull(firstMemberExpression.memberExpr());
+                const collectionPathExpression = nonNull(memberExpression.propertyPathExpr().collectionPathExpr());
+                const allExpression = nonNull(collectionPathExpression.allExpr());
+                assert.equal(allExpression.ALL().getText(), "all");
+                assert.equal(allExpression.lambdaParameterIdentifier().getText(), "link");
+                assert.equal(allExpression.expression().getText(), "(true)");
             });
         })
     })

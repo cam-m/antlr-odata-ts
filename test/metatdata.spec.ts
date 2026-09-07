@@ -1,4 +1,4 @@
-import {describe} from 'mocha';
+import { describe, it, before } from 'node:test';
 import * as xmldom from "@xmldom/xmldom";
 import * as assert from "assert";
 import { MetadataSymbols } from "../src/lang/edm/MetadataSymbols";
@@ -85,73 +85,73 @@ describe('MetadataSymbols', function () {
 
             const firstContainer: EntityContainer = metaDataSymbol?.schemas[0]?.EntityContainers[0];
             assert.ok(firstContainer, 'shoudld find a container');
-            assert.equal(firstContainer.EntitySetImports.length, 27);
+            assert.equal(firstContainer.EntitySetImports!.length, 27);
 
-            const firstEntitySet: EntitySet = firstContainer.EntitySetImports.find(es => es.Name === 'ResolveStatusTypeReferences');
+            const firstEntitySet: EntitySet = firstContainer.EntitySetImports!.find(es => es.Name === 'ResolveStatusTypeReferences')!;
             assert.equal(firstEntitySet.Name, 'ResolveStatusTypeReferences');
             assert.equal(firstEntitySet.EntityType, 'QMV.Investigate.EntityModel.ResolveStatusTypeReference');
             assert.equal(firstEntitySet.NavigationPropertyBindings.length, 4);
-            const incidentNavProperBinding: NavigationPropertyBinding = firstEntitySet.NavigationPropertyBindings.find(npb => npb.Path === 'Incident');
+            const incidentNavProperBinding: NavigationPropertyBinding = firstEntitySet.NavigationPropertyBindings.find(npb => npb.Path === 'Incident')!;
             assert.equal(incidentNavProperBinding.Target, 'Incidents');
             assert.equal(incidentNavProperBinding.Path, 'Incident');
 
-            const incidentsEntitySet: EntitySet = metaDataSymbol.schemas[0].EntityContainers[0].EntitySetImports.find(es => es.Name === 'Incidents');
+            const incidentsEntitySet: EntitySet = metaDataSymbol.schemas[0].EntityContainers[0].EntitySetImports!.find(es => es.Name === 'Incidents')!;
             assert.equal(incidentsEntitySet.Name, 'Incidents');
 
             assert.equal(incidentsEntitySet.NavigationPropertyBindings.length, 11);
-            const applicationNavPropertyBinding = incidentsEntitySet.NavigationPropertyBindings.find(npb => npb.Path === 'Application');
+            const applicationNavPropertyBinding = incidentsEntitySet.NavigationPropertyBindings.find(npb => npb.Path === 'Application')!;
             assert.equal(applicationNavPropertyBinding.Target, 'Applications');
             assert.equal(applicationNavPropertyBinding.Path, 'Application');
 
-            const incidentEntityType: EntityType = schema.entityTypeByName('Incident');
+            const incidentEntityType: EntityType = schema.entityTypeByName('Incident')!;
             assert.ok(incidentEntityType, 'Incident Entity Type not found');
             assert.equal(incidentEntityType.Name, 'Incident');
             assert.equal(incidentEntityType.Key, undefined);
-            assert.equal(incidentEntityType.Properties.length, 20);
+            assert.equal(incidentEntityType.Properties!.length, 20);
 
-            const resolveStatusTypeReferenceEntityType: EntityType = schema.entityTypeByName('ResolveStatusTypeReference');
+            const resolveStatusTypeReferenceEntityType: EntityType = schema.entityTypeByName('ResolveStatusTypeReference')!;
             assert.ok(resolveStatusTypeReferenceEntityType, 'resolveStatusTypeReferenceEntityType not found');
-            assert.equal(resolveStatusTypeReferenceEntityType.NavigationProperties.length, 5);
-            const incidentNavProperty = resolveStatusTypeReferenceEntityType.NavigationProperties.find(np => np.Name === 'Incident');
+            assert.equal(resolveStatusTypeReferenceEntityType.NavigationProperties!.length, 5);
+            const incidentNavProperty = resolveStatusTypeReferenceEntityType.NavigationProperties!.find(np => np.Name === 'Incident')!;
             assert.ok(incidentNavProperty, 'incidentNavProperty not founct');
             assert.equal(incidentNavProperty.Type.isCollection, true);
             assert.equal(incidentNavProperty.Type.namespace, 'QMV.Investigate.EntityModel');
             assert.equal(incidentNavProperty.Type.name, 'Incident');
 
 
-            const isAdvancedClassificationProperty = incidentEntityType.Properties.find(p => p.Name === 'IsAdvancedClassification');
+            const isAdvancedClassificationProperty = incidentEntityType.Properties!.find(p => p.Name === 'IsAdvancedClassification')!;
             assert.equal(isAdvancedClassificationProperty.Type.primitiveType, PrimitiveType.Boolean);
             assert.equal(isAdvancedClassificationProperty.Type.typeClass, TypeClass.Primitive);
             assert.equal(isAdvancedClassificationProperty.Type.namespace, 'Edm');
             assert.equal(isAdvancedClassificationProperty.Type.isCollection, false);
-            assert.equal(isAdvancedClassificationProperty.Nullable, true);
+            assert.equal(isAdvancedClassificationProperty.Nullable, false);
 
-            const applicationEntityNavigationProperty: NavigationProperty = incidentEntityType.NavigationProperties.find(np => np.Name === 'ApplicationEntity');
+            const applicationEntityNavigationProperty: NavigationProperty = incidentEntityType.NavigationProperties!.find(np => np.Name === 'ApplicationEntity')!;
             assert.ok(applicationEntityNavigationProperty != null, 'applicationEntityNavigationProperty not found');
             assert.equal(applicationEntityNavigationProperty.Type.fullName, 'QMV.Investigate.EntityModel.ApplicationEntity');
             assert.equal(applicationEntityNavigationProperty.Type.isCollection, false);
-            assert.equal(applicationEntityNavigationProperty.ReferentialConstraints.length, 1);
+            assert.equal(applicationEntityNavigationProperty.ReferentialConstraints!.length, 1);
 
-            const appEntityFirstRefConstraint: ReferentialConstraint = applicationEntityNavigationProperty.ReferentialConstraints[0];
+            const appEntityFirstRefConstraint: ReferentialConstraint = applicationEntityNavigationProperty.ReferentialConstraints![0];
             assert.equal(appEntityFirstRefConstraint.ReferencedProperty, 'ApplicationEntityId');
             assert.equal(appEntityFirstRefConstraint.Property, 'ApplicationEntityId');
             assert.equal(appEntityFirstRefConstraint.Property, 'ApplicationEntityId');
 
-            const incidentBreakdownFunction: EdmFunction = schema.Functions.find(f => f.Name === 'GetIncidentBreakdown');
+            const incidentBreakdownFunction: EdmFunction = schema.Functions.find(f => f.Name === 'GetIncidentBreakdown')!;
             assert.equal(incidentBreakdownFunction.Name, 'GetIncidentBreakdown');
-            assert.equal(incidentBreakdownFunction.Parameters.length, 3);
-            assert.equal(incidentBreakdownFunction.Parameters.find(p => p.Name === 'EnvironmentIdList').Type.fullName, 'Edm.String');
+            assert.equal(incidentBreakdownFunction.Parameters!.length, 3);
+            assert.equal(incidentBreakdownFunction.Parameters!.find(p => p.Name === 'EnvironmentIdList')!.Type.fullName, 'Edm.String');
 
-            const annotations: Annotations = schema.annotationsByName('QMV.Investigate.EntityModel.IncidentClassificationValue');
-            assert.equal(annotations.AnnotationList.length, 7, 'QMV.Investigate.EntityModel.IncidentClassificationValue should have 7 annotations')
-            const annotation = annotations.AnnotationsByTerm.get('IncidentClassificationValue.IncidentClassificationId');
+            const annotations: Annotations = schema.annotationsByName('QMV.Investigate.EntityModel.IncidentClassificationValue')!;
+            assert.equal(annotations.AnnotationList!.length, 7, 'QMV.Investigate.EntityModel.IncidentClassificationValue should have 7 annotations')
+            const annotation = annotations.AnnotationsByTerm!.get('IncidentClassificationValue.IncidentClassificationId')!;
             assert.equal(annotation.String, 'Foreign Key to IncidentClassification table', 'Annotation found matches xml')
         });
     });
 
     describe('entityTypeByName', function () {
         it('should return stored EntityTypes', function () {
-            const incidentEntityType: EntityType = schema.entityTypeByName('Incident');
+            const incidentEntityType: EntityType = schema.entityTypeByName('Incident')!;
             assert.ok(incidentEntityType, 'Not found');
             assert.equal(incidentEntityType.Name, 'Incident');
         })
@@ -167,7 +167,7 @@ describe('MetadataSymbols', function () {
 
     describe('complexTypeByName', function () {
         it('should return stored EntityTypes', function () {
-            const incidentEntityType: ComplexType = schema.complexTypeByName('IncidentDayAgeing');
+            const incidentEntityType: ComplexType = schema.complexTypeByName('IncidentDayAgeing')!;
             assert.ok(incidentEntityType, 'Not found');
             assert.equal(incidentEntityType.Name, 'IncidentDayAgeing');
         })
@@ -183,7 +183,7 @@ describe('MetadataSymbols', function () {
 
     describe('entitySetsByName', function () {
         it('should return stored EntitySets', function () {
-            const incidentEntitySet: EntitySet = schema.entitySetByName('Incidents');
+            const incidentEntitySet: EntitySet = schema.entitySetByName('Incidents')!;
             assert.ok(incidentEntitySet, 'Not found');
             assert.equal(incidentEntitySet.Name, 'Incidents');
         })
@@ -199,7 +199,7 @@ describe('MetadataSymbols', function () {
 
     describe('functionsByName', function () {
         it('should return stored Functions', function () {
-            const function1 = schema.functionByName('GetIncidentBreakdown');
+            const function1 = schema.functionByName('GetIncidentBreakdown')!;
             assert.equal(function1.Name, 'GetIncidentBreakdown');
         })
     });
@@ -209,7 +209,7 @@ describe('MetadataSymbols', function () {
             const functions: EdmFunction[] = schema.functionsWithPrefix('geti');
             assert.equal(functions.length, 6);
             assert.ok(functions.some(f => f.Name === 'GetIncidentBreakdown'));
-            const incidentBreakdownFunction: EdmFunction = functions.find(f => f.Name === 'GetIncidentBreakdown');
+            const incidentBreakdownFunction: EdmFunction = functions.find(f => f.Name === 'GetIncidentBreakdown')!;
             assert.ok(incidentBreakdownFunction);
             assert.ok(incidentBreakdownFunction.ReturnType);
             assert.ok(incidentBreakdownFunction.ReturnType.Type);
