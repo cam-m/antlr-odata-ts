@@ -18,7 +18,7 @@
     "compile-src-watch": "tsc -w -p tsconfig.json",
     "tests": "tsx --test",
     "tests-watch": "tsx --test --watch",
-    "antlr": "antlr-ng -Dlanguage=TypeScript -visitor -listener src/grammar/OData4Lite.g4 -o src"
+    "antlr": "antlr-ng -Dlanguage=TypeScript -l -v -o src src/grammar/OData4Lite.g4"
   },
   "files": [
     "dist/**/*"

@@ -2,6 +2,9 @@
 import * as antlr from "antlr4ng";
 import { Token } from "antlr4ng";
 
+import { OData4LiteListener } from "./OData4LiteListener.js";
+import { OData4LiteVisitor } from "./OData4LiteVisitor.js";
+
 // for running tests with parameters, TODO: discuss strategy for typed parameters in CI
 // eslint-disable-next-line no-unused-vars
 type int = number;
@@ -4124,6 +4127,23 @@ export class OdataRelativeURIContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_odataRelativeURI;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterOdataRelativeURI) {
+             listener.enterOdataRelativeURI(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitOdataRelativeURI) {
+             listener.exitOdataRelativeURI(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitOdataRelativeURI) {
+            return visitor.visitOdataRelativeURI(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -4147,6 +4167,23 @@ export class ResourcePathContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_resourcePath;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterResourcePath) {
+             listener.enterResourcePath(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitResourcePath) {
+             listener.exitResourcePath(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitResourcePath) {
+            return visitor.visitResourcePath(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -4161,6 +4198,23 @@ export class FunctionImportCallContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_functionImportCall;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterFunctionImportCall) {
+             listener.enterFunctionImportCall(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitFunctionImportCall) {
+             listener.exitFunctionImportCall(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitFunctionImportCall) {
+            return visitor.visitFunctionImportCall(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -4196,6 +4250,23 @@ export class FunctionParametersContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_functionParameters;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterFunctionParameters) {
+             listener.enterFunctionParameters(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitFunctionParameters) {
+             listener.exitFunctionParameters(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitFunctionParameters) {
+            return visitor.visitFunctionParameters(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -4218,6 +4289,23 @@ export class FunctionParameterContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_functionParameter;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterFunctionParameter) {
+             listener.enterFunctionParameter(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitFunctionParameter) {
+             listener.exitFunctionParameter(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitFunctionParameter) {
+            return visitor.visitFunctionParameter(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -4230,6 +4318,23 @@ export class FunctionParameterNameContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_functionParameterName;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterFunctionParameterName) {
+             listener.enterFunctionParameterName(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitFunctionParameterName) {
+             listener.exitFunctionParameterName(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitFunctionParameterName) {
+            return visitor.visitFunctionParameterName(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -4265,6 +4370,23 @@ export class CollectionNavigationContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_collectionNavigation;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterCollectionNavigation) {
+             listener.enterCollectionNavigation(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitCollectionNavigation) {
+             listener.exitCollectionNavigation(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitCollectionNavigation) {
+            return visitor.visitCollectionNavigation(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -4296,6 +4418,23 @@ export class SingleNavigationContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_singleNavigation;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterSingleNavigation) {
+             listener.enterSingleNavigation(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitSingleNavigation) {
+             listener.exitSingleNavigation(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitSingleNavigation) {
+            return visitor.visitSingleNavigation(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -4318,6 +4457,23 @@ export class PropertyPathContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_propertyPath;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterPropertyPath) {
+             listener.enterPropertyPath(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitPropertyPath) {
+             listener.exitPropertyPath(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitPropertyPath) {
+            return visitor.visitPropertyPath(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -4330,6 +4486,23 @@ export class CollectionPathContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_collectionPath;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterCollectionPath) {
+             listener.enterCollectionPath(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitCollectionPath) {
+             listener.exitCollectionPath(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitCollectionPath) {
+            return visitor.visitCollectionPath(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -4344,6 +4517,23 @@ export class SinglePathContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_singlePath;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterSinglePath) {
+             listener.enterSinglePath(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitSinglePath) {
+             listener.exitSinglePath(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitSinglePath) {
+            return visitor.visitSinglePath(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -4356,6 +4546,23 @@ export class PropertyContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_property;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterProperty) {
+             listener.enterProperty(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitProperty) {
+             listener.exitProperty(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitProperty) {
+            return visitor.visitProperty(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -4373,6 +4580,23 @@ export class QualifiedNameContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_qualifiedName;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterQualifiedName) {
+             listener.enterQualifiedName(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitQualifiedName) {
+             listener.exitQualifiedName(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitQualifiedName) {
+            return visitor.visitQualifiedName(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -4388,6 +4612,23 @@ export class KeyPredicateContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_keyPredicate;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterKeyPredicate) {
+             listener.enterKeyPredicate(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitKeyPredicate) {
+             listener.exitKeyPredicate(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitKeyPredicate) {
+            return visitor.visitKeyPredicate(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -4407,6 +4648,23 @@ export class SimpleKeyContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_simpleKey;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterSimpleKey) {
+             listener.enterSimpleKey(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitSimpleKey) {
+             listener.exitSimpleKey(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitSimpleKey) {
+            return visitor.visitSimpleKey(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -4460,6 +4718,23 @@ export class CompoundKeyContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_compoundKey;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterCompoundKey) {
+             listener.enterCompoundKey(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitCompoundKey) {
+             listener.exitCompoundKey(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitCompoundKey) {
+            return visitor.visitCompoundKey(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -4488,6 +4763,23 @@ export class QueryOptionsContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_queryOptions;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterQueryOptions) {
+             listener.enterQueryOptions(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitQueryOptions) {
+             listener.exitQueryOptions(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitQueryOptions) {
+            return visitor.visitQueryOptions(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -4503,6 +4795,23 @@ export class QueryOptionContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_queryOption;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterQueryOption) {
+             listener.enterQueryOption(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitQueryOption) {
+             listener.exitQueryOption(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitQueryOption) {
+            return visitor.visitQueryOption(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -4538,6 +4847,23 @@ export class SystemQueryOptionContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_systemQueryOption;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterSystemQueryOption) {
+             listener.enterSystemQueryOption(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitSystemQueryOption) {
+             listener.exitSystemQueryOption(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitSystemQueryOption) {
+            return visitor.visitSystemQueryOption(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -4553,6 +4879,23 @@ export class DynamicPropertyAssignmentContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_dynamicPropertyAssignment;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterDynamicPropertyAssignment) {
+             listener.enterDynamicPropertyAssignment(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitDynamicPropertyAssignment) {
+             listener.exitDynamicPropertyAssignment(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitDynamicPropertyAssignment) {
+            return visitor.visitDynamicPropertyAssignment(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -4573,6 +4916,23 @@ export class AliasAndValueContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_aliasAndValue;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterAliasAndValue) {
+             listener.enterAliasAndValue(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitAliasAndValue) {
+             listener.exitAliasAndValue(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitAliasAndValue) {
+            return visitor.visitAliasAndValue(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -4589,6 +4949,23 @@ export class ParameterAliasContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_parameterAlias;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterParameterAlias) {
+             listener.enterParameterAlias(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitParameterAlias) {
+             listener.exitParameterAlias(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitParameterAlias) {
+            return visitor.visitParameterAlias(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -4601,6 +4978,23 @@ export class ParameterValueContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_parameterValue;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterParameterValue) {
+             listener.enterParameterValue(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitParameterValue) {
+             listener.exitParameterValue(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitParameterValue) {
+            return visitor.visitParameterValue(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -4621,6 +5015,23 @@ export class FilterContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_filter;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterFilter) {
+             listener.enterFilter(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitFilter) {
+             listener.exitFilter(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitFilter) {
+            return visitor.visitFilter(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -4639,6 +5050,23 @@ export class ApplyContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_apply;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterApply) {
+             listener.enterApply(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitApply) {
+             listener.exitApply(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitApply) {
+            return visitor.visitApply(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -4668,6 +5096,23 @@ export class ApplyExpressionContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_applyExpression;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterApplyExpression) {
+             listener.enterApplyExpression(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitApplyExpression) {
+             listener.exitApplyExpression(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitApplyExpression) {
+            return visitor.visitApplyExpression(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -4692,6 +5137,23 @@ export class ApplyTrafoContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_applyTrafo;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterApplyTrafo) {
+             listener.enterApplyTrafo(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitApplyTrafo) {
+             listener.exitApplyTrafo(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitApplyTrafo) {
+            return visitor.visitApplyTrafo(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -4730,6 +5192,23 @@ export class ComputeTrafoContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_computeTrafo;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterComputeTrafo) {
+             listener.enterComputeTrafo(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitComputeTrafo) {
+             listener.exitComputeTrafo(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitComputeTrafo) {
+            return visitor.visitComputeTrafo(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -4745,6 +5224,23 @@ export class ComputeExpressionContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_computeExpression;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterComputeExpression) {
+             listener.enterComputeExpression(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitComputeExpression) {
+             listener.exitComputeExpression(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitComputeExpression) {
+            return visitor.visitComputeExpression(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -4783,6 +5279,23 @@ export class ConcatTrafoContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_concatTrafo;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterConcatTrafo) {
+             listener.enterConcatTrafo(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitConcatTrafo) {
+             listener.exitConcatTrafo(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitConcatTrafo) {
+            return visitor.visitConcatTrafo(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -4810,6 +5323,23 @@ export class GroupbyTrafoContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_groupbyTrafo;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterGroupbyTrafo) {
+             listener.enterGroupbyTrafo(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitGroupbyTrafo) {
+             listener.exitGroupbyTrafo(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitGroupbyTrafo) {
+            return visitor.visitGroupbyTrafo(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -4845,6 +5375,23 @@ export class GroupByListContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_groupByList;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterGroupByList) {
+             listener.enterGroupByList(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitGroupByList) {
+             listener.exitGroupByList(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitGroupByList) {
+            return visitor.visitGroupByList(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -4857,6 +5404,23 @@ export class GroupbyElementContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_groupbyElement;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterGroupbyElement) {
+             listener.enterGroupbyElement(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitGroupbyElement) {
+             listener.exitGroupbyElement(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitGroupbyElement) {
+            return visitor.visitGroupbyElement(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -4891,6 +5455,23 @@ export class GroupingPropertyContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_groupingProperty;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterGroupingProperty) {
+             listener.enterGroupingProperty(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitGroupingProperty) {
+             listener.exitGroupingProperty(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitGroupingProperty) {
+            return visitor.visitGroupingProperty(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -4929,6 +5510,23 @@ export class PathPrefixContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_pathPrefix;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterPathPrefix) {
+             listener.enterPathPrefix(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitPathPrefix) {
+             listener.exitPathPrefix(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitPathPrefix) {
+            return visitor.visitPathPrefix(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -4950,6 +5548,23 @@ export class FilterTrafoContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_filterTrafo;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterFilterTrafo) {
+             listener.enterFilterTrafo(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitFilterTrafo) {
+             listener.exitFilterTrafo(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitFilterTrafo) {
+            return visitor.visitFilterTrafo(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -4988,6 +5603,23 @@ export class AggregateTrafoContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_aggregateTrafo;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterAggregateTrafo) {
+             listener.enterAggregateTrafo(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitAggregateTrafo) {
+             listener.exitAggregateTrafo(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitAggregateTrafo) {
+            return visitor.visitAggregateTrafo(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -5016,6 +5648,23 @@ export class AggregationParamContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_aggregationParam;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterAggregationParam) {
+             listener.enterAggregationParam(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitAggregationParam) {
+             listener.exitAggregationParam(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitAggregationParam) {
+            return visitor.visitAggregationParam(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -5038,6 +5687,23 @@ export class AggregationExprContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_aggregationExpr;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterAggregationExpr) {
+             listener.enterAggregationExpr(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitAggregationExpr) {
+             listener.exitAggregationExpr(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitAggregationExpr) {
+            return visitor.visitAggregationExpr(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -5053,6 +5719,23 @@ export class AggregateWithContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_aggregateWith;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterAggregateWith) {
+             listener.enterAggregateWith(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitAggregateWith) {
+             listener.exitAggregateWith(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitAggregateWith) {
+            return visitor.visitAggregateWith(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -5082,6 +5765,23 @@ export class AggregateMethodContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_aggregateMethod;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterAggregateMethod) {
+             listener.enterAggregateMethod(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitAggregateMethod) {
+             listener.exitAggregateMethod(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitAggregateMethod) {
+            return visitor.visitAggregateMethod(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -5097,6 +5797,23 @@ export class AggregatedPropertyContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_aggregatedProperty;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterAggregatedProperty) {
+             listener.enterAggregatedProperty(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitAggregatedProperty) {
+             listener.exitAggregatedProperty(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitAggregatedProperty) {
+            return visitor.visitAggregatedProperty(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -5116,6 +5833,23 @@ export class CountContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_count;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterCount) {
+             listener.enterCount(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitCount) {
+             listener.exitCount(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitCount) {
+            return visitor.visitCount(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -5151,6 +5885,23 @@ export class OrderbyContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_orderby;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterOrderby) {
+             listener.enterOrderby(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitOrderby) {
+             listener.exitOrderby(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitOrderby) {
+            return visitor.visitOrderby(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -5169,6 +5920,23 @@ export class SkipContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_skip;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterSkip) {
+             listener.enterSkip(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitSkip) {
+             listener.exitSkip(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitSkip) {
+            return visitor.visitSkip(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -5189,6 +5957,23 @@ export class TopContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_top;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterTop) {
+             listener.enterTop(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitTop) {
+             listener.exitTop(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitTop) {
+            return visitor.visitTop(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -5207,6 +5992,23 @@ export class ExpandContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_expand;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterExpand) {
+             listener.enterExpand(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitExpand) {
+             listener.exitExpand(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitExpand) {
+            return visitor.visitExpand(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -5242,6 +6044,23 @@ export class SelectContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_select;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterSelect) {
+             listener.enterSelect(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitSelect) {
+             listener.exitSelect(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitSelect) {
+            return visitor.visitSelect(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -5260,6 +6079,23 @@ export class OrderbyItemContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_orderbyItem;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterOrderbyItem) {
+             listener.enterOrderbyItem(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitOrderbyItem) {
+             listener.exitOrderbyItem(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitOrderbyItem) {
+            return visitor.visitOrderbyItem(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -5283,6 +6119,23 @@ export class ExpandItemListContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_expandItemList;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterExpandItemList) {
+             listener.enterExpandItemList(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitExpandItemList) {
+             listener.exitExpandItemList(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitExpandItemList) {
+            return visitor.visitExpandItemList(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -5304,6 +6157,23 @@ export class ExpandItemContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_expandItem;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterExpandItem) {
+             listener.enterExpandItem(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitExpandItem) {
+             listener.exitExpandItem(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitExpandItem) {
+            return visitor.visitExpandItem(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -5342,6 +6212,23 @@ export class ExpandPathContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_expandPath;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterExpandPath) {
+             listener.enterExpandPath(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitExpandPath) {
+             listener.exitExpandPath(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitExpandPath) {
+            return visitor.visitExpandPath(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -5369,6 +6256,23 @@ export class ExpandQueryOptionsContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_expandQueryOptions;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterExpandQueryOptions) {
+             listener.enterExpandQueryOptions(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitExpandQueryOptions) {
+             listener.exitExpandQueryOptions(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitExpandQueryOptions) {
+            return visitor.visitExpandQueryOptions(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -5401,6 +6305,23 @@ export class ExpandQueryOptionContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_expandQueryOption;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterExpandQueryOption) {
+             listener.enterExpandQueryOption(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitExpandQueryOption) {
+             listener.exitExpandQueryOption(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitExpandQueryOption) {
+            return visitor.visitExpandQueryOption(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -5432,6 +6353,23 @@ export class FunctionExpressionContext extends ExpressionContext {
     public expressionList(): ExpressionListContext | null {
         return this.getRuleContext(0, ExpressionListContext);
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterFunctionExpression) {
+             listener.enterFunctionExpression(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitFunctionExpression) {
+             listener.exitFunctionExpression(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitFunctionExpression) {
+            return visitor.visitFunctionExpression(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 export class ParenthesisExpressionContext extends ExpressionContext {
     public constructor(ctx: ExpressionContext) {
@@ -5446,6 +6384,23 @@ export class ParenthesisExpressionContext extends ExpressionContext {
     }
     public RPAREN(): antlr.TerminalNode {
         return this.getToken(OData4LiteParser.RPAREN, 0)!;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterParenthesisExpression) {
+             listener.enterParenthesisExpression(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitParenthesisExpression) {
+             listener.exitParenthesisExpression(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitParenthesisExpression) {
+            return visitor.visitParenthesisExpression(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 export class UnaryExpressionContext extends ExpressionContext {
@@ -5465,6 +6420,23 @@ export class UnaryExpressionContext extends ExpressionContext {
     public MINUS(): antlr.TerminalNode | null {
         return this.getToken(OData4LiteParser.MINUS, 0);
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterUnaryExpression) {
+             listener.enterUnaryExpression(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitUnaryExpression) {
+             listener.exitUnaryExpression(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitUnaryExpression) {
+            return visitor.visitUnaryExpression(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 export class NegativeExpressionContext extends ExpressionContext {
     public constructor(ctx: ExpressionContext) {
@@ -5477,6 +6449,23 @@ export class NegativeExpressionContext extends ExpressionContext {
     public expression(): ExpressionContext {
         return this.getRuleContext(0, ExpressionContext)!;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterNegativeExpression) {
+             listener.enterNegativeExpression(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitNegativeExpression) {
+             listener.exitNegativeExpression(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitNegativeExpression) {
+            return visitor.visitNegativeExpression(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 export class LiteralExpressionContext extends ExpressionContext {
     public constructor(ctx: ExpressionContext) {
@@ -5485,6 +6474,23 @@ export class LiteralExpressionContext extends ExpressionContext {
     }
     public primitiveLiteral(): PrimitiveLiteralContext {
         return this.getRuleContext(0, PrimitiveLiteralContext)!;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterLiteralExpression) {
+             listener.enterLiteralExpression(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitLiteralExpression) {
+             listener.exitLiteralExpression(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitLiteralExpression) {
+            return visitor.visitLiteralExpression(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 export class LiteralCollectionExpressionContext extends ExpressionContext {
@@ -5495,6 +6501,23 @@ export class LiteralCollectionExpressionContext extends ExpressionContext {
     public primitiveLiteralCollection(): PrimitiveLiteralCollectionContext {
         return this.getRuleContext(0, PrimitiveLiteralCollectionContext)!;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterLiteralCollectionExpression) {
+             listener.enterLiteralCollectionExpression(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitLiteralCollectionExpression) {
+             listener.exitLiteralCollectionExpression(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitLiteralCollectionExpression) {
+            return visitor.visitLiteralCollectionExpression(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 export class FirstMemberExpressionContext extends ExpressionContext {
     public constructor(ctx: ExpressionContext) {
@@ -5504,6 +6527,23 @@ export class FirstMemberExpressionContext extends ExpressionContext {
     public firstMemberExpr(): FirstMemberExprContext {
         return this.getRuleContext(0, FirstMemberExprContext)!;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterFirstMemberExpression) {
+             listener.enterFirstMemberExpression(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitFirstMemberExpression) {
+             listener.exitFirstMemberExpression(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitFirstMemberExpression) {
+            return visitor.visitFirstMemberExpression(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 export class AliasExpressionContext extends ExpressionContext {
     public constructor(ctx: ExpressionContext) {
@@ -5512,6 +6552,23 @@ export class AliasExpressionContext extends ExpressionContext {
     }
     public parameterAlias(): ParameterAliasContext {
         return this.getRuleContext(0, ParameterAliasContext)!;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterAliasExpression) {
+             listener.enterAliasExpression(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitAliasExpression) {
+             listener.exitAliasExpression(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitAliasExpression) {
+            return visitor.visitAliasExpression(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 export class ModulusExpressionContext extends ExpressionContext {
@@ -5531,6 +6588,23 @@ export class ModulusExpressionContext extends ExpressionContext {
     public OP_MOD(): antlr.TerminalNode {
         return this.getToken(OData4LiteParser.OP_MOD, 0)!;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterModulusExpression) {
+             listener.enterModulusExpression(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitModulusExpression) {
+             listener.exitModulusExpression(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitModulusExpression) {
+            return visitor.visitModulusExpression(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 export class MultiplyExpressionContext extends ExpressionContext {
     public constructor(ctx: ExpressionContext) {
@@ -5548,6 +6622,23 @@ export class MultiplyExpressionContext extends ExpressionContext {
     }
     public OP_MUL(): antlr.TerminalNode {
         return this.getToken(OData4LiteParser.OP_MUL, 0)!;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterMultiplyExpression) {
+             listener.enterMultiplyExpression(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitMultiplyExpression) {
+             listener.exitMultiplyExpression(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitMultiplyExpression) {
+            return visitor.visitMultiplyExpression(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 export class DivisionExpressionContext extends ExpressionContext {
@@ -5567,6 +6658,23 @@ export class DivisionExpressionContext extends ExpressionContext {
     public OP_DIV(): antlr.TerminalNode {
         return this.getToken(OData4LiteParser.OP_DIV, 0)!;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterDivisionExpression) {
+             listener.enterDivisionExpression(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitDivisionExpression) {
+             listener.exitDivisionExpression(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitDivisionExpression) {
+            return visitor.visitDivisionExpression(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 export class SubtractExpressionContext extends ExpressionContext {
     public constructor(ctx: ExpressionContext) {
@@ -5585,6 +6693,23 @@ export class SubtractExpressionContext extends ExpressionContext {
     public OP_SUB(): antlr.TerminalNode {
         return this.getToken(OData4LiteParser.OP_SUB, 0)!;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterSubtractExpression) {
+             listener.enterSubtractExpression(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitSubtractExpression) {
+             listener.exitSubtractExpression(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitSubtractExpression) {
+            return visitor.visitSubtractExpression(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 export class AddExpressionContext extends ExpressionContext {
     public constructor(ctx: ExpressionContext) {
@@ -5602,6 +6727,23 @@ export class AddExpressionContext extends ExpressionContext {
     }
     public OP_ADD(): antlr.TerminalNode {
         return this.getToken(OData4LiteParser.OP_ADD, 0)!;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterAddExpression) {
+             listener.enterAddExpression(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitAddExpression) {
+             listener.exitAddExpression(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitAddExpression) {
+            return visitor.visitAddExpression(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 export class BinaryExpressionContext extends ExpressionContext {
@@ -5636,6 +6778,23 @@ export class BinaryExpressionContext extends ExpressionContext {
     public OP_LE(): antlr.TerminalNode | null {
         return this.getToken(OData4LiteParser.OP_LE, 0);
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterBinaryExpression) {
+             listener.enterBinaryExpression(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitBinaryExpression) {
+             listener.exitBinaryExpression(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitBinaryExpression) {
+            return visitor.visitBinaryExpression(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 export class LogicalExpressionContext extends ExpressionContext {
     public constructor(ctx: ExpressionContext) {
@@ -5657,6 +6816,23 @@ export class LogicalExpressionContext extends ExpressionContext {
     public OP_OR(): antlr.TerminalNode | null {
         return this.getToken(OData4LiteParser.OP_OR, 0);
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterLogicalExpression) {
+             listener.enterLogicalExpression(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitLogicalExpression) {
+             listener.exitLogicalExpression(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitLogicalExpression) {
+            return visitor.visitLogicalExpression(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 export class InExpressionContext extends ExpressionContext {
     public constructor(ctx: ExpressionContext) {
@@ -5674,6 +6850,23 @@ export class InExpressionContext extends ExpressionContext {
     }
     public parameterAlias(): ParameterAliasContext | null {
         return this.getRuleContext(0, ParameterAliasContext);
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterInExpression) {
+             listener.enterInExpression(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitInExpression) {
+             listener.exitInExpression(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitInExpression) {
+            return visitor.visitInExpression(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -5702,6 +6895,23 @@ export class ExpressionListContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_expressionList;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterExpressionList) {
+             listener.enterExpressionList(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitExpressionList) {
+             listener.exitExpressionList(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitExpressionList) {
+            return visitor.visitExpressionList(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -5806,6 +7016,23 @@ export class FunctionNameContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_functionName;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterFunctionName) {
+             listener.enterFunctionName(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitFunctionName) {
+             listener.exitFunctionName(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitFunctionName) {
+            return visitor.visitFunctionName(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -5822,6 +7049,23 @@ export class FirstMemberExprContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_firstMemberExpr;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterFirstMemberExpr) {
+             listener.enterFirstMemberExpr(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitFirstMemberExpr) {
+             listener.exitFirstMemberExpr(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitFirstMemberExpr) {
+            return visitor.visitFirstMemberExpr(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -5837,6 +7081,23 @@ export class LambdaPredicatePrefixExprContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_lambdaPredicatePrefixExpr;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterLambdaPredicatePrefixExpr) {
+             listener.enterLambdaPredicatePrefixExpr(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitLambdaPredicatePrefixExpr) {
+             listener.exitLambdaPredicatePrefixExpr(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitLambdaPredicatePrefixExpr) {
+            return visitor.visitLambdaPredicatePrefixExpr(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -5857,6 +7118,23 @@ export class MemberExprContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_memberExpr;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterMemberExpr) {
+             listener.enterMemberExpr(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitMemberExpr) {
+             listener.exitMemberExpr(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitMemberExpr) {
+            return visitor.visitMemberExpr(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -5875,6 +7153,23 @@ export class PropertyPathExprContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_propertyPathExpr;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterPropertyPathExpr) {
+             listener.enterPropertyPathExpr(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitPropertyPathExpr) {
+             listener.exitPropertyPathExpr(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitPropertyPathExpr) {
+            return visitor.visitPropertyPathExpr(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -5901,6 +7196,23 @@ export class CollectionNavigationExprContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_collectionNavigationExpr;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterCollectionNavigationExpr) {
+             listener.enterCollectionNavigationExpr(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitCollectionNavigationExpr) {
+             listener.exitCollectionNavigationExpr(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitCollectionNavigationExpr) {
+            return visitor.visitCollectionNavigationExpr(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -5919,6 +7231,23 @@ export class SingleNavigationExprContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_singleNavigationExpr;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterSingleNavigationExpr) {
+             listener.enterSingleNavigationExpr(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitSingleNavigationExpr) {
+             listener.exitSingleNavigationExpr(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitSingleNavigationExpr) {
+            return visitor.visitSingleNavigationExpr(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -5941,6 +7270,23 @@ export class CollectionPathExprContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_collectionPathExpr;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterCollectionPathExpr) {
+             listener.enterCollectionPathExpr(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitCollectionPathExpr) {
+             listener.exitCollectionPathExpr(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitCollectionPathExpr) {
+            return visitor.visitCollectionPathExpr(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -5970,6 +7316,23 @@ export class AnyExprContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_anyExpr;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterAnyExpr) {
+             listener.enterAnyExpr(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitAnyExpr) {
+             listener.exitAnyExpr(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitAnyExpr) {
+            return visitor.visitAnyExpr(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -5998,6 +7361,23 @@ export class AllExprContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_allExpr;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterAllExpr) {
+             listener.enterAllExpr(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitAllExpr) {
+             listener.exitAllExpr(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitAllExpr) {
+            return visitor.visitAllExpr(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -6010,6 +7390,23 @@ export class LambdaParameterIdentifierContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_lambdaParameterIdentifier;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterLambdaParameterIdentifier) {
+             listener.enterLambdaParameterIdentifier(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitLambdaParameterIdentifier) {
+             listener.exitLambdaParameterIdentifier(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitLambdaParameterIdentifier) {
+            return visitor.visitLambdaParameterIdentifier(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -6044,6 +7441,23 @@ export class PrimitiveLiteralCollectionContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_primitiveLiteralCollection;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterPrimitiveLiteralCollection) {
+             listener.enterPrimitiveLiteralCollection(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitPrimitiveLiteralCollection) {
+             listener.exitPrimitiveLiteralCollection(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitPrimitiveLiteralCollection) {
+            return visitor.visitPrimitiveLiteralCollection(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -6085,6 +7499,23 @@ export class PrimitiveLiteralContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_primitiveLiteral;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterPrimitiveLiteral) {
+             listener.enterPrimitiveLiteral(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitPrimitiveLiteral) {
+             listener.exitPrimitiveLiteral(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitPrimitiveLiteral) {
+            return visitor.visitPrimitiveLiteral(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -6110,6 +7541,23 @@ export class EnumContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_enum;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterEnum) {
+             listener.enterEnum(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitEnum) {
+             listener.exitEnum(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitEnum) {
+            return visitor.visitEnum(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -6125,6 +7573,23 @@ export class QualifiedEnumTypeNameContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_qualifiedEnumTypeName;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterQualifiedEnumTypeName) {
+             listener.enterQualifiedEnumTypeName(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitQualifiedEnumTypeName) {
+             listener.exitQualifiedEnumTypeName(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitQualifiedEnumTypeName) {
+            return visitor.visitQualifiedEnumTypeName(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -6154,6 +7619,23 @@ export class EnumValuesContext extends antlr.ParserRuleContext {
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_enumValues;
     }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterEnumValues) {
+             listener.enterEnumValues(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitEnumValues) {
+             listener.exitEnumValues(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitEnumValues) {
+            return visitor.visitEnumValues(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
+    }
 }
 
 
@@ -6178,6 +7660,23 @@ export class EnumValueContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_enumValue;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterEnumValue) {
+             listener.enterEnumValue(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitEnumValue) {
+             listener.exitEnumValue(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitEnumValue) {
+            return visitor.visitEnumValue(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
 
@@ -6206,5 +7705,22 @@ export class NamespaceContext extends antlr.ParserRuleContext {
     }
     public override get ruleIndex(): number {
         return OData4LiteParser.RULE_namespace;
+    }
+    public override enterRule(listener: OData4LiteListener): void {
+        if(listener.enterNamespace) {
+             listener.enterNamespace(this);
+        }
+    }
+    public override exitRule(listener: OData4LiteListener): void {
+        if(listener.exitNamespace) {
+             listener.exitNamespace(this);
+        }
+    }
+    public override accept<Result>(visitor: OData4LiteVisitor<Result>): Result | null {
+        if (visitor.visitNamespace) {
+            return visitor.visitNamespace(this);
+        } else {
+            return visitor.visitChildren(this);
+        }
     }
 }
