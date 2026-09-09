@@ -1,7 +1,7 @@
 {
   "name": "antlr-odata",
   "repository": {
-    "url": "https://github.com/cam-m/antlr-odata",
+    "url": "git+https://github.com/cam-m/antlr-odata.git",
     "type": "git"
   },
   "version": "1.0.3",
