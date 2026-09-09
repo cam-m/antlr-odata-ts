@@ -1,5 +1,5 @@
-import {Property} from "./Property";
-import {Schema} from "./Schema";
+import {Property} from "./Property.js";
+import {Schema} from "./Schema.js";
 
 export class ComplexType {
     public Name!: string;

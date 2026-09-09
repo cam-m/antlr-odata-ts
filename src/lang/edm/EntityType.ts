@@ -1,7 +1,7 @@
-import {Key} from "./Key";
-import {Property} from "./Property";
-import {NavigationProperty} from "./NavigationProperty";
-import {Schema} from "./Schema";
+import {Key} from "./Key.js";
+import {Property} from "./Property.js";
+import {NavigationProperty} from "./NavigationProperty.js";
+import {Schema} from "./Schema.js";
 
 export class EntityType {
     public Schema!: Schema;

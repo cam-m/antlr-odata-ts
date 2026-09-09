@@ -1,4 +1,4 @@
-import {Annotation} from "./Annotation";
+import {Annotation} from "./Annotation.js";
 
 export class Annotations {
     Target!: string;

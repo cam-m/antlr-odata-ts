@@ -1,5 +1,5 @@
-import {NavigationPropertyBinding} from "./NavigationPropertyBinding";
-import {Schema} from "./Schema";
+import {NavigationPropertyBinding} from "./NavigationPropertyBinding.js";
+import {Schema} from "./Schema.js";
 
 export class EntitySet {
     public EntityType!: string;

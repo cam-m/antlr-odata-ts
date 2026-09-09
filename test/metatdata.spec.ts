@@ -1,18 +1,18 @@
 import { describe, it, before } from 'node:test';
 import * as xmldom from "@xmldom/xmldom";
 import * as assert from "assert";
-import { MetadataSymbols } from "../src/lang/edm/MetadataSymbols";
-import {EntitySet} from "../src/lang/edm/EntitySet";
-import { Schema } from "../src/lang/edm/Schema";
-import {EntityContainer} from "../src/lang/edm/EntityContainer";
-import {EntityType} from "../src/lang/edm/EntityType";
-import {NavigationProperty} from "../src/lang/edm/NavigationProperty";
-import {NavigationPropertyBinding} from "../src/lang/edm/NavigationPropertyBinding";
-import {EdmFunction} from "../src/lang/edm/EdmFunction";
-import {ComplexType} from "../src/lang/edm/ComplexType";
-import {PrimitiveType, TypeClass} from "../src/lang/edm/Type";
-import {ReferentialConstraint} from "../src/lang/edm/ReferentialConstraint";
-import {Annotations} from "../src/lang/edm/Annotations";
+import { MetadataSymbols } from "../src/lang/edm/MetadataSymbols.js";
+import {EntitySet} from "../src/lang/edm/EntitySet.js";
+import { Schema } from "../src/lang/edm/Schema.js";
+import {EntityContainer} from "../src/lang/edm/EntityContainer.js";
+import {EntityType} from "../src/lang/edm/EntityType.js";
+import {NavigationProperty} from "../src/lang/edm/NavigationProperty.js";
+import {NavigationPropertyBinding} from "../src/lang/edm/NavigationPropertyBinding.js";
+import {EdmFunction} from "../src/lang/edm/EdmFunction.js";
+import {ComplexType} from "../src/lang/edm/ComplexType.js";
+import {PrimitiveType, TypeClass} from "../src/lang/edm/Type.js";
+import {ReferentialConstraint} from "../src/lang/edm/ReferentialConstraint.js";
+import {Annotations} from "../src/lang/edm/Annotations.js";
 
 describe('MetadataSymbols', function () {
     const parser = new xmldom.DOMParser();

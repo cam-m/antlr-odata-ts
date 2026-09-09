@@ -19,10 +19,10 @@ import {
     OdataRelativeURIContext, OrderbyItemContext,
     PropertyPathExprContext,
     SingleNavigationExprContext
-} from "../src";
-import {MetadataSymbols} from "../src/lang/edm/MetadataSymbols";
+} from "../src/index.js";
+import {MetadataSymbols} from "../src/lang/edm/MetadataSymbols.js";
 import * as xmldom from "@xmldom/xmldom";
-import {Schema} from "../src/lang/edm/Schema";
+import {Schema} from "../src/lang/edm/Schema.js";
 
 function nonNull<T>(value: T | null | undefined): T {
     return value ?? assert.fail('Expected parse tree node');

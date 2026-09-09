@@ -4,15 +4,23 @@
     "url": "https://github.com/cam-m/antlr-odata",
     "type": "git"
   },
-  "version": "1.0.2",
+  "version": "1.0.3",
+  "type": "module",
   "description": "Antlr 4 OData Typescript parser",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
   "scripts": {
     "clean": "rimraf dist",
-    "build": "npm run-script clean & npm run-script antlr & npm run-script compile-src-dist",
-    "test": "npm run-script build & npm run-script tests",
-    "dev": "npm run-script antlr & concurrently --kill-others \"npm run compile-src-watch\" \"npm run tests-watch\"",
+    "build": "npm run clean && npm run antlr && npm run compile-src-dist",
+    "test": "npm run build && npm run tests",
+    "dev": "npm run antlr && concurrently --kill-others \"npm run compile-src-watch\" \"npm run tests-watch\"",
+    "prepack": "npm run build",
     "compile-src-dist": "tsc -p tsconfig.dist.json",
     "compile-src": "tsc -p tsconfig.json",
     "compile-src-watch": "tsc -w -p tsconfig.json",

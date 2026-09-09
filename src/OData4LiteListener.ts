@@ -3,7 +3,7 @@ import { ErrorNode, ParseTreeListener, ParserRuleContext, TerminalNode } from "a
 
 
 // @ts-nocheck
-import { Schema } from './lang/edm/Schema';
+import { Schema } from './lang/edm/Schema.js';
 import { CharStream, TokenStream } from "antlr4ng";
 
 

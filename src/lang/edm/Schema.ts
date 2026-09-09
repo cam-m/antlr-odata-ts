@@ -1,10 +1,13 @@
-import {EntityContainer} from "./EntityContainer";
-import {EntityType} from "./EntityType";
-import {ComplexType} from "./ComplexType";
-import {EdmFunction} from "./EdmFunction";
-import {EntitySet} from "./EntitySet";
-import Trie from "trie-prefix-tree";
-import {Annotations} from "./Annotations";
+import {EntityContainer} from "./EntityContainer.js";
+import {EntityType} from "./EntityType.js";
+import {ComplexType} from "./ComplexType.js";
+import {EdmFunction} from "./EdmFunction.js";
+import {EntitySet} from "./EntitySet.js";
+import triePrefixTree from "trie-prefix-tree";
+import {Annotations} from "./Annotations.js";
+
+type TrieFactory = typeof import("trie-prefix-tree").default;
+const Trie = triePrefixTree as unknown as TrieFactory;
 
 /**
  * Represents a single EDM Schema, and contains helper methods for querying the various

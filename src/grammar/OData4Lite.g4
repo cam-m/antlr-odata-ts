@@ -4,7 +4,7 @@ grammar OData4Lite;
 // added later.
 @header {
 // @ts-nocheck
-import { Schema } from './lang/edm/Schema';
+import { Schema } from './lang/edm/Schema.js';
 import { CharStream, TokenStream } from "antlr4ng";
 }
 
@@ -696,4 +696,3 @@ fragment Y                  : [yY];
 fragment Z                  : [zZ];
 fragment F_POS_DIGIT        : [1-9];
 fragment F_YEAR             : [1-9];
-

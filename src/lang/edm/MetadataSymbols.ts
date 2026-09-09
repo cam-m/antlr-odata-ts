@@ -1,20 +1,19 @@
-import * as xpath from "xpath";
-import {XPathSelect} from "xpath";
-import {EntitySet} from "./EntitySet";
-import {EntityContainer} from "./EntityContainer";
-import {Schema} from "./Schema";
-import {NavigationPropertyBinding} from "./NavigationPropertyBinding";
-import {EntityType} from "./EntityType";
-import {ComplexType} from "./ComplexType";
-import {EdmFunction} from "./EdmFunction";
-import {Property} from "./Property";
-import {Parameter} from "./Parameter";
-import {ReturnType} from "./ReturnType";
-import {NavigationProperty} from "./NavigationProperty";
-import {ReferentialConstraint} from "./ReferentialConstraint";
-import {Type} from "./Type";
-import {Annotations} from "./Annotations";
-import {Annotation} from "./Annotation";
+import xpath, {type SelectReturnType, type XPathSelect} from "xpath";
+import {EntitySet} from "./EntitySet.js";
+import {EntityContainer} from "./EntityContainer.js";
+import {Schema} from "./Schema.js";
+import {NavigationPropertyBinding} from "./NavigationPropertyBinding.js";
+import {EntityType} from "./EntityType.js";
+import {ComplexType} from "./ComplexType.js";
+import {EdmFunction} from "./EdmFunction.js";
+import {Property} from "./Property.js";
+import {Parameter} from "./Parameter.js";
+import {ReturnType} from "./ReturnType.js";
+import {NavigationProperty} from "./NavigationProperty.js";
+import {ReferentialConstraint} from "./ReferentialConstraint.js";
+import {Type} from "./Type.js";
+import {Annotations} from "./Annotations.js";
+import {Annotation} from "./Annotation.js";
 
 export class MetadataSymbols {
     private _schemas: Schema[];
@@ -25,7 +24,7 @@ export class MetadataSymbols {
         'edm': 'http://docs.oasis-open.org/odata/ns/edm'
     });
 
-    private toNodeArray(result: xpath.SelectReturnType): Element[] {
+    private toNodeArray(result: SelectReturnType): Element[] {
         if (Array.isArray(result)) return result.filter(xpath.isElement);
         return xpath.isElement(result) ? [result] : [];
     }

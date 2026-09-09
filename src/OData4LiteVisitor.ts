@@ -3,7 +3,7 @@ import { AbstractParseTreeVisitor } from "antlr4ng";
 
 
 // @ts-nocheck
-import { Schema } from './lang/edm/Schema';
+import { Schema } from './lang/edm/Schema.js';
 import { CharStream, TokenStream } from "antlr4ng";
 
 

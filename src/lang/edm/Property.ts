@@ -1,4 +1,4 @@
-import {Type} from "./Type";
+import {Type} from "./Type.js";
 
 export class Property {
     public Name!: string;

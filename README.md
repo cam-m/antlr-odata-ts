@@ -1,21 +1,19 @@
 # antlr-odata
 This project provides an antlr generated lexer and parser for OData Queries.
 
-Note this project depends on antlr4ts ^0.5.0-alpha.3 - use in production code at your own risk.
-
 ## Dependencies
- - antlr4ts (Alpha).
+ - antlr-ng
 
 ## Usage (ts)
 The main useful classes exported by this library are `ODataLiteLexer` and `ODataLiteParser`. Here's how you can use these...
 
 ``` typescript
-import { CharStreams, CodePointCharStream, CommonTokenStream } from 'antlr4ts';
-import { ParseTree, ParseTreeWalker } from 'antlr4ts/tree';
+import { CharStream, CommonTokenStream } from 'antlr4ng';
+import { ParseTree, ParseTreeWalker } from 'antlr4ng';
 
 const odataQuery = 'MyEntity?$select=Property1&$expand=NavProperty1($select=Property2;$expand=NavProperty2)$filter=Property1 eq @MyAlias&@MyAlias=1';
 
-const codePointCharStream: CodePointCharStream = CharStreams.fromString(odataQuery);
+const codePointCharStream = CharStream.fromString(odataQuery);
 const lexer = new OData4LiteLexer(codePointCharStream);
 const tokens: CommonTokenStream = new CommonTokenStream(lexer);
 
@@ -69,6 +67,9 @@ https://tools.oasis-open.org/version-control/browse/wsvn/odata/trunk/4.01%20spec
 ...has been copied to this project purely for my reference. In its current state it will not build with antlr4ts.
 
 ## Releases
+### Version 1.0.3
+Switched to ESM only.
+
 ### Version 0.0.18
 #### Changes
 - Bumped devdep Typescript to 4

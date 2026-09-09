@@ -1,6 +1,6 @@
-import {ReferentialConstraint} from './ReferentialConstraint';
-import {Type} from "./Type";
-import {OnDelete} from "./OnDelete";
+import {ReferentialConstraint} from './ReferentialConstraint.js';
+import {Type} from "./Type.js";
+import {OnDelete} from "./OnDelete.js";
 
 export class NavigationProperty {
     public Name!: string;

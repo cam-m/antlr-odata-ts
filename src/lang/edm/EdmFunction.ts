@@ -1,6 +1,6 @@
-import { ReturnType } from "./ReturnType";
-import {Parameter} from "./Parameter";
-import {Schema} from "./Schema";
+import { ReturnType } from "./ReturnType.js";
+import {Parameter} from "./Parameter.js";
+import {Schema} from "./Schema.js";
 
 export class EdmFunction {
     public Schema!: Schema;

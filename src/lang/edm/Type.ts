@@ -1,5 +1,5 @@
-import {EntityType} from "./EntityType";
-import {ComplexType} from "./ComplexType";
+import {EntityType} from "./EntityType.js";
+import {ComplexType} from "./ComplexType.js";
 
 export enum TypeClass {
     /**

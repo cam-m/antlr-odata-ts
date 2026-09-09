@@ -1,4 +1,4 @@
-import {EntitySet} from "./EntitySet";
+import {EntitySet} from "./EntitySet.js";
 
 export class EntityContainer {
     public Name!: string;
