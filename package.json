@@ -4,6 +4,7 @@
     "url": "git+https://github.com/cam-m/antlr-odata.git",
     "type": "git"
   },
+  "homepage": "https://github.com/cam-m/antlr-odata-ts",
   "version": "1.0.4",
   "type": "module",
   "description": "Antlr 4 OData Typescript parser",
